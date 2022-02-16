@@ -1,0 +1,18 @@
+# Basic dependabot.yml to update Github Actions
+version: 2
+updates:
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    target-branch: "master"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "mrz1836"
+    assignees:
+      - "mrz1836"
+    labels:
+      - "chore"
+    open-pull-requests-limit: 10
