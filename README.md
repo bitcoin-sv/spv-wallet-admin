@@ -25,9 +25,15 @@
 <br />
 
 ## Installation
-(TODO)
+```shell
+npm install -g meteor
+meteor npm install -g yarn
+```
 
-<br />
+## Running
+```shell
+./start.sh
+```
 
 ## Documentation
 (TODO)
