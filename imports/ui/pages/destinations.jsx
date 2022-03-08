@@ -8,7 +8,7 @@ import { useUser } from "../hooks/user";
 import { DestinationsList } from "../components/destinations";
 
 export const Destinations = () => {
-  const { xPriv, server, transportType } = useUser();
+  const { xPriv, xPub, accessKey, server, transportType } = useUser();
 
   const [ destinations, setDestinations ] = useState([]);
   const [ loading, setLoading ] = useState(false);
@@ -17,8 +17,10 @@ export const Destinations = () => {
   const buxClient = new BuxClient(server, {
     transportType: transportType,
     xPriv,
+    xPub,
+    accessKey,
+    signRequest: true,
   });
-  buxClient.SetSignRequest(true);
 
   useEffect(() => {
     setLoading(true);

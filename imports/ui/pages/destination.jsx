@@ -10,7 +10,7 @@ import QRCode from "react-qr-code";
 import { JsonView } from "../components/json-view";
 
 export const Destination = () => {
-  const { xPriv, server, transportType } = useUser();
+  const { xPriv, xPub, accessKey, server, transportType } = useUser();
   const location = useLocation();
   const params = new URLSearchParams(location.search)
 
@@ -26,6 +26,8 @@ export const Destination = () => {
   const buxClient = new BuxClient(server, {
     transportType: transportType,
     xPriv,
+    xPub,
+    accessKey,
     signRequest: true,
   });
 

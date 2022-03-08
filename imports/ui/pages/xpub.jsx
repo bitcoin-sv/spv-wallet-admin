@@ -9,15 +9,17 @@ import { useUser } from "../hooks/user";
 import { JsonView } from "../components/json-view";
 
 export const XPub = () => {
-  const { xPriv, server, transportType } = useUser();
+  const { xPriv, xPub, accessKey, server, transportType } = useUser();
 
-  const [ xPub, setXPub ] = useState(null);
+  const [ xPubData, setXPubData ] = useState(null);
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
 
   const buxClient = new BuxClient(server, {
     transportType: transportType,
     xPriv,
+    xPub,
+    accessKey,
     signRequest: true,
   });
   buxClient.SetSignRequest(true);
@@ -25,7 +27,7 @@ export const XPub = () => {
   useEffect(() => {
     setLoading(true);
     buxClient.GetXPub().then(xPub => {
-      setXPub(xPub);
+      setXPubData(xPub);
       setError('');
       setLoading(false);
     }).catch(e => {
@@ -50,8 +52,8 @@ export const XPub = () => {
           {!!error &&
           <Alert severity="error">{error}</Alert>
           }
-          {xPub &&
-            <JsonView title="xPub" jsonData={xPub} />
+          {xPubData &&
+            <JsonView title="xPub" jsonData={xPubData} />
           }
         </>
       }

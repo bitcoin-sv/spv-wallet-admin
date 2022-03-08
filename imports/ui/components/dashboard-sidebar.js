@@ -15,7 +15,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
-import { setAdminKey, setXPrivString, useUser } from "../hooks/user";
+import { setAccessKeyString, setAdminKey, setXPrivString, setXPubString, useUser } from "../hooks/user";
 import { Lock as LockIcon } from "../icons/lock";
 
 const items = [
@@ -171,6 +171,8 @@ export const DashboardSidebar = (props) => {
               sx={{ mr: 1 }}
               onClick={() => {
                 setXPrivString('');
+                setXPubString('');
+                setAccessKeyString('');
                 setAdminKey('');
               }}
             >
