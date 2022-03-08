@@ -1,5 +1,5 @@
 # BUX: Console
-> Administrative dashboard to manage your Bux server
+> Administrative dashboard to manage your [BUX](https://getbux.io) Server
 
 [![last commit](https://img.shields.io/github/last-commit/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/commits/master)
 [![version](https://img.shields.io/github/release-pre/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/releases)
@@ -9,17 +9,17 @@
 [![Sponsor](https://img.shields.io/badge/sponsor-BuxOrg-181717.svg?logo=github&style=flat&v=1)](https://github.com/sponsors/BuxOrg)
 
 ## Table of Contents
+- [What is BUX?](#what-is-bux)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Code Standards](#code-standards)
 - [Usage](#usage)
-- [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
 
 <br />
 
-### What is BUX?
+## What is BUX?
 [Read more about BUX](https://getbux.io)
 
 <br />
@@ -118,16 +118,41 @@ Here's the [getting started](https://getbux.io) with BUX
 
 <br />
 
-## Maintainers
-| [<img src="https://github.com/mrz1836.png" height="50" alt="MrZ" />](https://github.com/mrz1836) |
-|:------------------------------------------------------------------------------------------------:|
-|                                [MrZ](https://github.com/mrz1836)                                 |
-
-<br />
 
 ## Contributing
-Open source tools that we used in this project:
-(TODO)
+View the [contributing guidelines](.github/CONTRIBUTING.md) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
+
+<br/>
+
+### How can I help?
+All kinds of contributions are welcome :raised_hands:!
+The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:.
+You can also support this project by [becoming a sponsor on GitHub](https://github.com/sponsors/BuxOrg) :clap:
+or by making a [**bitcoin donation**](https://getbux.io/#sponsor?utm_source=github&utm_medium=sponsor-link&utm_campaign=bux-console&utm_term=bux-console&utm_content=bux-console) to ensure this journey continues indefinitely! :rocket:
+
+[![Stars](https://img.shields.io/github/stars/BuxOrg/bux-console?label=Please%20like%20us&style=social&v=2)](https://github.com/BuxOrg/bux-console/stargazers)
+
+<br/>
+
+### Contributors ✨
+Thank you to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/icellan"><img src="https://avatars.githubusercontent.com/u/4411176?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Siggi</b></sub></a><br /><a href="#infra-icellan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/BuxOrg/bux-console/commits?author=icellan" title="Code">💻</a> <a href="#security-icellan" title="Security">🛡️</a></td>
+    <td align="center"><a href="https://mrz1818.com"><img src="https://avatars.githubusercontent.com/u/3743002?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mr. Z</b></sub></a><br /><a href="#infra-mrz1836" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/BuxOrg/bux-console/commits?author=mrz1836" title="Code">💻</a> <a href="#maintenance-mrz1836" title="Maintenance">🚧</a> <a href="#business-mrz1836" title="Business development">💼</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+> This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
 
 <br />
 

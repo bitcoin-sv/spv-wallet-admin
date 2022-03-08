@@ -1,9 +1,6 @@
 # Common makefile commands & variables between projects
 include .make/common.mk
 
-# Common aws commands & variables between projects
-include .make/aws.mk
-
 ## Not defined? Use default repo name which is the application
 ifeq ($(REPO_NAME),)
 	REPO_NAME="bux-console"
@@ -19,7 +16,7 @@ ifndef REPO_BRANCH
 	override REPO_BRANCH="master"
 endif
 
-.PHONY: clean release test
+.PHONY: clean
 
 clean: ## Remove previous builds and any test cache data
 	@npm run clean
@@ -27,3 +24,11 @@ clean: ## Remove previous builds and any test cache data
 	@if [ -d build ]; then rm -r build; fi
 	@if [ -d build_cache ]; then rm -r build_cache; fi
 	@if [ -d node_modules ]; then rm -r node_modules; fi
+
+install-all-contributors: ## Installs all contributors locally
+	@echo "installing all-contributors cli tool..."
+	@yarn global add all-contributors-cli
+
+update-contributors: ## Regenerates the contributors html/list
+	@echo "generating contributor html..."
+	@all-contributors generate

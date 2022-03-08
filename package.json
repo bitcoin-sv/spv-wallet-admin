@@ -1,11 +1,38 @@
 {
   "name": "@buxorg/bux-console",
+  "version": "0.1.0",
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
+  "author": "Siggi <github@icellan.com>",
+  "homepage": "https://getbux.io",
+  "license": "Open BSV",
+  "keywords": [
+    "bux",
+    "bitcoin",
+    "bitcoinsv",
+    "bsv"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BuxOrg/bux-console"
+  },
+  "bugs": {
+    "url": "https://github.com/BuxOrg/bux-console/issues"
+  },
+  "contributors": [
+    {
+      "name": "Siggi",
+      "url": "https://github.com/icellan/"
+    },
+    {
+      "name": "MrZ",
+      "url": "https://github.com/mrz1836/"
+    }
+  ],
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@buxorg/js-buxclient": "1.1.4",

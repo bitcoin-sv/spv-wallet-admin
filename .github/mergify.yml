@@ -164,6 +164,7 @@ pull_request_rules:
       - and:
           - author!=dependabot[bot]
           - author!=mergify[bot]
+          - author!=icellan
           - author!=mrz1836
     actions:
       comment:
