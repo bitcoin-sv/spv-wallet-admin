@@ -53,7 +53,7 @@
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
-    "react-chartjs-2": "^3.0.4",
+    "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-perfect-scrollbar": "^1.5.8",
     "react-qr-code": "^2.0.3",
