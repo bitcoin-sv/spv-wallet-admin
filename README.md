@@ -60,49 +60,17 @@ make help
 
 List of all current commands:
 ```text
-audit                         Checks for vulnerabilities in dependencies
-aws-param-certificate         Returns the ssm location for the domain ssl certificate id
-aws-param-zone                Returns the ssm location for the host zone id
-build                         Builds the package for web distribution
 clean                         Remove previous builds and any test cache data
-create-env-key                Creates a new key in KMS for a new stage
-create-secret                 Creates an secret into AWS SecretsManager
-decrypt                       Decrypts data using a KMY Key ID (awscli v2)
-decrypt-deprecated            Decrypts data using a KMY Key ID (awscli v1)
-deploy                        Build, prepare and deploy
-encrypt                       Encrypts data using a KMY Key ID (awscli v2)
-env-key-location              Returns the environment encryption key location
-firebase-deploy-simple        Deploys to firebase with limited flags
-firebase-get-env              Gets the current environment variables in the associated project
-firebase-param-app-id         Returns the location of the app_id parameter in SSM
-firebase-param-location       Creates a parameter location (for Firebase details in SSM)
-firebase-param-project        Returns the location of the project-id parameter in SSM
-firebase-param-sender-id      Returns the location of the sender_id parameter in SSM
-firebase-save-project         Saves the firebase project information for use by CloudFormation
-firebase-set-env              Set an environment variable in a firebase project
-firebase-update               Update the firebase tools
 help                          Show this help message
-install                       Installs the dependencies for the package
-invalidate-cache              Invalidates a cloudfront cache based on path
-lint                          Runs the standard-js lint tool
-outdated                      Checks for outdated packages via npm
-package                       Process the CF template and prepare for deployment
+install-all-contributors      Installs all contributors locally
 release                       Full production release (creates release in Github)
 release-snap                  Test the full release (build binaries)
 release-test                  Full production test release (everything except deploy)
 replace-version               Replaces the version in HTML/JS (pre-deploy)
-save-domain-info              Saves the zone id and the ssl id for use by CloudFormation
-save-param                    Saves a plain-text string parameter in SSM
-save-param-encrypted          Saves an encrypted string value as a parameter in SSM
-save-secrets                  Helper for saving sensitive credentials to Secrets Manager
-start                         Start the documentation site
 tag                           Generate a new tag and push (tag version=0.0.0)
 tag-remove                    Remove a tag if found (tag-remove version=0.0.0)
 tag-update                    Update an existing tag to current commit (tag-update version=0.0.0)
-teardown                      Deletes the entire stack
-test                          Runs all tests
-update-secret                 Updates an existing secret in AWS SecretsManager
-upload-files                  Upload/puts files into S3 bucket
+update-contributors           Regenerates the contributors html/list
 ```
 </details>
 
