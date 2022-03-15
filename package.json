@@ -34,7 +34,7 @@
     }
   ],
   "dependencies": {
-    "@babel/runtime": "^7.15.4",
+    "@babel/runtime": "^7.17.7",
     "@buxorg/js-buxclient": "1.1.4",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.8.2",
