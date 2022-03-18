@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { CacheProvider } from '@emotion/react';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -7,11 +7,11 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
-import Dashboard from './pages/dashboard';
 import { createEmotionCache } from './utils/create-emotion-cache';
 import { theme } from './theme';
 import { useUser } from "./hooks/user";
 
+import Dashboard from './pages/dashboard';
 import Login from "./pages/login";
 import { Transactions } from "./pages/transactions";
 import NotFound from "./pages/404";
@@ -36,38 +36,18 @@ export const App = () => {
           {(!!user.xPub || !!user.accessKeyString)
             ?
             <BrowserRouter>
-              <Switch>
-                <Route exact path="/" name="Home">
-                  <Dashboard/>
-                </Route>
-                <Route exact path="/xpub" name="xPub">
-                  <XPub/>
-                </Route>
-                <Route exact path="/destination" name="Destination search">
-                  <Destination/>
-                </Route>
-                <Route exact path="/destinations" name="Destinations">
-                  <Destinations/>
-                </Route>
-                <Route exact path="/destination-new" name="New Destinations">
-                  <DestinationNew/>
-                </Route>
-                <Route exact path="/transaction" name="Transaction search">
-                  <Transaction/>
-                </Route>
-                <Route exact path="/transactions" name="Transactions">
-                  <Transactions/>
-                </Route>
-                <Route exact path="/transaction-new" name="New Transactions">
-                  <TransactionNew/>
-                </Route>
-                <Route exact path="/access-keys" name="Access Keys">
-                  <AccessKeys/>
-                </Route>
-                <Route path="/" name="404">
-                  <NotFound/>
-                </Route>
-              </Switch>
+              <Routes>
+                <Route exact path="/" name="Home" element={<Dashboard/>} />
+                <Route exact path="/xpub" name="xPub" element={<XPub/>} />
+                <Route exact path="/destination" name="Destination search" element={<Destination/>} />
+                <Route exact path="/destinations" name="Destinations" element={<Destinations/>} />
+                <Route exact path="/destination-new" name="New Destinations" element={<DestinationNew/>} />
+                <Route exact path="/transaction" name="Transaction search" element={<Transaction/>} />
+                <Route exact path="/transactions" name="Transactions" element={<Transactions/>} />
+                <Route exact path="/transaction-new" name="New Transactions" element={<TransactionNew/>} />
+                <Route exact path="/access-keys" name="Access Keys" element={<AccessKeys/>} />
+                <Route path="/" name="404" element={<NotFound/>} />
+              </Routes>
             </BrowserRouter>
             :
             <Login/>

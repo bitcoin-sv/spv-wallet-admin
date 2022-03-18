@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, ListItem } from '@mui/material';
-import { useLocation, Link, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const NavItem = (props) => {
   const { href, icon, title, ...others } = props;
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const active = href ? (location.pathname === href) : false;
 
   return (
@@ -42,7 +42,7 @@ export const NavItem = (props) => {
           }
         }}
         onClick={() => {
-          history.push(href);
+          navigate(href);
         }}
       >
         <Box sx={{ flexGrow: 1 }}>
