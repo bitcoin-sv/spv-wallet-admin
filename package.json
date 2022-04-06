@@ -41,7 +41,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.5.1",
-    "@mui/lab": "^5.0.0-alpha.75",
+    "@mui/lab": "^5.0.0-alpha.76",
     "@mui/material": "^5.6.0",
     "@mui/styles": "^5.5.3",
     "bsv": "^1.5.6",
