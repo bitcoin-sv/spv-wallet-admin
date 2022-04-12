@@ -43,7 +43,7 @@
     "@mui/icons-material": "^5.6.0",
     "@mui/lab": "^5.0.0-alpha.76",
     "@mui/material": "^5.6.0",
-    "@mui/styles": "^5.6.0",
+    "@mui/styles": "^5.6.1",
     "bsv": "^1.5.6",
     "chart.js": "^3.5.1",
     "date-fns": "^2.25.0",
