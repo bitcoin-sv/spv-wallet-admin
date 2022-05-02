@@ -1,6 +1,6 @@
 import bsv from 'bsv';
 import React, { useEffect, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import { BuxClient } from '@buxorg/js-buxclient';
 
 import { Alert, TextField, Typography } from "@mui/material";
 

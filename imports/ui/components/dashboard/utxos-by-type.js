@@ -1,25 +1,67 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import 'chart.js/auto';
 import { Doughnut } from 'react-chartjs-2';
 import { Box, Card, CardContent, CardHeader, Divider, Typography, useTheme } from '@mui/material';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import PhoneIcon from '@mui/icons-material/Phone';
-import TabletIcon from '@mui/icons-material/Tablet';
+import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import TokenIcon from '@mui/icons-material/Token';
+import OtherIcon from '@mui/icons-material/DeviceUnknown';
 
-export const TrafficByDevice = (props) => {
+export const UtxosByType = (
+  {
+    data,
+    ...props
+  }
+) => {
   const theme = useTheme();
 
-  const data = {
-    datasets: [
-      {
-        data: [63, 15, 22],
-        backgroundColor: ['#3F51B5', '#e53935', '#FB8C00'],
-        borderWidth: 8,
-        borderColor: '#FFFFFF',
-        hoverBorderColor: '#FFFFFF'
+  const combinedData = useMemo(() => {
+    const combinedData = {
+      p2pkh: 0,
+      token: 0,
+      other: 0,
+    }
+    if (data) {
+      // clean up keys
+      for (let [key, value] of Object.entries(data)) {
+        if (key === "pubkeyhash") {
+          key = "p2pkh";
+        } else if (key.match(/token/)) {
+          key = "token";
+        } else {
+          key = "other";
+        }
+        combinedData[key] += Number(value);
       }
-    ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
-  };
+    }
+    return combinedData;
+  }, [data]);
+
+  const chartData = useMemo(() => {
+    const dataPoints = [];
+    const dataLabels = [];
+
+    if (data) {
+
+
+      for (const [key, value] of Object.entries(combinedData)) {
+        dataPoints.push(value);
+        dataLabels.push(key);
+      }
+    }
+
+    return {
+      datasets: [
+        {
+          data: dataPoints,
+          backgroundColor: ['#3F51B5', '#e53935', '#FB8C00'],
+          borderWidth: 2,
+          borderColor: '#FFFFFF',
+          hoverBorderColor: '#FFFFFF'
+        }
+      ],
+      labels: dataLabels
+    };
+  }, [combinedData]);
 
   const options = {
     animation: false,
@@ -43,30 +85,35 @@ export const TrafficByDevice = (props) => {
     }
   };
 
-  const devices = [
+  const total = combinedData.p2pkh + combinedData.token + combinedData.other;
+
+  const types = [
     {
-      title: 'Desktop',
-      value: 63,
-      icon: LaptopMacIcon,
+      title: 'P2PKH',
+      value: (100 * combinedData.p2pkh / total).toFixed(1),
+      icon: BitcoinIcon,
       color: '#3F51B5'
     },
     {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
+      title: 'Tokens',
+      value: (100 * combinedData.token / total).toFixed(1),
+      icon: TokenIcon,
       color: '#E53935'
     },
     {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
+      title: 'Other',
+      value: (100 * combinedData.other / total).toFixed(1),
+      icon: OtherIcon,
       color: '#FB8C00'
     }
   ];
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader
+        title="Utxos by type"
+        subheader="Coming soon..."
+      />
       <Divider />
       <CardContent>
         <Box
@@ -76,8 +123,9 @@ export const TrafficByDevice = (props) => {
           }}
         >
           <Doughnut
-            data={data}
+            data={chartData}
             options={options}
+            type=""
           />
         </Box>
         <Box
@@ -87,7 +135,7 @@ export const TrafficByDevice = (props) => {
             pt: 2
           }}
         >
-          {devices.map(({
+          {types.map(({
             color,
             icon: Icon,
             title,

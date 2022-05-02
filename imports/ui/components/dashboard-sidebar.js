@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 
@@ -11,6 +12,9 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddIcon from '@mui/icons-material/Add';
 import KeyIcon from '@mui/icons-material/Key';
+import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import AdminIcon from '@mui/icons-material/AdminPanelSettings';
+import PaymailIcon from '@mui/icons-material/Message';
 
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Logo } from './logo';
@@ -18,12 +22,57 @@ import { NavItem } from './nav-item';
 import { setAccessKeyString, setAdminKey, setXPrivString, setXPubString, useUser } from "../hooks/user";
 import { Lock as LockIcon } from "../icons/lock";
 
-const items = [
+const adminItems = [
   {
-    href: '/',
+    href: '/admin/dashboard',
     icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    title: 'Admin Dashboard',
+    children: [
+      {
+        href: '/admin/register-xpub',
+        icon: (<BitcoinIcon fontSize="small" />),
+        title: '+ xPub'
+      },
+      {
+        href: '/admin/access-keys',
+        icon: (<BitcoinIcon fontSize="small" />),
+        title: 'Access Keys'
+      },
+      {
+        href: '/admin/block-headers',
+        icon: (<BitcoinIcon fontSize="small" />),
+        title: 'Block Headers'
+      },
+      {
+        href: '/admin/destinations',
+        icon: (<LocationSearchingIcon fontSize="small" />),
+        title: 'Destinations'
+      },
+      {
+        href: '/admin/paymails',
+        icon: (<PaymailIcon fontSize="small" />),
+        title: 'Paymails'
+      },
+      {
+        href: '/admin/transactions',
+        icon: (<ViewListIcon fontSize="small" />),
+        title: 'Transactions'
+      },
+      {
+        href: '/admin/utxos',
+        icon: (<BitcoinIcon fontSize="small" />),
+        title: 'Utxos'
+      },
+      {
+        href: '/admin/xpubs',
+        icon: (<BitcoinIcon fontSize="small" />),
+        title: 'XPubs'
+      },
+    ]
   },
+];
+
+const items = [
   {
     href: '/xpub',
     icon: (<AutoFixHighIcon fontSize="small" />),
@@ -67,12 +116,21 @@ const items = [
 ];
 
 export const DashboardSidebar = (props) => {
-  const { xPubId, adminId } = useUser();
   const { open, onClose } = props;
+  const { xPubId, adminId, server } = useUser();
+  const navigate = useNavigate();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
+
+  const useItems = useMemo(() => {
+    if (adminId) {
+      return [...adminItems, ...items];
+    } else {
+      return [...items];
+    }
+  }, [adminId]);
 
   const content = (
     <>
@@ -96,6 +154,14 @@ export const DashboardSidebar = (props) => {
                 variant="h4"
               >
                 Bux
+              </Typography>
+              <Typography
+                variant="p"
+                style={{
+                  wordBreak: 'break-all'
+                }}
+              >
+                {server}
               </Typography>
             </Box>
           </Box>
@@ -132,7 +198,8 @@ export const DashboardSidebar = (props) => {
                 </Typography>
               </div>
             </Box>
-            {adminId &&
+            {adminId
+              ?
               <Box
                 sx={{
                   alignItems: 'center',
@@ -165,6 +232,16 @@ export const DashboardSidebar = (props) => {
                   </Typography>
                 </div>
               </Box>
+              :
+              <Button
+                startIcon={(<AdminIcon fontSize="small"/>)}
+                sx={{mr: 1}}
+                onClick={() => {
+                  navigate('/admin/dashboard');
+                }}
+              >
+                Login Admin
+              </Button>
             }
             <Button
               startIcon={(<LockIcon fontSize="small" />)}
@@ -187,13 +264,26 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
-            <NavItem
-              key={item.title}
-              icon={item.icon}
-              href={item.href}
-              title={item.title}
-            />
+          {useItems.map((item) => (
+            <div key={`${item.title}-${item.href}`}>
+              <NavItem
+                icon={item.icon}
+                href={item.href}
+                title={item.title}
+              />
+              {item.children?.length > 0 && <>
+                {item.children.map((child) => (
+                  <Box key={`sidebar-child-${child.title}-${child.href}`} sx={{ flexGrow: 1, marginLeft: 4 }}>
+                    <NavItem
+                      key={child.title}
+                      icon={child.icon}
+                      href={child.href}
+                      title={child.title}
+                    />
+                  </Box>
+                ))}
+              </>}
+            </div>
           ))}
         </Box>
       </Box>

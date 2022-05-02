@@ -1,45 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import React, { useState } from 'react';
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { DashboardLayout } from "../components/dashboard-layout";
-import { useUser } from "../hooks/user";
-import { Alert } from "@mui/material";
+import { Alert, Card } from "@mui/material";
 import { AccessKeysList } from "../components/access-keys";
+import { useQueryList } from "../hooks/use-query-list";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 export const AccessKeys = () => {
-  const { xPriv, server, transportType } = useUser();
+  const {
+    items,
+    loading,
+    error,
+    setError,
+    Pagination,
+    setRefreshData,
+    buxClient,
+  } = useQueryList({modelFunction: 'GetAccessKeys'});
 
-  const [ accessKeys, setAccessKeys ] = useState([]);
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState('');
-  const [ info, setInfo ] = useState('');
-
-  const [ refreshData, setRefreshData ] = useState(0);
-
-  const buxClient = new BuxClient(server, {
-    transportType: transportType,
-    xPriv,
-    signRequest: true,
-  });
-
-  useEffect(() => {
-    setLoading(true);
-    buxClient.GetAccessKeys({}).
-      then(keys => {
-        setAccessKeys([...keys].sort((a,b) => {
-          return a.created_at > b.created_at ? -1 : 1;
-        }));
-        setError('');
-        setLoading(false);
-      }).
-      catch(e => {
-        setError(e.message);
-        setLoading(false);
-      });
-  },[refreshData]);
+  const [info, setInfo] = useState('');
 
   const handleRevokeAccessKey = function (accessKey) {
     if (confirm('Revoke access key?')) {
@@ -59,7 +40,7 @@ export const AccessKeys = () => {
         variant="h4"
       >
         Access keys
-        <span style={{ float: 'right'}}>
+        <span style={{float: 'right'}}>
           <Button
             color="primary"
             onClick={async () => {
@@ -73,22 +54,27 @@ export const AccessKeys = () => {
         </span>
       </Typography>
       {info &&
-        <Alert severity="info">
-          {info}
-        </Alert>
+      <Alert severity="info">
+        {info}
+      </Alert>
       }
       {loading
-      ?
+        ?
         <>Loading...</>
-      :
+        :
         <>
           {!!error &&
-            <Alert severity="error">{error}</Alert>
+          <Alert severity="error">{error}</Alert>
           }
-          <AccessKeysList
-            accessKeys={accessKeys}
-            handleRevokeAccessKey={handleRevokeAccessKey}
-          />
+          <Card>
+            <PerfectScrollbar>
+              <AccessKeysList
+                items={items}
+                handleRevokeAccessKey={handleRevokeAccessKey}
+              />
+            </PerfectScrollbar>
+            <Pagination/>
+          </Card>
         </>
       }
     </DashboardLayout>

@@ -1,5 +1,6 @@
 import { useTracker } from "meteor/react-meteor-data";
 import bsv from 'bsv';
+import { BuxClient } from "@buxorg/js-buxclient";
 
 const _xPrivString = new ReactiveVar();
 const _xPubString = new ReactiveVar();
@@ -60,6 +61,27 @@ export const useUser = () => useTracker(() => {
     adminId = bsv.crypto.Hash.sha256(Buffer.from(adminKeyString)).toString('hex')
   }
 
+  let buxClient, buxAdminClient;
+  if (server && transportType) {
+    buxClient = new BuxClient(server, {
+      transportType: transportType,
+      xPriv,
+      xPub,
+      accessKey,
+      signRequest: true,
+    });
+    if (adminKey) {
+      buxAdminClient = new BuxClient(server, {
+        transportType: transportType,
+        xPriv,
+        xPub,
+        accessKey,
+        signRequest: true,
+      });
+      buxAdminClient.SetAdminKey(adminKey);
+    }
+  }
+
   return {
     xPrivString,
     xPriv,
@@ -72,5 +94,7 @@ export const useUser = () => useTracker(() => {
     server,
     adminKey,
     adminId,
-  } ;
+    buxClient,
+    buxAdminClient,
+  };
 });

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import { BuxClient } from '@buxorg/js-buxclient';
 import QRCode from "react-qr-code";
 
 import { Alert, Box, Button, Typography } from "@mui/material";

@@ -1,37 +1,56 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
 import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-export const Sales = (props) => {
+const moment = extendMoment(Moment);
+
+export const AdminChart = (
+  {
+    data,
+    ...props
+  }
+) => {
   const theme = useTheme();
 
-  const data = {
-    datasets: [
-      {
-        backgroundColor: '#3F51B5',
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year',
-        maxBarThickness: 10
-      },
-      {
-        backgroundColor: '#EEEEEE',
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year',
-        maxBarThickness: 10
+  const chartData = useMemo(() => {
+    const dataPoints = [];
+    const dataLabels = [];
+
+    if (data) {
+      const dataKeys = Object.keys(data).map(k => Number(k));
+      if (dataKeys.length > 0) {
+        const minDate = moment.max(moment().subtract(3, 'months'), moment(Math.min(...dataKeys), 'YYYYMMDD'));
+        const maxDate = moment(Math.max(...dataKeys), 'YYYYMMDD');
+        const range = moment.range(minDate, maxDate);
+        for (let day of range.by('day')) {
+          const d = day.format('YYYYMMDD');
+          dataPoints.push(data[d.toString()]);
+          dataLabels.push(day.format('YYYY-MM-DD'))
+        }
       }
-    ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug', '7 aug']
-  };
+    }
+
+    return {
+      datasets: [
+        {
+          backgroundColor: '#3F51B5',
+          barPercentage: 0.5,
+          barThickness: 12,
+          borderRadius: 4,
+          categoryPercentage: 0.5,
+          data: dataPoints,
+          label: 'Transactions',
+          maxBarThickness: 10
+        },
+      ],
+      labels: dataLabels
+    };
+  }, [data]);
 
   const options = {
     animation: false,
@@ -85,15 +104,8 @@ export const Sales = (props) => {
   return (
     <Card {...props}>
       <CardHeader
-        action={(
-          <Button
-            endIcon={<ArrowDropDownIcon fontSize="small" />}
-            size="small"
-          >
-            Last 7 days
-          </Button>
-        )}
-        title="Latest Sales"
+        title="Transactions per day"
+        subheader="Last 3 months"
       />
       <Divider />
       <CardContent>
@@ -104,27 +116,11 @@ export const Sales = (props) => {
           }}
         >
           <Bar
-            data={data}
+            data={chartData}
             options={options}
           />
         </Box>
       </CardContent>
-      <Divider />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          p: 2
-        }}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon fontSize="small" />}
-          size="small"
-        >
-          Overview
-        </Button>
-      </Box>
     </Card>
   );
 };

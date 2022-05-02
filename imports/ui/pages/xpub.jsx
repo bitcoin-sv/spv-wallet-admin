@@ -1,8 +1,7 @@
-import bsv from 'bsv';
 import React, { useEffect, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import { BuxClient } from '@buxorg/js-buxclient';
 
-import { Alert, TextField, Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useUser } from "../hooks/user";

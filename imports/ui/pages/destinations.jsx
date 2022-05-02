@@ -1,42 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import React from 'react';
 
-import { Alert, Typography } from "@mui/material";
+import { Alert, Card, Typography } from "@mui/material";
 
 import { DashboardLayout } from "../components/dashboard-layout";
-import { useUser } from "../hooks/user";
 import { DestinationsList } from "../components/destinations";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { useQueryList } from "../hooks/use-query-list";
 
 export const Destinations = () => {
-  const { xPriv, xPub, accessKey, server, transportType } = useUser();
-
-  const [ destinations, setDestinations ] = useState([]);
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState('');
-
-  const buxClient = new BuxClient(server, {
-    transportType: transportType,
-    xPriv,
-    xPub,
-    accessKey,
-    signRequest: true,
-  });
-
-  useEffect(() => {
-    setLoading(true);
-    buxClient.GetDestinations({}).
-      then(dests => {
-        setDestinations([...dests].sort((a,b) => {
-          return a.created_at > b.created_at ? -1 : 1;
-        }));
-        setError('');
-        setLoading(false);
-      }).
-      catch(e => {
-        setError(e.message);
-        setLoading(false);
-      });
-  },[]);
+  const { items, loading, error, Pagination } = useQueryList({ modelFunction: 'GetDestinations' });
 
   return (
     <DashboardLayout>
@@ -47,14 +19,19 @@ export const Destinations = () => {
         Destinations
       </Typography>
       {loading
-      ?
+        ?
         <>Loading...</>
-      :
+        :
         <>
           {!!error &&
           <Alert severity="error">{error}</Alert>
           }
-          <DestinationsList destinations={destinations}/>
+          <Card>
+            <PerfectScrollbar>
+              <DestinationsList items={items}/>
+            </PerfectScrollbar>
+            <Pagination/>
+          </Card>
         </>
       }
     </DashboardLayout>

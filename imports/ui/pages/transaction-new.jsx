@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import BuxClient from '@buxorg/js-buxclient';
+import { BuxClient } from '@buxorg/js-buxclient';
 
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 

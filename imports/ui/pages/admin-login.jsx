@@ -3,18 +3,31 @@ import React, { useState } from 'react';
 
 import { Box, Button, Container, Select, TextField, Typography } from '@mui/material';
 
-import { setAdminKey } from "../hooks/user";
+import { setAdminKey, useUser } from "../hooks/user";
 import { SeverityPill } from "../components/severity-pill";
+import { BuxClient } from "@buxorg/js-buxclient";
 
 const AdminLogin = () => {
+  const { server, transportType, xPrivString, xPubString, accessKey } = useUser();
 
   const [ xPriv, setXPriv ] = useState('');
   const [ error, setError ] = useState('');
 
-  const handleSubmit = function(e) {
+  const handleSubmit = async function(e) {
     e.preventDefault();
     if (xPriv) {
       try {
+        // try to make a connection and get the xpub
+        const buxClient = new BuxClient(server, {
+          transportType: transportType,
+          xPrivString: xPrivString,
+          xPubString: xPubString,
+          accessKeyString: accessKey,
+          signRequest: true,
+        });
+        buxClient.SetAdminKey(xPriv)
+        const status = await buxClient.AdminGetStatus();
+
         const key = bsv.HDPrivateKey.fromString(xPriv);
         setAdminKey(xPriv);
       } catch (e) {

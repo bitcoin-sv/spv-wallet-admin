@@ -1,99 +1,71 @@
 import React, { useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import {
-  Box,
-  Button,
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow, } from '@mui/material';
+import { JsonView } from "./json-view";
 
-export const AccessKeysList = ({ accessKeys, handleRevokeAccessKey, ...rest }) => {
-  const [selectedTransactions, setSelectedTransactions] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
-
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
-
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
+export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
+  const [selectedAccessKeys, setSelectedAccessKeys] = useState([]);
 
   return (
-    <Card {...rest}>
-      <PerfectScrollbar>
-        <Box>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Revoke</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {accessKeys.slice(page*limit, page*limit + limit).map(accessKey => (
-                <TableRow
-                  hover
-                  key={`access_key_${accessKey.id}`}
-                  selected={selectedTransactions.indexOf(accessKey.id) !== -1}
-                  style={{
-                    opacity: accessKey.revoked_at ? 0.5 : 1
-                  }}
-                  onClick={() => {
-                    if (selectedTransactions.indexOf(accessKey.id) !== -1) {
-                      setSelectedTransactions([])
-                    } else {
-                      setSelectedTransactions([accessKey.id])
-                    }
-                  }}
-                >
-                  <TableCell>{accessKey.id}</TableCell>
-                  <TableCell>
-                    {format(new Date(accessKey.created_at), 'dd/MM/yyyy hh:mm')}
-                  </TableCell>
-                  <TableCell>
-                    {accessKey.revoked_at
-                      ?
-                      <span title={`Revoked at ${accessKey.revoked_at}`}>Revoked</span>
-                      :
-                      <Button
-                        onClick={() => handleRevokeAccessKey(accessKey)}
-                      >
-                        Revoke key
-                      </Button>
-                    }
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={accessKeys.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-        showFirstButton={true}
-        showLastButton={true}
-      />
-    </Card>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>ID</TableCell>
+          <TableCell>Created</TableCell>
+          <TableCell>Revoke</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {items.map(accessKey => (
+          <>
+            <TableRow
+              hover
+              key={`access_key_${accessKey.id}`}
+              selected={selectedAccessKeys.indexOf(accessKey.id) !== -1}
+              style={{
+                opacity: accessKey.revoked_at ? 0.5 : 1
+              }}
+              onClick={() => {
+                if (selectedAccessKeys.indexOf(accessKey.id) !== -1) {
+                  setSelectedAccessKeys([])
+                } else {
+                  setSelectedAccessKeys([accessKey.id])
+                }
+              }}
+            >
+              <TableCell>{accessKey.id}</TableCell>
+              <TableCell>
+                {format(new Date(accessKey.created_at), 'dd/MM/yyyy hh:mm')}
+              </TableCell>
+              <TableCell>
+                {accessKey.revoked_at
+                  ?
+                  <span title={`Revoked at ${accessKey.revoked_at}`}>Revoked</span>
+                  :
+                  <Button
+                    onClick={() => handleRevokeAccessKey(accessKey)}
+                  >
+                    Revoke key
+                  </Button>
+                }
+              </TableCell>
+            </TableRow>
+            {selectedAccessKeys.indexOf(accessKey.id) !== -1 &&
+            <TableRow>
+              <TableCell colSpan={5}>
+                <JsonView jsonData={accessKey}/>
+              </TableCell>
+            </TableRow>
+            }
+          </>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 
 AccessKeysList.propTypes = {
-  accessKeys: PropTypes.array.isRequired,
-  handleRevokeAccessKey: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
+  handleRevokeAccessKey: PropTypes.func,
 };

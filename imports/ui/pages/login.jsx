@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { Box, Button, Container, Select, TextField, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 
-import { setAccessKeyString, setServer, setTransportType, setXPrivString, setXPubString } from "../hooks/user";
+import { setAccessKeyString, setServer, setTransportType, setXPrivString } from "../hooks/user";
 import { SeverityPill } from "../components/severity-pill";
 import { useLocalStorage } from "../hooks/localstorage";
+import { BuxClient } from "@buxorg/js-buxclient";
 
 const Login = () => {
 
@@ -15,16 +16,22 @@ const Login = () => {
   const [ serverUrl, setServerUrl ] = useLocalStorage('login.serverUrl', 'http://localhost:3003/v1');
   const [ error, setError ] = useState('');
 
-  const handleSubmit = function(e) {
+  const handleSubmit = async function(e) {
     e.preventDefault();
     if (loginKey && serverUrl && transport) {
       try {
+        // try to make a connection and get the xpub
+        const buxClient = new BuxClient(serverUrl, {
+          transportType: transport,
+          xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
+          accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
+          signRequest: true,
+        });
+        const xPub = await buxClient.GetXPub();
+
         if (loginKey.match(/^xprv/)) {
           const key = bsv.HDPrivateKey.fromString(loginKey);
           setXPrivString(loginKey);
-        } else if (loginKey.match(/^xpub/)) {
-          const key = bsv.HDPublicKey.fromString(loginKey);
-          setXPubString(loginKey);
         } else {
           const key = bsv.PrivateKey.fromString(loginKey);
           setAccessKeyString(loginKey);
@@ -32,6 +39,7 @@ const Login = () => {
         setServer(serverUrl);
         setTransportType(transport);
       } catch (e) {
+        console.error(e);
         setError(e.reason || e.message);
       }
     } else {
@@ -63,7 +71,7 @@ const Login = () => {
               gutterBottom
               variant="body2"
             >
-              Sign in using your xPriv, xPub or access key
+              Sign in using your xPriv or access key
             </Typography>
           </Box>
           <Select
@@ -89,7 +97,7 @@ const Login = () => {
           />
           <TextField
             fullWidth
-            label="xPriv / xPub / access key"
+            label="xPriv / access key"
             margin="dense"
             value={loginKey}
             onChange={(e) => setLoginKey(e.target.value)}
