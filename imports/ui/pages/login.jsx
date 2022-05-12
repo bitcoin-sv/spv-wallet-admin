@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Box, Button, Container, Select, TextField, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 
-import { setAccessKeyString, setServer, setTransportType, setXPrivString } from "../hooks/user";
+import { setAccessKeyString, setAdminKey, setServer, setTransportType, setXPrivString } from "../hooks/user";
 import { SeverityPill } from "../components/severity-pill";
 import { useLocalStorage } from "../hooks/localstorage";
 import { BuxClient } from "@buxorg/js-buxclient";
@@ -39,6 +39,29 @@ const Login = () => {
         setServer(serverUrl);
         setTransportType(transport);
       } catch (e) {
+        // check whether this is a admin only login
+        try {
+          if (loginKey.match(/^xprv/)) {
+            const buxClient = new BuxClient(serverUrl, {
+              transportType: transport,
+              xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
+              accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
+              signRequest: true,
+            });
+            buxClient.SetAdminKey(loginKey);
+            const admin = await buxClient.AdminGetStatus();
+            if (admin === true) {
+              setAdminKey(loginKey);
+              setServer(serverUrl);
+              setTransportType(transport);
+            }
+          }
+          return
+        } catch(e) {
+          // rethrow error
+          throw e
+        }
+
         console.error(e);
         setError(e.reason || e.message);
       }

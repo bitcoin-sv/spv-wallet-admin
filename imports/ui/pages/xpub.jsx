@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { BuxClient } from '@buxorg/js-buxclient';
 
 import { Alert, Typography } from "@mui/material";
 
@@ -8,20 +7,11 @@ import { useUser } from "../hooks/user";
 import { JsonView } from "../components/json-view";
 
 export const XPub = () => {
-  const { xPriv, xPub, accessKey, server, transportType } = useUser();
+  const { buxClient } = useUser();
 
   const [ xPubData, setXPubData ] = useState(null);
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
-
-  const buxClient = new BuxClient(server, {
-    transportType: transportType,
-    xPriv,
-    xPub,
-    accessKey,
-    signRequest: true,
-  });
-  buxClient.SetSignRequest(true);
 
   useEffect(() => {
     setLoading(true);

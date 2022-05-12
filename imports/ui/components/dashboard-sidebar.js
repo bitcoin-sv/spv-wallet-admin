@@ -59,6 +59,11 @@ const adminItems = [
         title: 'Transactions'
       },
       {
+        href: '/admin/transaction-record',
+        icon: (<AddIcon fontSize="small" />),
+        title: 'Transactions'
+      },
+      {
         href: '/admin/utxos',
         icon: (<BitcoinIcon fontSize="small" />),
         title: 'Utxos'
@@ -126,7 +131,10 @@ export const DashboardSidebar = (props) => {
 
   const useItems = useMemo(() => {
     if (adminId) {
-      return [...adminItems, ...items];
+      if (xPubId) {
+        return [...adminItems, ...items];
+      }
+      return [...adminItems];
     } else {
       return [...items];
     }
