@@ -58,8 +58,7 @@ const Login = () => {
           }
           return
         } catch(e) {
-          // rethrow error
-          throw e
+          //console.error(e);
         }
 
         console.error(e);
