@@ -68,7 +68,7 @@ export const PaymailsList = (
                 }
               }}
             >
-              <TableCell>{paymail.value ? <img src={paymail.value} style={{ height: '24px' }}/> : ''}</TableCell>
+              <TableCell>{paymail.avatar ? <img src={paymail.avatar} style={{ height: '24px' }}/> : ''}</TableCell>
               <TableCell>{paymail.public_name}</TableCell>
               <TableCell>{paymail.alias}</TableCell>
               <TableCell>{paymail.deleted_at ? '' : paymail.domain}</TableCell>
