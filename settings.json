@@ -1,5 +1,9 @@
 {
   "public": {
-
+    "_loginTitle": "Sign in to the test Bux server",
+    "_loginSubtitle": "Sign in to our server using your xPriv or access key",
+    "_transportType": "graphql",
+    "_serverUrl": "http://localhost:3003/graphql",
+    "_hideServerUrl": true
   }
 }

@@ -9,6 +9,7 @@ import { SeverityPill } from "../components/severity-pill";
 import { useLocalStorage } from "../hooks/localstorage";
 import { BuxClient } from "@buxorg/js-buxclient";
 
+
 const Login = () => {
 
   const [ loginKey, setLoginKey ] = useState('');
@@ -20,9 +21,17 @@ const Login = () => {
     e.preventDefault();
     if (loginKey && serverUrl && transport) {
       try {
+        let useTransport = transport;
+        let userServerUrl = serverUrl
+        if (Meteor.settings.public.transportType && Meteor.settings.public.serverUrl) {
+          // use the hardcoded defaults for transport and server url
+          useTransport = Meteor.settings.public.transportType;
+          userServerUrl = Meteor.settings.public.serverUrl;
+        }
+
         // try to make a connection and get the xpub
-        const buxClient = new BuxClient(serverUrl, {
-          transportType: transport,
+        const buxClient = new BuxClient(userServerUrl, {
+          transportType: useTransport,
           xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
           signRequest: true,
@@ -86,37 +95,68 @@ const Login = () => {
               color="textPrimary"
               variant="h4"
             >
-              Sign in to a Bux server
+              {Meteor.settings.public.loginTitle || "Sign in to a Bux server"}
             </Typography>
             <Typography
               color="textSecondary"
               gutterBottom
               variant="body2"
             >
-              Sign in using your xPriv or access key
+              {Meteor.settings.public.loginSubtitle || "Sign in using your xPriv or access key"}
             </Typography>
           </Box>
-          <Select
-            fullWidth
-            label="Server transport"
-            margin="dense"
-            value={transport}
-            onChange={(e) => setTransport(e.target.value)}
-            type="text"
-            variant="outlined"
-          >
-            <MenuItem value="graphql">GraphQL</MenuItem>
-            <MenuItem value="http">HTTP</MenuItem>
-          </Select>
-          <TextField
-            fullWidth
-            label="Server"
-            margin="dense"
-            value={serverUrl}
-            onChange={(e) => setServerUrl(e.target.value)}
-            type="text"
-            variant="outlined"
-          />
+          <Box>
+            <img
+              src="/svg/my-password.svg"
+              alt="Login"
+              style={{
+                width: "100%",
+                marginTop: '-35%',
+                marginBottom: '-25%',
+                zIndex: -1
+              }}
+            />
+          </Box>
+          {!!(Meteor.settings.public.transportType && Meteor.settings.public.serverUrl)
+          ?
+            (!Meteor.settings.public.hideServerUrl &&
+              <>
+                <TextField
+                  fullWidth
+                  label={Meteor.settings.public.transportType}
+                  margin="dense"
+                  value={Meteor.settings.public.serverUrl}
+                  type="text"
+                  variant="outlined"
+                  disabled={true}
+                />
+              </>
+            )
+          :
+            <>
+              <Select
+                fullWidth
+                label="Server transport"
+                margin="dense"
+                value={transport}
+                onChange={(e) => setTransport(e.target.value)}
+                type="text"
+                variant="outlined"
+              >
+                <MenuItem value="graphql">GraphQL</MenuItem>
+                <MenuItem value="http">HTTP</MenuItem>
+              </Select>
+              <TextField
+                fullWidth
+                label="Server"
+                margin="dense"
+                value={serverUrl}
+                onChange={(e) => setServerUrl(e.target.value)}
+                type="text"
+                variant="outlined"
+              />
+            </>
+          }
           <TextField
             fullWidth
             label="xPriv / access key"
