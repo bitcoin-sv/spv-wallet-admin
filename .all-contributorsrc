@@ -34,6 +34,15 @@
           "maintenance",
           "business"
         ]
+      },
+      {
+        "login": "galt-tr",
+        "name": "Dylan",
+        "avatar_url": "https://avatars.githubusercontent.com/u/64976002?v=4",
+        "profile": "https://github.com/galt-tr",
+        "contributions": [
+          "code"
+        ]
       }
     ]
 }
