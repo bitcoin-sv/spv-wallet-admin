@@ -9,7 +9,7 @@
   },
   "author": "Siggi <github@icellan.com>",
   "homepage": "https://getbux.io",
-  "license": "Open BSV",
+  "license": "MIT",
   "keywords": [
     "bux",
     "bitcoin",
