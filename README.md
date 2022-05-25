@@ -3,9 +3,8 @@
 
 [![last commit](https://img.shields.io/github/last-commit/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/commits/master)
 [![version](https://img.shields.io/github/release-pre/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/releases)
-[![license](https://img.shields.io/badge/license-Open%20BSV-brightgreen.svg?style=flat)](/LICENSE)
 [![app health](https://img.shields.io/website-up-down-green-red/https/getbux.io.svg?label=status&v=1)](https://getbux.io)
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/BuxOrg/bux-console&style=flat&v=3)](https://mergify.io)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/BuxOrg/bux-console&style=flat&v=3)](https://mergify.io)
 [![Sponsor](https://img.shields.io/badge/sponsor-BuxOrg-181717.svg?logo=github&style=flat&v=1)](https://github.com/sponsors/BuxOrg)
 
 ## Table of Contents
@@ -60,13 +59,17 @@ make help
 
 List of all current commands:
 ```text
+audit                         Checks for any packages that are vulnerable
 clean                         Remove previous builds and any test cache data
 help                          Show this help message
+install                       Install the application
 install-all-contributors      Installs all contributors locally
+outdated                      Checks for any outdated packages
 release                       Full production release (creates release in Github)
 release-snap                  Test the full release (build binaries)
 release-test                  Full production test release (everything except deploy)
 replace-version               Replaces the version in HTML/JS (pre-deploy)
+start                         Starts the console
 tag                           Generate a new tag and push (tag version=0.0.0)
 tag-remove                    Remove a tag if found (tag-remove version=0.0.0)
 tag-update                    Update an existing tag to current commit (tag-update version=0.0.0)
@@ -125,4 +128,4 @@ Thank you to these wonderful people ([emoji key](https://allcontributors.org/doc
 <br />
 
 ## License
-[![License](https://img.shields.io/badge/license-Open%20BSV-brightgreen.svg?style=flat)](/LICENSE)
+[![License](https://img.shields.io/github/license/BuxOrg/bux-console.svg?style=flat&v=1)](LICENSE)
