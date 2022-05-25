@@ -35,7 +35,7 @@ meteor npm install -g yarn
 ```
 
 ## Documentation
-(TODO)
+View more [BUX documentation](https://getbux.io)
 
 <details>
 <summary><strong><code>Release Deployment</code></strong></summary>
