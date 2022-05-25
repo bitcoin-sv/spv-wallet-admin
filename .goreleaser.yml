@@ -4,7 +4,7 @@
 # ---------------------------
 before:
   hooks:
-    - make test
+    #- make test
 snapshot:
   name_template: "{{ .Tag }}"
 dist: release
