@@ -18,6 +18,9 @@ endif
 
 .PHONY: clean
 
+audit: ## Checks for any packages that are vulnerable
+	@yarn audit
+
 clean: ## Remove previous builds and any test cache data
 	@npm run clean
 	@if [ -d $(DISTRIBUTIONS_DIR) ]; then rm -r $(DISTRIBUTIONS_DIR); fi
@@ -25,9 +28,18 @@ clean: ## Remove previous builds and any test cache data
 	@if [ -d build_cache ]; then rm -r build_cache; fi
 	@if [ -d node_modules ]; then rm -r node_modules; fi
 
+install: ## Install the application
+	@yarn
+
 install-all-contributors: ## Installs all contributors locally
 	@echo "installing all-contributors cli tool..."
 	@yarn global add all-contributors-cli
+
+start: ## Starts the console
+	@yarn run start
+
+outdated: ## Checks for any outdated packages
+	@yarn outdated
 
 update-contributors: ## Regenerates the contributors html/list
 	@echo "generating contributor html..."
