@@ -68,7 +68,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-next": "12.1.6"
   },
   "meteor": {
