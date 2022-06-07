@@ -84,10 +84,10 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@buxorg/js-buxclient@1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@buxorg/js-buxclient/-/js-buxclient-1.3.4.tgz#7b0ee15f1506bc4955b3a4c36990732771c747ad"
-  integrity sha512-7Cbopd8S5bHEwl3bqLSdoNhQx6WtGwT7lTS736ZfEN4xU4s/H//Dq7NGs0wqPJc1LslBYZvOuCEERYn90LoGsg==
+"@buxorg/js-buxclient@1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@buxorg/js-buxclient/-/js-buxclient-1.3.5.tgz#8d5d018c518ee825bcee0226fe5f5b9fb5eff1d4"
+  integrity sha512-VJQ51P9HRDyt9ybOtKdEDWjiyyk905oY8ElfWQTBoQfe8daedZ1EhWqL4dFCuqykt6H68KWHW41ywkKc3dIO9Q==
   dependencies:
     "@apollo/client" "^3.5.8"
     cross-fetch "^3.1.5"
