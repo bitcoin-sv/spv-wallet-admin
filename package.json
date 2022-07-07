@@ -52,7 +52,7 @@
     "formik": "^2.1.5",
     "history": "^5.0.0",
     "meteor-node-stubs": "^1.2.3",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "moment-range": "^4.0.2",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
