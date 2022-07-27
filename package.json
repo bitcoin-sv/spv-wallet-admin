@@ -51,7 +51,7 @@
     "date-fns": "^2.29.1",
     "formik": "^2.1.5",
     "history": "^5.0.0",
-    "meteor-node-stubs": "^1.2.3",
+    "meteor-node-stubs": "^1.2.5",
     "moment": "^2.29.4",
     "moment-range": "^4.0.2",
     "nprogress": "^0.2.0",
