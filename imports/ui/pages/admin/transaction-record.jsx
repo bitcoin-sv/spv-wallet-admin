@@ -28,7 +28,7 @@ export const AdminTransactionRecord = () => {
   const recordTransaction = useCallback((txHex) => {
     if (txHex) {
       setLoading(true);
-      buxAdminClient.RecordTransaction(txHex, null, {}).then(tx => {
+      buxAdminClient.AdminRecordTransaction(txHex).then(tx => {
         setTransaction(tx);
         setError('');
         setLoading(false);
