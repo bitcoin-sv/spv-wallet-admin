@@ -13,8 +13,8 @@ import { BuxClient } from "@buxorg/js-buxclient";
 const Login = () => {
 
   const [ loginKey, setLoginKey ] = useState('');
-  const [ transport, setTransport ] = useLocalStorage('login.transport', 'http');
-  const [ serverUrl, setServerUrl ] = useLocalStorage('login.serverUrl', 'http://localhost:3003/v1');
+  const [ transport, setTransport ] = useLocalStorage('login.transport', Meteor.settings.public.transportType);
+  const [ serverUrl, setServerUrl ] = useLocalStorage('login.serverUrl', Meteor.settings.public.serverUrl);
   const [ error, setError ] = useState('');
 
   const handleSubmit = async function(e) {
@@ -22,15 +22,15 @@ const Login = () => {
     if (loginKey && serverUrl && transport) {
       try {
         let useTransport = transport;
-        let userServerUrl = serverUrl
+        let useServerUrl = serverUrl
         if (Meteor.settings.public.transportType && Meteor.settings.public.serverUrl) {
           // use the hardcoded defaults for transport and server url
           useTransport = Meteor.settings.public.transportType;
-          userServerUrl = Meteor.settings.public.serverUrl;
+          useServerUrl = Meteor.settings.public.serverUrl;
         }
 
         // try to make a connection and get the xpub
-        const buxClient = new BuxClient(userServerUrl, {
+        const buxClient = new BuxClient(useServerUrl, {
           transportType: useTransport,
           xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
@@ -45,14 +45,14 @@ const Login = () => {
           const key = bsv.PrivateKey.fromString(loginKey);
           setAccessKeyString(loginKey);
         }
-        setServer(serverUrl);
-        setTransportType(transport);
+        setServer(useServerUrl);
+        setTransportType(useTransport);
       } catch (e) {
         // check whether this is a admin only login
         try {
           if (loginKey.match(/^xprv/)) {
-            const buxClient = new BuxClient(serverUrl, {
-              transportType: transport,
+            const buxClient = new BuxClient(useServerUrl, {
+              transportType: useTransport,
               xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
               accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
               signRequest: true,
@@ -61,8 +61,8 @@ const Login = () => {
             const admin = await buxClient.AdminGetStatus();
             if (admin === true) {
               setAdminKey(loginKey);
-              setServer(serverUrl);
-              setTransportType(transport);
+              setServer(useServerUrl);
+              setTransportType(useTransport);
             }
           }
           return
