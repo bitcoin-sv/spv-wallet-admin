@@ -24,8 +24,9 @@ export const AdminChart = (
     if (data) {
       const dataKeys = Object.keys(data).map(k => Number(k));
       if (dataKeys.length > 0) {
-        const minDate = moment.max(moment().subtract(3, 'months'), moment(Math.min(...dataKeys), 'YYYYMMDD'));
-        const maxDate = moment(Math.max(...dataKeys), 'YYYYMMDD');
+        const minDate = moment.max(moment().subtract(6, 'months'), moment(Math.min(...dataKeys), 'YYYYMMDD'));
+        const maxDate = moment.max(moment().subtract(3, 'months'), moment(Math.min(...dataKeys), 'YYYYMMDD'));
+        //const maxDate = moment(Math.max(...dataKeys), 'YYYYMMDD');
         const range = moment.range(minDate, maxDate);
         for (let day of range.by('day')) {
           const d = day.format('YYYYMMDD');

@@ -25,8 +25,21 @@ export const AdminTransactionRecord = () => {
     }
   }, [params]);
 
-  const recordTransaction = useCallback((txHex) => {
+  const recordTransaction = useCallback(async (txHex) => {
     if (txHex) {
+      if (txHex.length === 64) {
+        // transaction ID used, lookup tx hex from WhatsOnChain
+        const response = await fetch(`https://api.whatsonchain.com/v1/bsv/main/tx/${txHex}/hex`);
+        const hex = await response.text();
+        if (hex && hex.length > 64) {
+          txHex = hex
+        } else {
+          setTransaction(null);
+          setError("Failed getting transaction from WhatsOnChain");
+          return;
+        }
+      }
+
       setLoading(true);
       buxAdminClient.AdminRecordTransaction(txHex).then(tx => {
         setTransaction(tx);
@@ -46,13 +59,16 @@ export const AdminTransactionRecord = () => {
         color="inherit"
         variant="h4"
       >
-        Record a Transaction in HEX
+        Record a Transaction
       </Typography>
       <TextareaAutosize
         aria-label="empty textarea"
-        placeholder="Empty"
+        placeholder="Transaction ID or Hex string"
         value={txHex}
-        onChange={(e) => setTxHex(e.target.value)}
+        onChange={(e) => {
+          setTransaction(null);
+          setTxHex(e.target.value);
+        }}
         style={{
           width: '100%',
           padding: 10,

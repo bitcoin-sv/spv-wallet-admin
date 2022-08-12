@@ -20,6 +20,7 @@ const Login = () => {
   const handleSubmit = async function(e) {
     e.preventDefault();
     if (loginKey && serverUrl && transport) {
+      let buxClient;
       try {
         let useTransport = transport;
         let useServerUrl = serverUrl
@@ -30,7 +31,7 @@ const Login = () => {
         }
 
         // try to make a connection and get the xpub
-        const buxClient = new BuxClient(useServerUrl, {
+        buxClient = new BuxClient(useServerUrl, {
           transportType: useTransport,
           xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
@@ -48,15 +49,9 @@ const Login = () => {
         setServer(useServerUrl);
         setTransportType(useTransport);
       } catch (e) {
-        // check whether this is a admin only login
+        // check whether this is an admin only login
         try {
           if (loginKey.match(/^xprv/)) {
-            const buxClient = new BuxClient(useServerUrl, {
-              transportType: useTransport,
-              xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
-              accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
-              signRequest: true,
-            });
             buxClient.SetAdminKey(loginKey);
             const admin = await buxClient.AdminGetStatus();
             if (admin === true) {

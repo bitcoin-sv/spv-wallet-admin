@@ -1,6 +1,6 @@
 {
   "name": "@buxorg/bux-console",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "start": "yarn && meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.18.9",
-    "@buxorg/js-buxclient": "1.3.8",
+    "@buxorg/js-buxclient": "1.3.9",
     "@emotion/cache": "^11.10.1",
     "@emotion/react": "^11.10.0",
     "@emotion/server": "^11.10.0",
@@ -46,6 +46,7 @@
     "@mui/styles": "^5.9.3",
     "@inovua/reactdatagrid-community": "^4.21.0",
     "@mui/x-data-grid": "^5.15.2",
+    "@mui/x-date-pickers": "^5.0.0-beta.4",
     "bsv": "^1.5.6",
     "chart.js": "^3.9.1",
     "date-fns": "^2.29.1",

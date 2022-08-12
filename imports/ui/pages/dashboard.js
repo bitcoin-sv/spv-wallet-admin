@@ -118,7 +118,7 @@ const Dashboard = () => {
                   Icon={PaymailIcon}
                   iconColor={'grey'}
                   title="Paymails"
-                  value={stats?.paymails ? new Intl.NumberFormat().format(stats.paymails) : ''}
+                  value={stats?.paymail_addresses ? new Intl.NumberFormat().format(stats.paymail_addresses) : ''}
                   listLink="/admin/paymails"
                 />
               </Grid>
