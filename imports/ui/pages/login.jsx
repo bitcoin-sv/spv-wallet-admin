@@ -21,9 +21,9 @@ const Login = () => {
     e.preventDefault();
     if (loginKey && serverUrl && transport) {
       let buxClient;
+      let useTransport = transport;
+      let useServerUrl = serverUrl
       try {
-        let useTransport = transport;
-        let useServerUrl = serverUrl
         if (Meteor.settings.public.transportType && Meteor.settings.public.serverUrl) {
           // use the hardcoded defaults for transport and server url
           useTransport = Meteor.settings.public.transportType;
