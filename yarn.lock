@@ -2807,10 +2807,10 @@ react-chartjs-2@^4.3.1:
   resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.3.1.tgz#9941e7397fb963f28bb557addb401e9ff96c6681"
   integrity sha512-5i3mjP6tU7QSn0jvb8I4hudTzHJqS8l00ORJnVwI2sYu0ihpj83Lv2YzfxunfxTZkscKvZu2F2w9LkwNBhj6xA==
 
-react-data-grid@^7.0.0-beta.16:
-  version "7.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-beta.16.tgz#ef5e4c9d43ab68ef2b0624821a8a0e60bd6b0086"
-  integrity sha512-OMBGWYoYSS3Hh2FyIAG29vi8QkPOJ4uFF+YWFF+ht9gEjFDiNI7yXvdingquovFVDFJMJDde9o/Jxcf1MmF2/Q==
+react-data-grid@^7.0.0-canary.49:
+  version "7.0.0-canary.49"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.49.tgz#31625d271b6c7e48b2f3d12fb2cae378f619744d"
+  integrity sha512-Jg83CRnJtnv8FF7XeByke0KiJBdfXbnrsS08yxHcqyfTEICFmMdtQXFK8SCH7prYR3HiGtI6NqYcju/Te2Kl6w==
   dependencies:
     clsx "^1.1.1"
 
