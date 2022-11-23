@@ -422,7 +422,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.1.tgz#1eb2bc182c595029884047f2525ad4dbefea318e"
   integrity sha512-c5mSM7ivD8EsqK6HUi9hQPr5V7TJ/IRThUQ9nWNYPdhCGriTSQV4vL6DflT99LkM+wLiIS1rVjphpEWxERep7A==
 
-"@mui/utils@^5.10.14", "@mui/utils@^5.10.15", "@mui/utils@^5.10.3":
+"@mui/utils@^5.10.15", "@mui/utils@^5.10.3":
   version "5.10.15"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.10.15.tgz#54fc1b373508d20dd5568070b2dcc0818e6bebba"
   integrity sha512-6AW4MLBUijJi31hxx+6utTJM2q/4hbO+QiMdtwM+f4Iy+BfFnh/elhb08apxNYLfuugPnXXpkDmzEjg+8uDU9g==
@@ -3019,10 +3019,10 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
-react-chartjs-2@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-5.0.0.tgz#bd55afc982b09241f248caa0fa9cc5c8f4acff1a"
-  integrity sha512-cA9dd1P4hHOfb4lpxaT6ghmfk3ZW0JgL94BpEf5sTTWFeeykNw3HgddcnTjFOikva9tLSnYTPE2b43cAUKZx5Q==
+react-chartjs-2@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-5.0.1.tgz#7ef7dd57441903e8d34e1d06a1aead1095d0bca8"
+  integrity sha512-u38C9OxynlNCBp+79grgXRs7DSJ9w8FuQ5/HO5FbYBbri8HSZW+9SWgjVshLkbXBfXnMGWakbHEtvN0nL2UG7Q==
 
 react-data-grid@^7.0.0-canary.49:
   version "7.0.0-canary.49"
