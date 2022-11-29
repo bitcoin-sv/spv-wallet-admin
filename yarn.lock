@@ -288,10 +288,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@inovua/reactdatagrid-community@^5.7.0":
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/@inovua/reactdatagrid-community/-/reactdatagrid-community-5.7.0.tgz#945a085597ce5e3995d387604d3ee33ed3655cb7"
-  integrity sha512-5nCmwtcHn0vKeMZqsx4i5GM6AmMYoklf1pIovTphYT+t62/PHAcQF+0OxTmxOTUS3oP+ZLXwbiDBL262CRkuAQ==
+"@inovua/reactdatagrid-community@^5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@inovua/reactdatagrid-community/-/reactdatagrid-community-5.8.0.tgz#6ffee15079d7dbffbd9b319b4a8ef737b279b109"
+  integrity sha512-U2IgRKL1raFBy8n2Vl7SDkvQgVQ+YPzAtGOxRgYlsfSKll6n0qETzEou0mHUDi8ugGj6uoPIALHkC9Ueu5EBGA==
   dependencies:
     "@types/lodash.debounce" "^4.0.6"
     "@types/lodash.throttle" "^4.1.6"
