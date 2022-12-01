@@ -64,7 +64,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-qr-code": "^2.0.8",
     "react-router": "^6.4.3",
-    "react-router-dom": "^6.4.3",
+    "react-router-dom": "^6.4.4",
     "uuid": "^9.0.0",
     "yup": "^0.32.9"
   },
