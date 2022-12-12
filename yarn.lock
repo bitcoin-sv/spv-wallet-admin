@@ -3063,10 +3063,10 @@ react-perfect-scrollbar@^1.5.8:
     perfect-scrollbar "^1.5.0"
     prop-types "^15.6.1"
 
-react-qr-code@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/react-qr-code/-/react-qr-code-2.0.8.tgz#d34a766fb5b664a40dbdc7020f7ac801bacb2851"
-  integrity sha512-zYO9EAPQU8IIeD6c6uAle7NlKOiVKs8ji9hpbWPTGxO+FLqBN2on+XCXQvnhm91nrRd306RvNXUkUNcXXSfhWA==
+react-qr-code@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-qr-code/-/react-qr-code-2.0.9.tgz#cfdf82720093273683d7a14db235d1fde034b4ad"
+  integrity sha512-q6CUAzKZXxJyWOe9SFvw2G1hQ80k/1hnIE7eRTMMcNcnQGjm4Ohd+w4tBz7ASz+a76AMs9wPUNOZmES8sfhmuA==
   dependencies:
     prop-types "^15.8.1"
     qr.js "0.0.0"
