@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "eslint": "^8.29.0",
-    "eslint-config-next": "13.0.6"
+    "eslint-config-next": "13.0.7"
   },
   "meteor": {
     "mainModule": {
