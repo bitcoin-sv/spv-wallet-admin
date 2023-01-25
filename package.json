@@ -44,7 +44,7 @@
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.11.6",
     "@mui/styles": "^5.11.2",
-    "@inovua/reactdatagrid-community": "^5.8.1",
+    "@inovua/reactdatagrid-community": "^5.8.2",
     "@mui/x-data-grid": "^5.17.20",
     "@mui/x-date-pickers": "^5.0.15",
     "bsv": "^1.5.6",
