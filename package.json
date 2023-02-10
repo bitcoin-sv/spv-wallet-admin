@@ -48,7 +48,7 @@
     "@mui/x-data-grid": "^5.17.22",
     "@mui/x-date-pickers": "^5.0.17",
     "bsv": "^1.5.6",
-    "chart.js": "^4.2.0",
+    "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
     "formik": "^2.1.5",
     "history": "^5.0.0",
