@@ -119,7 +119,7 @@
   dependencies:
     "@date-io/core" "^2.15.0"
 
-"@emotion/babel-plugin@^11.10.5", "@emotion/babel-plugin@^11.10.6":
+"@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"
   integrity sha512-p2dAqtVrkhSa7xz1u/m9eHYdLi+en8NowrmXeF/dKtJpU8lCWli8RUAati7NcSl0afsBott48pdnANuD0wh9QQ==
@@ -425,10 +425,10 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid@^5.17.23":
-  version "5.17.23"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.17.23.tgz#93d20b2206f0bc69b11cb83ac415672c3d9727c9"
-  integrity sha512-vCGHiwUp479S/5Le+8zpeJ6hBRVYcP/F0Wbai2rk0VoP6q5ZKPcJ08jdlax62QsIAkmGY67jhXMEQeq43lobqw==
+"@mui/x-data-grid@^5.17.24":
+  version "5.17.24"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.17.24.tgz#271ce9b29702aa7f795d0b58c51ae640102391bb"
+  integrity sha512-2QjHlc3tEcPKatTIqQnzEvEj1+rJ33xZyOCbUXcsptjzN61DWWlWoIxXe8BW7Lp41TjqchSeUW6kBCdkJfoh8w==
   dependencies:
     "@babel/runtime" "^7.18.9"
     "@mui/utils" "^5.10.3"
