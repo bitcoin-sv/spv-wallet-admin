@@ -62,7 +62,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
   version "7.21.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
   integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
@@ -440,7 +440,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.3.tgz#06faae1c0e2f3a31c86af6f28b3a4a42143670b9"
   integrity sha512-tZ+CQggbe9Ol7e/Fs5RcKwg/woU+o8DCtOnccX6KmbBc7YrfqMYEYuaIcXHuhpT880QwNkZZ3wQwvtlDFA2yOw==
 
-"@mui/utils@^5.10.3", "@mui/utils@^5.11.11", "@mui/utils@^5.11.7":
+"@mui/utils@^5.11.11", "@mui/utils@^5.11.7":
   version "5.11.11"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.11.11.tgz#c5dddc80c02dc76bd95f492550a5a616548e5557"
   integrity sha512-neMM5rrEXYQrOrlxUfns/TGgX4viS8K2zb9pbQh11/oUUYFlGI32Tn+PHePQx7n6Fy/0zq6WxdBFC9VpnJ5JrQ==
@@ -451,16 +451,16 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid@^5.17.25":
-  version "5.17.25"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.17.25.tgz#28c0402cb517ca8e02a87a8f916bcd41d910c45b"
-  integrity sha512-d7zbd9JmEqGLaJ5K+11SnHaQKs7Thkg9KJSVftn/3S21rDJi4znt9rS08/CDSl0p3tNaCA+FBEEbYwVCB3eNYQ==
+"@mui/x-data-grid@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.0.0.tgz#6588a66023768999336d45fabe47d2eaa396d48a"
+  integrity sha512-jkvDbe8OKOh/4YH7DnM20X6TbDerfaeVCOa6J+PXfDk/GDoNkcSAwIYtn15+hCY3SNWXuTXmJNiNTHxwxLfYBQ==
   dependencies:
-    "@babel/runtime" "^7.18.9"
-    "@mui/utils" "^5.10.3"
+    "@babel/runtime" "^7.20.13"
+    "@mui/utils" "^5.11.7"
     clsx "^1.2.1"
     prop-types "^15.8.1"
-    reselect "^4.1.6"
+    reselect "^4.1.7"
 
 "@mui/x-date-pickers@^6.0.0":
   version "6.0.0"
@@ -3163,10 +3163,10 @@ regexpp@^3.2.0:
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
   integrity sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==
 
-reselect@^4.1.6:
-  version "4.1.6"
-  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.6.tgz#19ca2d3d0b35373a74dc1c98692cdaffb6602656"
-  integrity sha512-ZovIuXqto7elwnxyXbBtCPo9YFEr3uJqj2rRbcOOog1bmu2Ag85M4hixSwFWyaBMKXNgvPaJ9OSu9SkBPIeJHQ==
+reselect@^4.1.7:
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.7.tgz#56480d9ff3d3188970ee2b76527bd94a95567a42"
+  integrity sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==
 
 resize-observer-polyfill@^1.5.1:
   version "1.5.1"
