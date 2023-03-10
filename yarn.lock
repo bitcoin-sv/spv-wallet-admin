@@ -476,10 +476,10 @@
     prop-types "^15.8.1"
     reselect "^4.1.7"
 
-"@mui/x-date-pickers@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.0.0.tgz#003a613e7addc33fee6bcb2938f3194188c68b47"
-  integrity sha512-6kraEcal5oBM/14CyJteNYcr0BqVD3qy4fX83dQrruRf2B3j8evzCVPZiT7T+Qdrx3AvbUS2wQdGP+9BcHByhA==
+"@mui/x-date-pickers@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.0.1.tgz#855f71b0661602c105dfd75bd0d38cd8c40d59f5"
+  integrity sha512-eZ3uTWp2uA08h4IULoqI7rkP16ltzZH0kSdZdvLCvaa4ix1ZP5zGcvt8CdtxM+NFWjRS7fGWPOgOoScGw9lKLQ==
   dependencies:
     "@babel/runtime" "^7.20.13"
     "@date-io/core" "^2.16.0"
