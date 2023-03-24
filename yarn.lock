@@ -474,12 +474,12 @@
     prop-types "^15.8.1"
     reselect "^4.1.7"
 
-"@mui/x-date-pickers@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.0.2.tgz#277e14e2a8dd0983d395e72a486b0544bd1c08c9"
-  integrity sha512-FfGLOqRnv1PTOyRpZjVMy2+0se2O0z8OjXG239GnMBna2Xj6G1UMHwfGqYT5oCbNor6uej+5f+p4h/9fcOFNuw==
+"@mui/x-date-pickers@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.0.3.tgz#f95a76bf95c41aeea9163106e9a1a785968dc406"
+  integrity sha512-TgKfWf47WiNzSAY3C8R+FQ2grtVveoS3WCtLf6E1I/O2adxruxXA+AFiIRVnfv8QX9QFLNayTKoaVUISg/PcXQ==
   dependencies:
-    "@babel/runtime" "^7.20.13"
+    "@babel/runtime" "^7.21.0"
     "@date-io/core" "^2.16.0"
     "@date-io/date-fns" "^2.16.0"
     "@date-io/date-fns-jalali" "^2.16.0"
