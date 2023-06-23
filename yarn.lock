@@ -463,12 +463,12 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid@^6.8.0":
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.8.0.tgz#6f04084dceca61c71e5594f6437ee7f038c89f01"
-  integrity sha512-L4CJb2zJDkyBXItfY1QwXt57ap1vIigPGiNrmuJZ8APS1jHafO1dftBWSfJyDJXsnQ5UsDBXsX1nagX51AebpQ==
+"@mui/x-data-grid@^6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.9.0.tgz#3383722e0c23e09d25da1a3357865644c12576ac"
+  integrity sha512-JlvLvYHUrfFBQMQa7fzkxUmEVygQL5IWt0cww1Rs4zKYaVcDM5v1T8ZhFOrOQp04c7meB+CykuP94r3Dn30wqQ==
   dependencies:
-    "@babel/runtime" "^7.21.0"
+    "@babel/runtime" "^7.22.5"
     "@mui/utils" "^5.13.1"
     clsx "^1.2.1"
     prop-types "^15.8.1"
