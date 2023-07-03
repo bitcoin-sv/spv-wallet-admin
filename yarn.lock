@@ -482,13 +482,13 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid@^6.9.0":
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.9.0.tgz#3383722e0c23e09d25da1a3357865644c12576ac"
-  integrity sha512-JlvLvYHUrfFBQMQa7fzkxUmEVygQL5IWt0cww1Rs4zKYaVcDM5v1T8ZhFOrOQp04c7meB+CykuP94r3Dn30wqQ==
+"@mui/x-data-grid@^6.9.1":
+  version "6.9.1"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.9.1.tgz#c18da0fa0b0ead1452a6e4cd2683dff21cca7f40"
+  integrity sha512-nJjvyGHRh8fWSF+VZYtN/gwDRRv/0V3AvbwlIMKRtEiXNUxPxGZ8G0J8dpq9zu6VSDU2AbQ/Prl1yfrnHiPQog==
   dependencies:
     "@babel/runtime" "^7.22.5"
-    "@mui/utils" "^5.13.1"
+    "@mui/utils" "^5.13.6"
     clsx "^1.2.1"
     prop-types "^15.8.1"
     reselect "^4.1.8"
