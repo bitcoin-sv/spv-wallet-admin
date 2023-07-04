@@ -42,7 +42,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.134",
-    "@mui/material": "^5.13.6",
+    "@mui/material": "^5.13.7",
     "@mui/styles": "^5.13.2",
     "@inovua/reactdatagrid-community": "^5.9.5",
     "@mui/x-data-grid": "^6.9.1",
