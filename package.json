@@ -1,11 +1,11 @@
 {
   "name": "@buxorg/bux-console",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "scripts": {
-    "start": "yarn && meteor run",
-    "test": "meteor test --once --driver-package meteortesting:mocha",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
   },
   "author": "Siggi <github@icellan.com>",
   "homepage": "https://getbux.io",
@@ -31,11 +31,14 @@
     {
       "name": "MrZ",
       "url": "https://github.com/mrz1836/"
+    },
+    {
+      "name": "dorzepowski",
+      "url": "https://github.com/dorzepowski/"
     }
   ],
   "dependencies": {
-    "@babel/runtime": "^7.22.6",
-    "@buxorg/js-buxclient": "1.4.0",
+    "@buxorg/js-buxclient": "^1.4.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -47,36 +50,55 @@
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@mui/x-data-grid": "^6.10.2",
     "@mui/x-date-pickers": "^6.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "assert": "npm:assert-browserify@^2.0.0",
     "bsv": "^1.5.6",
+    "buffer": "6.0.3",
     "chart.js": "^4.3.3",
+    "crypto": "npm:crypto-browserify@^3.12.0",
     "date-fns": "^2.30.0",
     "formik": "^2.4.3",
     "history": "^5.0.0",
-    "meteor-node-stubs": "^1.2.5",
     "moment": "^2.29.4",
     "moment-range": "^4.0.2",
     "nprogress": "^0.2.0",
+    "process": "^0.11.10",
     "prop-types": "^15.7.2",
-    "react": "^17.0.2",
+    "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-data-grid": "^7.0.0-canary.49",
-    "react-dom": "^17.0.2",
+    "react-dom": "^18.2.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-qr-code": "^2.0.11",
-    "react-router": "^6.14.1",
+    "react-router": "^6.14.2",
     "react-router-dom": "^6.14.2",
+    "react-scripts": "5.0.1",
+    "stream": "npm:stream-browserify@3.0.0",
     "uuid": "^9.0.0",
+    "web-vitals": "^2.1.0",
     "yup": "^1.2.0"
   },
-  "devDependencies": {
-    "eslint": "^8.46.0",
-    "eslint-config-next": "13.4.12"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "meteor": {
-    "mainModule": {
-      "client": "client/main.jsx",
-      "server": "server/main.js"
-    },
-    "testModule": "tests/main.js"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0"
   }
 }

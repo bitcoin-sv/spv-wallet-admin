@@ -35,13 +35,16 @@ node_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-
 # WebStorm
-.idea
+.idea/
+*.iml
 .DS_Store
 todo.md
 
 # Deployment
 packaged.yaml
+
+# asdf
+.tool-versions
+
+artifacts/

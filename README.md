@@ -25,13 +25,13 @@
 
 ## Installation
 ```shell
-npm install -g meteor
-meteor npm install -g yarn
+npm install -g yarn
+yarn install
 ```
 
 ## Running
 ```shell
-./start.sh
+yarn start
 ```
 
 ## Documentation
