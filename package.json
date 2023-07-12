@@ -40,7 +40,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.13.7",
+    "@mui/icons-material": "^5.14.0",
     "@mui/lab": "^5.0.0-alpha.136",
     "@mui/material": "^5.14.0",
     "@mui/styles": "^5.14.0",
