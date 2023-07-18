@@ -19,6 +19,7 @@ bower_components
 
 # Dependency directories
 node_modules/
+build/
 
 # Optional npm cache directory
 .npm
@@ -48,3 +49,6 @@ packaged.yaml
 .tool-versions
 
 artifacts/
+
+# overriden config
+env-config.json

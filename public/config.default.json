@@ -1,0 +1,7 @@
+{
+  "loginTitle": "Sign in to a Bux server",
+  "loginSubtitle": "Sign in using your xPriv",
+  "transportType": "http",
+  "serverUrl": "https://bux.4chain.space/v1",
+  "hideServerUrl": false
+}

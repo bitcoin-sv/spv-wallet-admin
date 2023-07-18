@@ -10,7 +10,7 @@ import {useModifyCredentials} from "../hooks/use-credentials";
 
 const Login = () => {
 
-  const config = useConfig();
+  const { config } = useConfig();
   const [loginKey, setLoginKey] = useState('');
   const [transport, setTransport] = useLocalStorage('login.transport', config.transportType);
   const [serverUrl, setServerUrl] = useLocalStorage('login.serverUrl', config.serverUrl);
