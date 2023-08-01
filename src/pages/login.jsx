@@ -5,7 +5,7 @@ import bsv from "bsv";
 import React, {useState} from 'react';
 import {SeverityPill} from "../components/severity-pill";
 import {useLocalStorage} from "../hooks/localstorage";
-import {useConfig} from "../hooks/use-config";
+import {useConfig} from "@4chain-ag/react-configuration";
 import {useModifyCredentials} from "../hooks/use-credentials";
 
 const Login = () => {

@@ -8,7 +8,7 @@ import { CredentialsProvider } from "./hooks/use-credentials";
 import { AppRouter } from "./routes";
 import { theme } from "./theme";
 import { createEmotionCache } from "./utils/create-emotion-cache";
-import { ConfigProvider } from "./hooks/use-config";
+import { ConfigProvider } from "@4chain-ag/react-configuration";
 
 const clientSideEmotionCache = createEmotionCache();
 
