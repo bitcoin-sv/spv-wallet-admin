@@ -41,7 +41,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.1",
-    "@mui/lab": "^5.0.0-alpha.137",
+    "@mui/lab": "^5.0.0-alpha.138",
     "@mui/material": "^5.14.2",
     "@mui/styles": "^5.14.1",
     "@inovua/reactdatagrid-community": "^5.10.2",
