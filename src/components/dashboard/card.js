@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react';
-import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import MoneyIcon from '@mui/icons-material/Money';
+import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
 import { Link } from "react-router-dom";
 
 export const AdminCard = (

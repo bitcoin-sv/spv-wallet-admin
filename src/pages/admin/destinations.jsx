@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { AdminListing } from "../../components/listing/admin";
-import { XPubsList } from "../../components/xpubs";
 import { useNavigate } from "react-router-dom";
 import { DestinationsList } from "../../components/destinations";
 

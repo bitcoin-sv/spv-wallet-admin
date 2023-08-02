@@ -7,6 +7,7 @@ import { JsonView } from "./json-view";
 export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
   const [selectedAccessKeys, setSelectedAccessKeys] = useState([]);
 
+    console.log("access keys", items)
   return (
     <Table>
       <TableHead>
@@ -36,7 +37,7 @@ export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
             >
               <TableCell>{accessKey.id}</TableCell>
               <TableCell>
-                {format(new Date(accessKey.created_at), 'dd/MM/yyyy hh:mm')}
+                {format(new Date(accessKey.Model.created_at), 'dd/MM/yyyy hh:mm')}
               </TableCell>
               <TableCell>
                 {accessKey.revoked_at

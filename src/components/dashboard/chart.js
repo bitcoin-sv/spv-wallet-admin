@@ -4,8 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 
-import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box, Card, CardContent, CardHeader, Divider, useTheme } from '@mui/material';
 
 const moment = extendMoment(Moment);
 

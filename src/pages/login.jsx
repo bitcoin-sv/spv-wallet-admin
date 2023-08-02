@@ -19,10 +19,10 @@ const Login = () => {
 
   const handleSubmit = async function (e) {
     e.preventDefault();
-    if (loginKey && serverUrl && transport) {
+    if (loginKey && (config.serverUrl || serverUrl) && (config.transportType || transport)) {
       let buxClient;
-      let useTransport = transport;
-      let useServerUrl = serverUrl
+      let useTransport = transport || config.transportType;
+      let useServerUrl = serverUrl || config.serverUrl
       try {
         if (config.transportType && config.serverUrl) {
           // use the hardcoded defaults for transport and server url

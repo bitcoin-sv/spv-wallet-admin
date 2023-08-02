@@ -1,19 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete'
 
-import { useUser } from "../hooks/user";
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
 import { JsonView } from "./json-view";
 
 export const BlockHeadersList = (
