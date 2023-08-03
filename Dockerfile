@@ -1,39 +1,36 @@
-# Dockerfile
+# build stage
+FROM node:18 as build
 
-# The tag here should match the Meteor version of your app, per .meteor/release
-FROM geoffreybooth/meteor-base:2.7.3
+WORKDIR /app
 
-# Copy app package.json and package-lock.json into container
-COPY ./package*.json $APP_SOURCE_FOLDER/
+RUN addgroup --system app && adduser --system app --ingroup app && chown -R app:app /app
 
-RUN bash $SCRIPTS_FOLDER/build-app-npm-dependencies.sh
+USER app
 
-# Copy app source into container
-COPY . $APP_SOURCE_FOLDER/
+ENV NODE_PATH=/node_modules
+ENV PATH=$PATH:/node_modules/.bin
 
-RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
+# Copy package files to separate yarn install and copying other files
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
+# Copy the rest of project files
+COPY . .
 
-# Use the specific version of Node expected by your Meteor release, per https://docs.meteor.com/changelog.html; this is expected for Meteor 2.7.3
-FROM node:14.19.3-alpine
+ENV NODE_ENV=production
 
-ENV APP_BUNDLE_FOLDER /opt/bundle
-ENV SCRIPTS_FOLDER /docker
+# Build project into build directory
+RUN yarn run build
 
-# Runtime dependencies; if your dependencies need compilation (native modules such as bcrypt) or you are using Meteor <1.8.1, use app-with-native-dependencies.dockerfile instead
-RUN apk --no-cache add \
-		bash \
-		ca-certificates
+# App final stage
+# serving the production build
+FROM nginx:1.25.1-alpine
 
-# Copy in entrypoint
-COPY --from=0 $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
+# We need some custom nginx configuration, which we import here
+COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 
-# Copy in app bundle
-COPY --from=0 $APP_BUNDLE_FOLDER/bundle $APP_BUNDLE_FOLDER/bundle/
+# Copy our production build from the first step to nginx's html directory
+WORKDIR /usr/share/nginx/html
+COPY --from=build /app/build/ .
 
-RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh
-
-# Start app
-ENTRYPOINT ["/docker/entrypoint.sh"]
-
-CMD ["node", "main.js"]
+EXPOSE 3000
