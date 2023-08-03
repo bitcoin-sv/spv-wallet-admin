@@ -1,4 +1,4 @@
-# Basic dependabot.yml to update Github Actions
+# Basic dependabot.yml to update GitHub Actions
 version: 2
 updates:
   # Maintain dependencies for npm

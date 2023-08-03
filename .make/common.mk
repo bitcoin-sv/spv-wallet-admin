@@ -33,7 +33,7 @@ export DISTRIBUTIONS_DIR
 help: ## Show this help message
 	@egrep -h '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
-release:: ## Full production release (creates release in Github)
+release:: ## Full production release (creates release in GitHub)
 	@test $(github_token)
 	@export GITHUB_TOKEN=$(github_token) && goreleaser --rm-dist
 
