@@ -38,7 +38,7 @@ yarn start
 1. If you want to change default environment variables - create a file *env-config.json* somewhere in your filesystem and override the variables that you want to change. No all variables need to be overriden. For example:
 ```json
 {
-  "serverUrl": "http://localhost:3003/v1",
+  "serverUrl": "http://localhost:3003/v1"
 }
 ```
 
@@ -67,7 +67,7 @@ View more [BUX documentation](https://getbux.io)
 <summary><strong><code>Release Deployment</code></strong></summary>
 <br/>
 
-[goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to Github and can be installed via: `brew install goreleaser`.
+[goreleaser](https://github.com/goreleaser/goreleaser) for easy binary or library deployment to GitHub and can be installed via: `brew install goreleaser`.
 
 The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](https://github.com/goreleaser/goreleaser).
 
@@ -91,7 +91,7 @@ help                          Show this help message
 install                       Install the application
 install-all-contributors      Installs all contributors locally
 outdated                      Checks for any outdated packages
-release                       Full production release (creates release in Github)
+release                       Full production release (creates release in GitHub)
 release-snap                  Test the full release (build binaries)
 release-test                  Full production test release (everything except deploy)
 replace-version               Replaces the version in HTML/JS (pre-deploy)
