@@ -166,6 +166,11 @@ pull_request_rules:
           - author!=mergify[bot]
           - author!=icellan
           - author!=mrz1836
+          - author!=dorzepowski
+          - author!=pawellewandowski98
+          - author!=vitalibalashka
+          - author!=arkadiuszos4chain
+          - author!=wregulski
     actions:
       comment:
         message:  Welcome to our open-source project! 💘
