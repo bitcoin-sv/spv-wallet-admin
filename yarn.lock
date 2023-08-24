@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@4chain-ag/react-configuration@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@4chain-ag/react-configuration/-/react-configuration-1.0.2.tgz#70bb148dba4cee14594bb858d5dacd9fd49713fd"
-  integrity sha512-y6dtYIRqY+ebrysZXwx4CJ3YLaUhnKzZoaddqrfNPS+PZW7wsyH+Vx0+VstOV2hPomu7w45FvporCdd1ufANzA==
+"@4chain-ag/react-configuration@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@4chain-ag/react-configuration/-/react-configuration-1.0.3.tgz#ed5389569aaed95625364ae813cc34e293875619"
+  integrity sha512-f7hRmCuFWgogF91aK16HEDBiHuxGSZkI914SN3FbCugJdLSwvPOf/WdtX6iRUg3apunvQZeqQbNwTtMq0WUCbg==
 
 "@adobe/css-tools@^4.3.0":
   version "4.3.1"
