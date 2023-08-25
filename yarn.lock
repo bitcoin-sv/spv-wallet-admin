@@ -1852,12 +1852,12 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.14.5.tgz#c5854b89d57520c77253a79b20b784d5c2903fb6"
   integrity sha512-+wpGH1USwPcKMFPMvXqYPC6fEvhxM3FzxC8lyDiNK/imLyyJ6y2DPb1Oue7OGIKJWBmYBqrWWtfovrxd1aJHTA==
 
-"@mui/icons-material@^5.14.3":
-  version "5.14.3"
-  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.14.3.tgz#26a84d52ab2fceea2856adf7a139527b3a51ae90"
-  integrity sha512-XkxWPhageu1OPUm2LWjo5XqeQ0t2xfGe8EiLkRW9oz2LHMMZmijvCxulhgquUVTF1DnoSh+3KoDLSsoAFtVNVw==
+"@mui/icons-material@^5.14.6":
+  version "5.14.6"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.14.6.tgz#0efdcba2c30d6b22e6ead787b67247da173bd11a"
+  integrity sha512-7Cujy7lRGTj2T3SvY9C9ZOTFDtrXJogeNnRcU/ODyNoxwskMNPFOcc15F+98MAdJenBVLJPYu+vPP6DUvEpNrA==
   dependencies:
-    "@babel/runtime" "^7.22.6"
+    "@babel/runtime" "^7.22.10"
 
 "@mui/lab@^5.0.0-alpha.140":
   version "5.0.0-alpha.140"
