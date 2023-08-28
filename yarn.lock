@@ -1103,7 +1103,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.6", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.11", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.22.11"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.11.tgz#7a9ba3bbe406ad6f9e8dd4da2ece453eb23a77a4"
   integrity sha512-ee7jVNlWN09+KftVOu9n7S8gQzD/Z6hN/I8VBRXW4P1+Xe7kJGXMwu8vds4aGIMHZnNbdpSWCfZZtinytpcAvA==
@@ -1991,12 +1991,12 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid@^6.11.2":
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.11.2.tgz#c9ad731108439eab1cd914228d3ac368d51cd6e3"
-  integrity sha512-84IgDwjgQ2eqTJvoj0BxN2KIgQdwTf7pnR0dYxbpcIkB+LMsOxSv502UJkvWWkjm16D4vKcj4QMSLsWhc21BHg==
+"@mui/x-data-grid@^6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.12.0.tgz#bb4a020cc352d1a48498ac7d4f0aca41fac653b4"
+  integrity sha512-ZuQ8Uq/dF6gjrE/qU6VvP3tgy9n78DdCMD6hbXy/uDIoddJ4J8hSn9S6flnFnFQbRZzF/Q/pPWXZTR4oeg8NQg==
   dependencies:
-    "@babel/runtime" "^7.22.6"
+    "@babel/runtime" "^7.22.11"
     "@mui/utils" "^5.14.5"
     clsx "^2.0.0"
     prop-types "^15.8.1"
