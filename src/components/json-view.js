@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexBasis: 'flex-start',
     whiteSpace: 'nowrap',
-    maxWidth: '120px',
+    maxWidth: '600px',
     overflow: 'hidden'
   },
   dataCell: {

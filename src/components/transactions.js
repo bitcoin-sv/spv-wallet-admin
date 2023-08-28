@@ -13,7 +13,7 @@ export const TransactionsList = ({items}) => {
       <TableHead>
         <TableRow>
           <TableCell>ID</TableCell>
-          <TableCell>Value</TableCell>
+          <TableCell>Block Height</TableCell>
           <TableCell>Date</TableCell>
         </TableRow>
       </TableHead>
@@ -32,9 +32,9 @@ export const TransactionsList = ({items}) => {
               }}
             >
               <TableCell>{transaction.id}</TableCell>
-              <TableCell>{transaction.output_value}</TableCell>
+              <TableCell>{transaction.block_height}</TableCell>
               <TableCell>
-                {format(new Date(transaction.created_at), 'dd/MM/yyyy hh:mm')}
+                {format(new Date(transaction.Model.created_at), 'dd/MM/yyyy hh:mm')}
               </TableCell>
             </TableRow>
             {selectedTransactions.indexOf(transaction.id) !== -1 &&
