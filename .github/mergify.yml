@@ -9,21 +9,12 @@ pull_request_rules:
       - -draft
       - author~=^dependabot(|-preview)\[bot\]$
       - check-success='Analyze (javascript)'
-      - title~=^Bump [^\s]+ from ([\d]+)\..+ to \1\.
     actions:
       review:
         type: APPROVE
         message: Automatically approving dependabot pull request
       merge:
         method: merge
-  - name: Alert on major version detection
-    conditions:
-      - author~=^dependabot(|-preview)\[bot\]$
-      - check-success='Analyze (javascript)'
-      - -title~=^Bump [^\s]+ from ([\d]+)\..+ to \1\.
-    actions:
-      comment:
-        message: "⚠️ @mrz1836: this is a major version bump and requires your attention"
 
   # ===============================================================================
   # AUTOMATIC MERGE (APPROVALS)
@@ -171,6 +162,7 @@ pull_request_rules:
           - author!=vitalibalashka
           - author!=arkadiuszos4chain
           - author!=wregulski
+          - author!=kuba-4chain
     actions:
       comment:
         message:  Welcome to our open-source project! 💘
