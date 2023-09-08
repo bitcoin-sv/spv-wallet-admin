@@ -4,6 +4,18 @@ import { format } from 'date-fns';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow, } from '@mui/material';
 import { JsonView } from "./json-view";
 
+const RevokeAccessKeyButton = ({accessKeyToRevoke, handleRevokeAccessKey}) => {
+  if(handleRevokeAccessKey) {
+    return <Button
+      onClick={() => handleRevokeAccessKey(accessKeyToRevoke)}
+    >
+      Revoke key
+    </Button>
+  } else {
+    return null;
+  }
+}
+
 export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
   const [selectedAccessKeys, setSelectedAccessKeys] = useState([]);
 
@@ -14,7 +26,7 @@ export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
         <TableRow>
           <TableCell>ID</TableCell>
           <TableCell>Created</TableCell>
-          <TableCell>Revoke</TableCell>
+          <TableCell>Revoked</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -41,14 +53,8 @@ export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
               </TableCell>
               <TableCell>
                 {accessKey.revoked_at
-                  ?
-                  <span title={`Revoked at ${accessKey.revoked_at}`}>Revoked</span>
-                  :
-                  <Button
-                    onClick={() => handleRevokeAccessKey(accessKey)}
-                  >
-                    Revoke key
-                  </Button>
+                  ? <span title={`Revoked at ${accessKey.revoked_at}`}>Revoked</span>
+                  : <RevokeAccessKeyButton accessKeyToRevoke={accessKey} handleRevokeAccessKey={handleRevokeAccessKey} />
                 }
               </TableCell>
             </TableRow>
