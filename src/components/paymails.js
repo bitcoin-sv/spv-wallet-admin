@@ -29,7 +29,7 @@ export const PaymailsList = (
   const handleDeletePaymail = useCallback(async paymailAddress => {
     // eslint-disable-next-line no-restricted-globals
     if (paymailAddress && confirm('Are you sure you want to delete the paymail address from this user?')) {
-      const paymailDeleted = await buxAdminClient.AdminDeletePaymail(paymailAddress).catch(e => {
+      const paymailDeleted = await buxAdminClient.AdminDeletePaymail(`${paymailAddress.alias}@${paymailAddress.domain}`).catch(e => {
         alert("ERROR: Could not delete paymail: " + e.message);
       });
       if (paymailDeleted) {
