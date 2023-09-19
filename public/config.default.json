@@ -2,6 +2,6 @@
   "loginTitle": "Sign in to a Bux server",
   "loginSubtitle": "Sign in using your xPriv",
   "transportType": "http",
-  "serverUrl": null,
+  "serverUrl": "",
   "hideServerUrl": false
 }
