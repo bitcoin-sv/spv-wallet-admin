@@ -38,7 +38,7 @@
     }
   ],
   "dependencies": {
-    "@4chain-ag/react-configuration": "^1.0.3",
+    "@4chain-ag/react-configuration": "^1.0.4",
     "@buxorg/js-buxclient": "^1.4.4",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
