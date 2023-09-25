@@ -1945,10 +1945,10 @@
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
-"@mui/x-date-pickers@^6.14.0":
-  version "6.14.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.14.0.tgz#1bf36c3f4754b8382a0347af74d6e4b8287dc4df"
-  integrity sha512-vgVEMGrm6FISD0vVTnrShwWYB6IoaXSRZogwwgF5ruKjtxwKifXNk7d6836uVo/Mv2TSKYBMk1dVwl6gand6DQ==
+"@mui/x-date-pickers@^6.15.0":
+  version "6.15.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.15.0.tgz#5316f0507286fb60319421997c967d069f2ff342"
+  integrity sha512-ubo5SBGe5qPU3F7/mMOa/Yb52GggLGvROCe3HdlatD6LebsxqsERsI2O8aLqwUwIb1AAX2GeiJLdvNBPCQ8xpQ==
   dependencies:
     "@babel/runtime" "^7.22.15"
     "@mui/base" "^5.0.0-beta.14"
