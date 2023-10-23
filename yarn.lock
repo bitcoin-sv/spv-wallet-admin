@@ -1893,7 +1893,7 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mui/base@5.0.0-beta.20", "@mui/base@^5.0.0-beta.17":
+"@mui/base@5.0.0-beta.20", "@mui/base@^5.0.0-beta.20":
   version "5.0.0-beta.20"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.20.tgz#14fcdfe0350f2aad06ab6c37c4c91dacaab8f600"
   integrity sha512-CS2pUuqxST7ch9VNDCklRYDbJ3rru20Tx7na92QvVVKfu3RL4z/QLuVIc8jYGsdCnauMaeUSlFNLAJNb0yXe6w==
@@ -2011,7 +2011,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.6.tgz#d72b9e9eb0032e107e76033932d65c3f731d2608"
   integrity sha512-7sjLQrUmBwufm/M7jw/quNiPK/oor2+pGUQP2CULRcFCArYTq78oJ3D5esTaL0UMkXKJvDqXn6Ike69yAOBQng==
 
-"@mui/utils@^5.14.11", "@mui/utils@^5.14.13", "@mui/utils@^5.14.14", "@mui/utils@^5.14.3":
+"@mui/utils@^5.14.13", "@mui/utils@^5.14.14", "@mui/utils@^5.14.3":
   version "5.14.14"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.14.14.tgz#7b2a0bcfb44c3376fc81f85500f9bd01706682ac"
   integrity sha512-3AKp8uksje5sRfVrtgG9Q/2TBsHWVBUtA0NaXliZqGcXo8J+A+Agp0qUW2rJ+ivgPWTCCubz9FZVT2IQZ3bGsw==
@@ -2032,14 +2032,14 @@
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
-"@mui/x-date-pickers@^6.16.2":
-  version "6.16.2"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.16.2.tgz#a21e9891d797287bd8aebb822eb26e70a81923f8"
-  integrity sha512-JFrDUeBkiKtfJ0WqwyPBICEP1U+Ujfsily3ZQ/Hv4zAOleG/5769EgS7TOO4cVgnuhtvQ/pqx2gmuCn8/gcC5w==
+"@mui/x-date-pickers@^6.16.3":
+  version "6.16.3"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.16.3.tgz#3d9584ae3d360b66dbff8a18ace5d375e27705b9"
+  integrity sha512-CBwXrOJ5blqkAdF0d1dWF1RMeCS6ZYDq+53Yf/r+Izqj33+SCw+wAbdrxuIxE2GL3JY5NszEx8JFnCKZIzFZuA==
   dependencies:
-    "@babel/runtime" "^7.23.1"
-    "@mui/base" "^5.0.0-beta.17"
-    "@mui/utils" "^5.14.11"
+    "@babel/runtime" "^7.23.2"
+    "@mui/base" "^5.0.0-beta.20"
+    "@mui/utils" "^5.14.14"
     "@types/react-transition-group" "^4.4.7"
     clsx "^2.0.0"
     prop-types "^15.8.1"
