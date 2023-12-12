@@ -8,6 +8,7 @@ import { DashboardLayout } from "../components/dashboard-layout";
 import { useUser } from "../hooks/user";
 import { useLocation } from "react-router-dom";
 import { JsonView } from "../components/json-view";
+import logger from "../logger";
 
 export const Transaction = () => {
   const { xPriv, xPub, accessKey, server, transportType } = useUser();
@@ -44,6 +45,7 @@ export const Transaction = () => {
         setLoading(false);
       }).catch(e => {
         setTransaction(null);
+        logger.error(e)
         setError(e.message);
         setLoading(false);
       });

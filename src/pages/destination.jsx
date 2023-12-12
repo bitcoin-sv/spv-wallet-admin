@@ -8,6 +8,7 @@ import { useUser } from "../hooks/user";
 import { useLocation } from "react-router-dom";
 import QRCode from "react-qr-code";
 import { JsonView } from "../components/json-view";
+import logger from "../logger";
 
 export const Destination = () => {
   const { xPriv, xPub, accessKey, server, transportType } = useUser();
@@ -62,6 +63,7 @@ export const Destination = () => {
       }).catch(e => {
         setDestination(null);
         setError(e.message);
+        logger.error(e)
         setLoading(false);
       });
     } else if (address) {
@@ -72,6 +74,7 @@ export const Destination = () => {
         setLoading(false);
       }).catch(e => {
         setDestination(null);
+        logger.error(e)
         setError(e.message);
         setLoading(false);
       });
@@ -84,6 +87,7 @@ export const Destination = () => {
       }).catch(e => {
         setDestination(null);
         setError(e.message);
+        logger.error(e)
         setLoading(false);
       });
     }

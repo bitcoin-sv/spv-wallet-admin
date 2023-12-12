@@ -12,6 +12,7 @@ import { useUser } from "../hooks/user";
 import AdminLogin from "./admin-login";
 import { AdminCard } from "../components/dashboard/card";
 import { UtxosByType } from "../components/dashboard/utxos-by-type";
+import logger from "../logger";
 
 const Dashboard = () => {
   const { buxAdminClient, adminId } = useUser();
@@ -30,6 +31,7 @@ const Dashboard = () => {
       setLoading(false);
     }).catch(e => {
       setError(e.message);
+      logger.error(e)
       setLoading(false);
     });
   }, [adminId]);
@@ -41,8 +43,6 @@ const Dashboard = () => {
       </DashboardLayout>
     );
   }
-
-  console.log(stats)
 
   return (
     <DashboardLayout>

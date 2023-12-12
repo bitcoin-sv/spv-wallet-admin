@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from "../logger";
 
 // https://usehooks.com/useLocalStorage/
 export const useLocalStorage = function(key, initialValue) {
@@ -9,10 +10,12 @@ export const useLocalStorage = function(key, initialValue) {
       // Get from local storage by key
       const item = key ? window.localStorage.getItem(key) : undefined;
       // Parse stored json or if none return initialValue
+      // throw new Error("hehehehe")
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       // If error also return initialValue
-      console.error(error);
+      // console.log(JSON.stringify(error), 'strigyfied')
+      logger.error(error)
       return initialValue;
     }
   });
@@ -35,7 +38,7 @@ export const useLocalStorage = function(key, initialValue) {
       }
     } catch (error) {
       // A more advanced implementation would handle the error case
-      console.error(error);
+      logger.error(error)
     }
   };
   return [storedValue, setValue];

@@ -7,6 +7,7 @@ import {SeverityPill} from "../components/severity-pill";
 import {useLocalStorage} from "../hooks/localstorage";
 import {useConfig} from "@4chain-ag/react-configuration";
 import {useModifyCredentials} from "../hooks/use-credentials";
+import logger from "../logger";
 
 const Login = () => {
 
@@ -62,14 +63,16 @@ const Login = () => {
           }
           return
         } catch (e) {
+          logger.error(e)
           //console.error(e);
         }
 
-        console.error(e);
+        logger.error(e)
         setError(e.reason || e.message);
       }
     } else {
       setError("Please set a server and an xPriv to connect");
+      logger.warn("Please set a server and an xPriv to connect")
     }
   }
 

@@ -6,6 +6,7 @@ import { Alert, Button, TextField, Typography } from "@mui/material";
 
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useUser } from "../../hooks/user";
+import logger from "../../logger";
 
 export const AdminRegisterXPub = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export const AdminRegisterXPub = () => {
         setNewXPub(xPrivHD.hdPublicKey.toString());
         setXPrivInput("");
       } catch(e) {
+          logger.error(e)
         setError(e.message);
       }
     }
@@ -37,14 +39,17 @@ export const AdminRegisterXPub = () => {
   const handleRegisterXPub = useCallback((newXPub) => {
     if (!newXPub) {
       setError("No xPub to add")
+        logger.info("No xPub to add")
     }
     setLoading(true);
     try {
       const xPubHD = bsv.HDPublicKey.fromString(newXPub); // will throw on error
       buxAdminClient.RegisterXpub(newXPub);
       alert("XPub added");
+      logger.info("XPub added")
       setNewXPub("");
     } catch(e) {
+        logger.error(e)
       setError(e.message);
     }
     setLoading(false);

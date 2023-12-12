@@ -8,6 +8,7 @@ import { Alert, Card } from "@mui/material";
 import { AccessKeysList } from "../components/access-keys";
 import { useQueryList } from "../hooks/use-query-list";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import logger from "../logger";
 
 export const AccessKeys = () => {
   const {
@@ -27,8 +28,10 @@ export const AccessKeys = () => {
     if (confirm('Revoke access key?')) {
       buxClient.RevokeAccessKey(accessKey.id).then(r => {
         setInfo(`Access key ${accessKey.id} revoked`);
+        logger.info(`Access key ${accessKey.id} revoked`)
         setRefreshData(+new Date());
       }).catch(e => {
+        logger.error(e)
         setError(e.message);
       });
     }

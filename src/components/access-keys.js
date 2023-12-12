@@ -7,7 +7,6 @@ import { JsonView } from "./json-view";
 export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
   const [selectedAccessKeys, setSelectedAccessKeys] = useState([]);
 
-    console.log("access keys", items)
   return (
     <Table>
       <TableHead>

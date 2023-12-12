@@ -7,6 +7,7 @@ import { Alert, Button, TextareaAutosize, Typography } from "@mui/material";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useUser } from "../../hooks/user";
 import { JsonView } from "../../components/json-view";
+import logger from "../../logger";
 
 export const AdminTransactionRecord = () => {
   const { buxAdminClient } = useUser();
@@ -36,6 +37,7 @@ export const AdminTransactionRecord = () => {
         } else {
           setTransaction(null);
           setError("Failed getting transaction from WhatsOnChain");
+          logger.error("Failed getting transaction from WhatsOnChain")
           return;
         }
       }
@@ -48,6 +50,7 @@ export const AdminTransactionRecord = () => {
       }).catch(e => {
         setTransaction(null);
         setError(e.message);
+        logger.error(e)
         setLoading(false);
       });
     }
