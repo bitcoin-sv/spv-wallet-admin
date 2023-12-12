@@ -64,7 +64,6 @@ const Login = () => {
           return
         } catch (e) {
           logger.error(e)
-          //console.error(e);
         }
 
         logger.error(e)
