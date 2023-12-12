@@ -28,6 +28,7 @@ const Dashboard = () => {
     buxAdminClient.AdminGetStats().then(stats => {
       setStats(stats);
       setError('');
+      //test
       setLoading(false);
     }).catch(e => {
       setError(e.message);
