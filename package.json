@@ -47,7 +47,7 @@
     "@mui/icons-material": "^5.15.0",
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.15.0",
-    "@mui/styles": "^5.14.20",
+    "@mui/styles": "^5.15.0",
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@mui/x-data-grid": "^6.18.4",
     "@mui/x-date-pickers": "^6.18.4",
