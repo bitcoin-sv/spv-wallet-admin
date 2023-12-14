@@ -73,7 +73,7 @@
     "react-dom": "^18.2.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-qr-code": "^2.0.12",
-    "react-router": "^6.19.0",
+    "react-router": "^6.21.0",
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "stream": "npm:stream-browserify@3.0.0",
