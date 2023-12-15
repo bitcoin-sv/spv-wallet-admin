@@ -79,7 +79,7 @@
     "stream": "npm:stream-browserify@3.0.0",
     "uuid": "^9.0.1",
     "web-vitals": "^3.5.0",
-    "yup": "^1.3.2"
+    "yup": "^1.3.3"
   },
   "eslintConfig": {
     "extends": [
