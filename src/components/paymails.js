@@ -15,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useUser } from "../hooks/user";
 import { format } from "date-fns";
 import { JsonView } from "./json-view";
+import logger from "../logger";
 
 export const PaymailsList = (
   {
@@ -30,9 +31,11 @@ export const PaymailsList = (
     // eslint-disable-next-line no-restricted-globals
     if (paymailAddress && confirm('Are you sure you want to delete the paymail address from this user?')) {
       const paymailDeleted = await buxAdminClient.AdminDeletePaymail(`${paymailAddress.alias}@${paymailAddress.domain}`).catch(e => {
+        logger.error("Could not delete paymail" + e.message)
         alert("ERROR: Could not delete paymail: " + e.message);
       });
       if (paymailDeleted) {
+        logger.info("Paymail deleted")
         alert("Paymail deleted");
         refetch();
       }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logger from "../logger";
 
 // https://usehooks.com/useLocalStorage/
 export const useLocalStorage = function(key, initialValue) {
@@ -12,7 +13,7 @@ export const useLocalStorage = function(key, initialValue) {
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       // If error also return initialValue
-      console.error(error);
+      logger.error(error)
       return initialValue;
     }
   });
@@ -35,7 +36,7 @@ export const useLocalStorage = function(key, initialValue) {
       }
     } catch (error) {
       // A more advanced implementation would handle the error case
-      console.error(error);
+      logger.error(error)
     }
   };
   return [storedValue, setValue];

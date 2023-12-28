@@ -19,7 +19,6 @@ const RevokeAccessKeyButton = ({accessKeyToRevoke, handleRevokeAccessKey}) => {
 export const AccessKeysList = ({items, handleRevokeAccessKey}) => {
   const [selectedAccessKeys, setSelectedAccessKeys] = useState([]);
 
-    console.log("access keys", items)
   return (
     <Table>
       <TableHead>

@@ -7,6 +7,7 @@ import {useModifyCredentials} from "../hooks/use-credentials";
 import { useUser } from "../hooks/user";
 import { SeverityPill } from "../components/severity-pill";
 import { BuxClient } from "@buxorg/js-buxclient";
+import logger from "../logger";
 
 const AdminLogin = () => {
   const { server, transportType, xPrivString, xPubString, accessKey } = useUser();
@@ -32,6 +33,7 @@ const AdminLogin = () => {
         const key = bsv.HDPrivateKey.fromString(xPriv);
         setAdminKey(xPriv);
       } catch (e) {
+        logger.error(e)
         setError(e.reason || e.message);
       }
     }

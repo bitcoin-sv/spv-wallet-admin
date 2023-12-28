@@ -7,6 +7,7 @@ import { Alert, Box, Button, Typography } from "@mui/material";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useUser } from "../hooks/user";
 import { JsonView } from "../components/json-view";
+import logger from "../logger";
 
 export const DestinationNew = () => {
   const { xPriv, server, transportType } = useUser();
@@ -30,6 +31,7 @@ export const DestinationNew = () => {
       setLoading(false);
     }).catch(e => {
       setError(e.message);
+      logger.error(e)
       setLoading(false);
     });
   },[]);

@@ -65,6 +65,7 @@
     "moment": "^2.30.1",
     "moment-range": "^4.0.2",
     "nprogress": "^0.2.0",
+    "pino": "^8.16.2",
     "process": "^0.11.10",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",

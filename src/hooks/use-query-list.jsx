@@ -1,6 +1,7 @@
 import { useUser } from "./user";
 import React, { useEffect, useState } from "react";
 import { TablePagination } from "@mui/material";
+import logger from "../logger"
 
 export const useQueryList = function (
   {
@@ -39,6 +40,7 @@ export const useQueryList = function (
       setItemsCount(count);
       setError('');
     }).catch(e => {
+      logger.error(e)
       setItemsCount(limit);
       setError(e.message);
     });
@@ -59,6 +61,7 @@ export const useQueryList = function (
       setError('');
       setLoading(false);
     }).catch(e => {
+      logger.error(e)
       setError(e.message);
       setLoading(false);
     });

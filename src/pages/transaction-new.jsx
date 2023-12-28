@@ -6,6 +6,7 @@ import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useUser } from "../hooks/user";
 import { JsonView } from "../components/json-view";
+import logger from "../logger";
 
 export const TransactionNew = () => {
   const { xPriv, server, transportType } = useUser();
@@ -30,6 +31,7 @@ export const TransactionNew = () => {
       setError('');
       setLoading(false);
     }).catch(e => {
+      logger.error(e)
       setError(e.message);
       setLoading(false);
     });
@@ -44,6 +46,7 @@ export const TransactionNew = () => {
       setDraftTransaction(null);
       setTransaction(null);
       setError(e.message);
+      logger.error(e)
       setLoading(false);
     }
 
@@ -55,6 +58,7 @@ export const TransactionNew = () => {
       }).catch(e => {
         setTransaction(null);
         setError(e.message);
+        logger.error(e)
         setLoading(false);
       });
     }

@@ -5,6 +5,7 @@ import { Alert, Typography } from "@mui/material";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useUser } from "../hooks/user";
 import { JsonView } from "../components/json-view";
+import logger from "../logger";
 
 export const XPub = () => {
   const { buxClient } = useUser();
@@ -20,6 +21,7 @@ export const XPub = () => {
       setError('');
       setLoading(false);
     }).catch(e => {
+      logger.error(e)
       setError(e.message);
       setLoading(false);
     });
