@@ -2031,10 +2031,10 @@
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
-"@mui/x-date-pickers@^6.18.7":
-  version "6.18.7"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.18.7.tgz#6b00163c77dc450c11b44a479baf62541e6f8b36"
-  integrity sha512-4NoapaCT3jvEk2cuAUjG0ReZvTEk1i4dGDz94Gt1Oc08GuC1AuzYRwCR1/1tdmbDynwkR8ilkKL6AyS3NL1H4A==
+"@mui/x-date-pickers@^6.19.0":
+  version "6.19.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.19.0.tgz#198b6c3b396adc1d75fab25a5a13fe21ff9ee71b"
+  integrity sha512-/GccT+iFJTKjI6b9b0MWojyRKnizL/VYYAfPnR1q0wSVVXjYv7a1NK0uQlan4JbnovqoQCNVeTOCy/0bUJyD2Q==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@mui/base" "^5.0.0-beta.22"
