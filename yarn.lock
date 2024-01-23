@@ -1548,13 +1548,6 @@
     "@floating-ui/core" "^1.5.3"
     "@floating-ui/utils" "^0.2.0"
 
-"@floating-ui/react-dom@^2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-2.0.5.tgz#851522899c34e3e2be1e29f3294f150834936e28"
-  integrity sha512-UsBK30Bg+s6+nsgblXtZmwHhgS2vmbuQK22qgt2pTQM6M3X6H1+cQcLXqgRY3ihVLcZJE6IvqDQozhsnIVqK/Q==
-  dependencies:
-    "@floating-ui/dom" "^1.5.4"
-
 "@floating-ui/react-dom@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-2.0.6.tgz#5ffcf40b6550817a973b54cdd443374f51ca7a5c"
@@ -1900,19 +1893,6 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mui/base@5.0.0-beta.32":
-  version "5.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.32.tgz#cdda6c68389f0b8b39a5bff7ed16e40788aed510"
-  integrity sha512-4VptvYeLUYMJhZapWBkD50GmKfOc0XT381KJcTK3ncZYIl8MdBhpR6l8jOyeP5cixUPBJhstjrnmQEAHjCLriw==
-  dependencies:
-    "@babel/runtime" "^7.23.8"
-    "@floating-ui/react-dom" "^2.0.5"
-    "@mui/types" "^7.2.13"
-    "@mui/utils" "^5.15.5"
-    "@popperjs/core" "^2.11.8"
-    clsx "^2.1.0"
-    prop-types "^15.8.1"
-
 "@mui/base@5.0.0-beta.33", "@mui/base@^5.0.0-beta.22":
   version "5.0.0-beta.33"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.33.tgz#fbb844e2d840d47dd7a48850a03152aed2381d10"
@@ -1938,16 +1918,16 @@
   dependencies:
     "@babel/runtime" "^7.23.8"
 
-"@mui/lab@^5.0.0-alpha.161":
-  version "5.0.0-alpha.161"
-  resolved "https://registry.yarnpkg.com/@mui/lab/-/lab-5.0.0-alpha.161.tgz#bd4f05a5620016aebc0ac59ca49b067997d4593e"
-  integrity sha512-dLWWZrJAi44av+iiqEHpZHfPhZ4DM42ItS31yqBwboroawumG2GUyYvHVTyEFXM1Zr8+kufiZ9t28rqHXVf5+w==
+"@mui/lab@^5.0.0-alpha.162":
+  version "5.0.0-alpha.162"
+  resolved "https://registry.yarnpkg.com/@mui/lab/-/lab-5.0.0-alpha.162.tgz#f7b4ddef46f796760a1f667f444060b3984fb3ab"
+  integrity sha512-nSdlhq1YVozKXn6mtItWmnU9b/gQ708RSWG6C+M/Y096MlQ7Mz1gdNWOEwcGw2HaNoNgDvuG0+0HKARAMIMaLg==
   dependencies:
     "@babel/runtime" "^7.23.8"
-    "@mui/base" "5.0.0-beta.32"
-    "@mui/system" "^5.15.5"
+    "@mui/base" "5.0.0-beta.33"
+    "@mui/system" "^5.15.6"
     "@mui/types" "^7.2.13"
-    "@mui/utils" "^5.15.5"
+    "@mui/utils" "^5.15.6"
     clsx "^2.1.0"
     prop-types "^15.8.1"
 
@@ -2020,7 +2000,7 @@
     jss-plugin-vendor-prefixer "^10.10.0"
     prop-types "^15.8.1"
 
-"@mui/system@^5.15.5", "@mui/system@^5.15.6":
+"@mui/system@^5.15.6":
   version "5.15.6"
   resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.15.6.tgz#d278adb09d57ee21f4eef2f6bc335bf9bd062fca"
   integrity sha512-J01D//u8IfXvaEHMBQX5aO2l7Q+P15nt96c4NskX7yp5/+UuZP8XCQJhtBtLuj+M2LLyXHYGmCPeblsmmscP2Q==
