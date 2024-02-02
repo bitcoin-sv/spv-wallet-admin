@@ -49,7 +49,7 @@
     "@mui/material": "^5.15.7",
     "@mui/styles": "^5.15.7",
     "@inovua/reactdatagrid-community": "^5.10.2",
-    "@mui/x-data-grid": "^6.19.2",
+    "@mui/x-data-grid": "^6.19.3",
     "@mui/x-date-pickers": "^6.19.3",
     "@testing-library/jest-dom": "^6.4.1",
     "@testing-library/react": "^14.2.1",
