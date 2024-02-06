@@ -1244,10 +1244,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@buxorg/js-buxclient@^1.4.4":
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/@buxorg/js-buxclient/-/js-buxclient-1.4.4.tgz#51fb4450bb0c0173f91edccfa7ffcab205740322"
-  integrity sha512-WG8w9Kt4t4WQy4teK0CalAyZatzsaERzxe7CGdzjRKXOvuVffHaZqHEERXHR1cQOe88sm5t5NjeeOtF7uHsQGA==
+"@buxorg/js-buxclient@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@buxorg/js-buxclient/-/js-buxclient-1.4.5.tgz#d432c4f746aac75fb9a77d29dd6ed0fdb940d705"
+  integrity sha512-IWtPW+EEQ1/QcS8SQ3rqbuoLBRHFWAzxSoYAp/HaZTbAtPzePIYXdd8ZsPm9zSTX+wxWkzj1o5mrsZOjMowooA==
   dependencies:
     "@apollo/client" "^3.5.8"
     cross-fetch "^4.0.0"
