@@ -1,8 +1,6 @@
 import { CacheProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import React from "react";
 import { CredentialsProvider } from "./hooks/use-credentials";
 import { AppRouter } from "./routes";
@@ -15,7 +13,6 @@ const clientSideEmotionCache = createEmotionCache();
 export const App = () => {
   return (
     <CacheProvider value={clientSideEmotionCache}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ConfigProvider>
           <CredentialsProvider>
             <ThemeProvider theme={theme}>
@@ -24,7 +21,6 @@ export const App = () => {
             </ThemeProvider>
           </CredentialsProvider>
         </ConfigProvider>
-      </LocalizationProvider>
     </CacheProvider>
   );
 };

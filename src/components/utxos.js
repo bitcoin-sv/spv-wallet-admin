@@ -1,22 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import {Table, TableBody, TableCell, TableHead, TableRow,} from '@mui/material';
 import PropTypes from 'prop-types';
-import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-
-import { JsonView } from "./json-view";
+import {JsonView} from "./json-view";
 
 export const UtxosList = (
   {
     items,
-    refetch,
   }
 ) => {
 
@@ -60,7 +51,7 @@ export const UtxosList = (
               <TableCell>{xpub.script_pub_key}</TableCell>
               <TableCell>{xpub.satoshis}</TableCell>
               <TableCell>
-                {format(new Date(xpub.created_at), 'dd/MM/yyyy hh:mm')}
+                {new Date(xpub.created_at).toLocaleString()}
               </TableCell>
               <TableCell>
                 <Link to={`/transaction?tx_id=${xpub.spending_tx_id}`}>

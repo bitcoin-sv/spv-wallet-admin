@@ -99,7 +99,6 @@ export const TransactionNew = () => {
                 newRecipients[index].satoshis = Number(e.target.value);
                 setRecipients(newRecipients)
               }}
-              type="text"
               variant="outlined"
             />
           </Box>

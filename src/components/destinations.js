@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Link } from "react-router-dom";
-import { JsonView } from "./json-view";
+import React, {useState} from 'react';
+import {Link} from "react-router-dom";
+import {JsonView} from "./json-view";
 
 export const DestinationsList = ({items}) => {
   const [selectedDestinations, setSelectedDestinations] = useState([]);
@@ -34,7 +33,7 @@ export const DestinationsList = ({items}) => {
               <TableCell>{destination.address}</TableCell>
               <TableCell>{destination.locking_script}</TableCell>
               <TableCell>
-                {format(new Date(destination.created_at), 'dd/MM/yyyy hh:mm')}
+                {new Date(destination.created_at).toLocaleString()}
               </TableCell>
             </TableRow>
             {selectedDestinations.indexOf(destination.id) !== -1 &&

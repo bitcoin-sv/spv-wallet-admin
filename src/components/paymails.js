@@ -1,21 +1,13 @@
-import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
-
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete'
 
-import { useUser } from "../hooks/user";
-import { format } from "date-fns";
-import { JsonView } from "./json-view";
+import {Button, Table, TableBody, TableCell, TableHead, TableRow,} from '@mui/material';
+import PropTypes from 'prop-types';
+import React, {useCallback, useState} from 'react';
+import {Link} from 'react-router-dom'
+
+import {useUser} from "../hooks/user";
 import logger from "../logger";
+import {JsonView} from "./json-view";
 
 export const PaymailsList = (
   {
@@ -77,7 +69,7 @@ export const PaymailsList = (
               <TableCell>{paymail.alias}</TableCell>
               <TableCell>{paymail.deleted_at ? '' : paymail.domain}</TableCell>
               <TableCell>
-                {format(new Date(paymail.created_at), 'dd/MM/yyyy hh:mm')}
+                {new Date(paymail.created_at).toLocaleString()}
               </TableCell>
               <TableCell>
                 <Link to={`/admin/xpubs?search=${paymail.xpub_id}`}>
