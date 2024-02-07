@@ -140,7 +140,7 @@ export const DashboardSidebar = (props) => {
     } else {
       return [...items];
     }
-  }, [adminId]);
+  }, [adminId, xPubId]);
 
   const content = (
     <>

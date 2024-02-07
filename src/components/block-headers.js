@@ -1,21 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import {Table, TableBody, TableCell, TableHead, TableRow,} from '@mui/material';
+
 import PropTypes from 'prop-types';
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-
-import { format } from "date-fns";
-import { JsonView } from "./json-view";
+import React, {useEffect, useState} from 'react';
+import {JsonView} from "./json-view";
 
 export const BlockHeadersList = (
   {
     items,
-    refetch,
   }
 ) => {
 
@@ -57,10 +48,10 @@ export const BlockHeadersList = (
               <TableCell>{xpub.id}</TableCell>
               <TableCell>{xpub.height}</TableCell>
               <TableCell>
-                {format(new Date(xpub.time*1000), 'dd/MM/yyyy hh:mm')}
+                {new Date(xpub.time*1000).toLocaleString()}
               </TableCell>
               <TableCell>
-                {format(new Date(xpub.created_at), 'dd/MM/yyyy hh:mm')}
+                {new Date(xpub.created_at).toLocaleString()}
               </TableCell>
             </TableRow>
             {selectedXPubs.indexOf(xpub.id) !== -1 &&

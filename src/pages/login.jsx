@@ -38,13 +38,13 @@ const Login = () => {
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
           signRequest: true,
         });
-        const xPub = await buxClient.GetXPub();
+        await buxClient.GetXPub();
 
         if (loginKey.match(/^xprv/)) {
-          const key = bsv.HDPrivateKey.fromString(loginKey);
+          bsv.HDPrivateKey.fromString(loginKey);
           setXPrivString(loginKey);
         } else {
-          const key = bsv.PrivateKey.fromString(loginKey);
+          bsv.PrivateKey.fromString(loginKey);
           setAccessKeyString(loginKey);
         }
         setServer(useServerUrl);

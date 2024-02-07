@@ -61,7 +61,7 @@ export const UtxosByType = (
       ],
       labels: dataLabels
     };
-  }, [combinedData]);
+  }, [combinedData, data]);
 
   const options = {
     animation: false,

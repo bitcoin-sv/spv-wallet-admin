@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Link } from "react-router-dom";
-import { JsonView } from "./json-view";
+import React, {useState} from 'react';
+import {Link} from "react-router-dom";
+import {JsonView} from "./json-view";
 
 export const TransactionsList = ({items}) => {
   const [selectedTransactions, setSelectedTransactions] = useState([]);
@@ -34,7 +33,7 @@ export const TransactionsList = ({items}) => {
               <TableCell>{transaction.id}</TableCell>
               <TableCell>{transaction.block_height}</TableCell>
               <TableCell>
-                {format(new Date(transaction.created_at), 'dd/MM/yyyy hh:mm')}
+                {new Date(transaction.created_at).toLocaleString()}
               </TableCell>
             </TableRow>
             {selectedTransactions.indexOf(transaction.id) !== -1 &&
