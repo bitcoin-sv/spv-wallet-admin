@@ -1,0 +1,20 @@
+name: Manual Test Check
+
+on:
+  pull_request_target:
+    types: [labeled, unlabeled]
+
+jobs:
+  manual-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Fail if tested label is not assigned'
+        if: !contains(github.event.pull_request.labels.*.name, 'tested')
+        run: |
+          echo "::error title=Waiting for manual tests to be performed.::Waiting for manual tests to be performed. Please add 'tested' label after testing."
+          exit 1
+      - name: 'Fail if tested label is unassigned'
+        if: github.event.action == 'unlabeled' && github.event.label.name == 'tested'
+        run: |
+          echo "::error title=Waiting for manual tests to be performed.::Waiting for manual tests to be performed. Please add 'tested' label after testing."
+          exit 1
