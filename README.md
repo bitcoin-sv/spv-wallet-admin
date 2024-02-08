@@ -1,5 +1,6 @@
 # BUX: Console
-> Administrative dashboard to manage your [BUX](https://getbux.io) Server
+
+> Administrative dashboard to manage your [BUX](https://getbux.io) Server.
 
 [![last commit](https://img.shields.io/github/last-commit/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/commits/master)
 [![version](https://img.shields.io/github/release-pre/BuxOrg/bux-console.svg?style=flat)](https://github.com/BuxOrg/bux-console/releases)
@@ -8,6 +9,7 @@
 [![Sponsor](https://img.shields.io/badge/sponsor-BuxOrg-181717.svg?logo=github&style=flat&v=1)](https://github.com/sponsors/BuxOrg)
 
 ## Table of Contents
+
 - [What is BUX?](#what-is-bux)
 - [Installation](#installation)
 - [Documentation](#documentation)
@@ -19,23 +21,28 @@
 <br />
 
 ## What is BUX?
+
 [Read more about BUX](https://getbux.io)
 
 <br />
 
 ## Installation
+
 ```shell
 npm install -g yarn
 yarn install
 ```
 
 ## Running
+
 ```shell
 yarn start
 ```
 
 ## Running from Docker-Compose
-1. If you want to change default environment variables - create a file *env-config.json* somewhere in your filesystem and override the variables that you want to change. No all variables need to be overriden. For example:
+
+1. If you want to change default environment variables - create a file _env-config.json_ somewhere in your filesystem and override the variables that you want to change. No all variables need to be overriden. For example:
+
 ```json
 {
   "serverUrl": "http://localhost:3003/v1"
@@ -43,6 +50,7 @@ yarn start
 ```
 
 2. Mount this file from your filesystem to config.json in docker-compose:
+
 ```yaml
 services:
   app:
@@ -50,17 +58,19 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
-      - '/host/path/to/env-config.json:/usr/share/nginx/html/env-config.json'
+      - "/host/path/to/env-config.json:/usr/share/nginx/html/env-config.json"
 ```
 
 3. Run docker-compose
+
 ```shell
 docker-compose up -d
 ```
 
 ## Documentation
+
 View more [BUX documentation](https://getbux.io)
 
 <details>
@@ -72,6 +82,7 @@ View more [BUX documentation](https://getbux.io)
 The [.goreleaser.yml](.goreleaser.yml) file is used to configure [goreleaser](https://github.com/goreleaser/goreleaser).
 
 Use `make release-snap` to create a snapshot version of the release, and finally `make release` to ship to production.
+
 </details>
 
 <details>
@@ -79,11 +90,13 @@ Use `make release-snap` to create a snapshot version of the release, and finally
 <br/>
 
 View all `makefile` commands
+
 ```shell script
 make help
 ```
 
 List of all current commands:
+
 ```text
 audit                         Checks for any packages that are vulnerable
 clean                         Remove previous builds and any test cache data
@@ -101,27 +114,31 @@ tag-remove                    Remove a tag if found (tag-remove version=0.0.0)
 tag-update                    Update an existing tag to current commit (tag-update version=0.0.0)
 update-contributors           Regenerates the contributors html/list
 ```
+
 </details>
 
 <br />
 
 ## Code Standards
+
 Please read our [standards document](.github/CODE_STANDARDS.md)
 
 <br />
 
 ## Usage
+
 Here's the [getting started](https://getbux.io) with BUX
 
 <br />
 
-
 ## Contributing
+
 View the [contributing guidelines](.github/CONTRIBUTING.md) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
 
 <br/>
 
 ### How can I help?
+
 All kinds of contributions are welcome :raised_hands:!
 The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:.
 You can also support this project by [becoming a sponsor on GitHub](https://github.com/sponsors/BuxOrg) :clap:
@@ -132,6 +149,7 @@ or by making a [**bitcoin donation**](https://getbux.io/#sponsor?utm_source=gith
 <br/>
 
 ### Contributors ✨
+
 Thank you to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -155,4 +173,5 @@ Thank you to these wonderful people ([emoji key](https://allcontributors.org/doc
 <br />
 
 ## License
+
 [![License](https://img.shields.io/github/license/BuxOrg/bux-console.svg?style=flat&v=1)](LICENSE)
