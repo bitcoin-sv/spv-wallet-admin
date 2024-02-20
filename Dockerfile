@@ -24,7 +24,7 @@ RUN yarn run build
 
 # App final stage
 # serving the production build
-FROM nginx:1.25.1-alpine
+FROM nginx:1.25.4-alpine
 
 # We need some custom nginx configuration, which we import here
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
