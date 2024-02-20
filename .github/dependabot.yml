@@ -6,13 +6,8 @@ updates:
     target-branch: 'master'
     directory: '/'
     schedule:
-      interval: 'daily'
-      # Check for npm updates at 10am UTC (5am EST)
-      time: '10:00'
-    reviewers:
-      - 'mrz1836'
-    assignees:
-      - 'mrz1836'
+      interval: "weekly"
+      day: "monday"
     # Labels must be created first
     labels:
       - 'chore'
@@ -24,10 +19,17 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    reviewers:
-      - "mrz1836"
-    assignees:
-      - "mrz1836"
+    labels:
+      - "chore"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    target-branch: "master"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
     labels:
       - "chore"
     open-pull-requests-limit: 10
