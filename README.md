@@ -34,32 +34,6 @@ yarn install
 yarn start
 ```
 
-## Running from Docker-Compose
-1. If you want to change default environment variables - create a file *env-config.json* somewhere in your filesystem and override the variables that you want to change. No all variables need to be overriden. For example:
-```json
-{
-  "serverUrl": "http://localhost:3003/v1"
-}
-```
-
-2. Mount this file from your filesystem to config.json in docker-compose:
-```yaml
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
-    volumes:
-      - '/host/path/to/env-config.json:/usr/share/nginx/html/env-config.json'
-```
-
-3. Run docker-compose
-```shell
-docker-compose up -d
-```
-
 ## Documentation
 View more [BUX documentation](https://getbux.io)
 

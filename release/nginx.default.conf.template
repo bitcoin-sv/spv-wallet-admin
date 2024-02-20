@@ -1,9 +1,14 @@
 server {
-    listen 3000 default_server;
+    listen ${SPV_WALLET_ADMIN_PORT} default_server;
     server_name  _;
     root /usr/share/nginx/html;
     index index.html;
     server_tokens off;
+
+    location /v1 {
+        proxy_pass ${SPV_WALLET_ADMIN_PROXY_API_DOMAIN};
+        proxy_set_header Host $host;
+    }
 
     location / {
         # fallback on index

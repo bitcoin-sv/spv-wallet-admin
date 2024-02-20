@@ -1,35 +1,20 @@
-# From: https://goreleaser.com/ci/actions/#usage
 name: release
-
-env:
-  GO111MODULE: on
 
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
-  goreleaser:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.19
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5.0.0
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --rm-dist --debug
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  release:
+    uses: ./.github/workflows/on-release.yaml
+    with:
+      version: ${{ github.ref_name }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.ON_RELEASE_SLACK_WEBHOOK_URL }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
