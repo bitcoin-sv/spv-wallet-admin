@@ -26,7 +26,7 @@ updates:
   # Maintain dependencies for Docker
   - package-ecosystem: "docker"
     target-branch: "master"
-    directory: "/"
+    directory: "/release"
     schedule:
       interval: "weekly"
       day: "monday"
