@@ -1,5 +1,5 @@
 {
-  "loginTitle": "Sign in to a Bux server",
+  "loginTitle": "Sign in to a SPV Wallet",
   "loginSubtitle": "Sign in using your xPriv",
   "transportType": "http",
   "serverUrl": "",

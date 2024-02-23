@@ -1,6 +1,6 @@
 import bsv from 'bsv';
 import React, { useEffect, useState } from 'react';
-import { BuxClient } from '@buxorg/js-buxclient';
+import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 
 import { Alert, TextField, Typography } from "@mui/material";
 
@@ -20,14 +20,14 @@ export const Transaction = () => {
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
 
-  const buxClient = new BuxClient(server, {
+  const spvWalletClient = new SpvWalletClient(server, {
     transportType: transportType,
     xPriv,
     xPub,
     accessKey,
     signRequest: true,
   });
-  buxClient.SetSignRequest(true);
+  spvWalletClient.SetSignRequest(true);
 
   useEffect(() => {
     const tx_id = params.get('tx_id');
@@ -39,7 +39,7 @@ export const Transaction = () => {
   useEffect(() => {
     if (txId) {
       setLoading(true);
-      buxClient.GetTransaction(txId.trim()).then(tx => {
+      spvWalletClient.GetTransaction(txId.trim()).then(tx => {
         setTransaction(tx);
         setError('');
         setLoading(false);
@@ -78,7 +78,7 @@ export const Transaction = () => {
           <Alert severity="error">{error}</Alert>
           }
           {txId && transaction && <>
-            <h2>Bux transaction</h2>
+            <h2>SPV Wallet transaction</h2>
             <JsonView jsonData={transaction} />
             <h2>Bitcoin transaction</h2>
             <JsonView jsonData={(new bsv.Transaction(transaction.hex)).toObject()} />

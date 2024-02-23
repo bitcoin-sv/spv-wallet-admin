@@ -1,6 +1,6 @@
 {
-  "short_name": "Bux Console",
-  "name": "Bux admin console",
+  "short_name": "SPV Wallet Admin",
+  "name": "SPV Wallet Admin",
   "icons": [
     {
       "src": "favicon.ico",

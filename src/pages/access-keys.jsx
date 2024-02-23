@@ -18,7 +18,7 @@ export const AccessKeys = () => {
     setError,
     Pagination,
     setRefreshData,
-    buxClient,
+    spvWalletClient,
   } = useQueryList({modelFunction: 'GetAccessKeys'});
 
   const [info, setInfo] = useState('');
@@ -26,7 +26,7 @@ export const AccessKeys = () => {
   const handleRevokeAccessKey = function (accessKey) {
     // eslint-disable-next-line no-restricted-globals
     if (confirm('Revoke access key?')) {
-      buxClient.RevokeAccessKey(accessKey.id).then(r => {
+      spvWalletClient.RevokeAccessKey(accessKey.id).then(r => {
         setInfo(`Access key ${accessKey.id} revoked`);
         logger.info(`Access key ${accessKey.id} revoked`)
         setRefreshData(+new Date());
@@ -48,7 +48,7 @@ export const AccessKeys = () => {
           <Button
             color="primary"
             onClick={async () => {
-              const accessKey = await buxClient.CreateAccessKey();
+              const accessKey = await spvWalletClient.CreateAccessKey();
               setInfo(`New access key created!\n Your key is ${accessKey?.key}.\n Please make sure to save this key, it is not possible to give it out again.`);
               setRefreshData(+new Date());
             }}

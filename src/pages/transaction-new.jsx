@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { BuxClient } from '@buxorg/js-buxclient';
+import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 
@@ -18,7 +18,7 @@ export const TransactionNew = () => {
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
 
-  const buxClient = new BuxClient(server, {
+  const spvWalletClient = new SpvWalletClient(server, {
     transportType: transportType,
     xPriv,
     signRequest: true,
@@ -26,7 +26,7 @@ export const TransactionNew = () => {
 
   const handleNewTransaction = useCallback((recipients) => {
     setLoading(true);
-    buxClient.DraftToRecipients(recipients, { agent: 'Bux client test' }).then(d => {
+    spvWalletClient.DraftToRecipients(recipients, { agent: 'SPV Wallet client test' }).then(d => {
       setDraftTransaction(d);
       setError('');
       setLoading(false);
@@ -41,7 +41,7 @@ export const TransactionNew = () => {
     setLoading(true);
     let transactionHex;
     try {
-      transactionHex = buxClient.FinalizeTransaction(draftTransaction);
+      transactionHex = spvWalletClient.FinalizeTransaction(draftTransaction);
     } catch (e) {
       setDraftTransaction(null);
       setTransaction(null);
@@ -51,7 +51,7 @@ export const TransactionNew = () => {
     }
 
     if (transactionHex) {
-      buxClient.RecordTransaction(transactionHex, draftTransaction.id, {}).then(t => {
+      spvWalletClient.RecordTransaction(transactionHex, draftTransaction.id, {}).then(t => {
         setTransaction(t);
         setError('');
         setLoading(false);
@@ -128,7 +128,7 @@ export const TransactionNew = () => {
           <Alert severity="error">{error}</Alert>
           }
           {draftTransaction && <>
-            <h2>Bux draft transaction</h2>
+            <h2>SPV Wallet draft transaction</h2>
             <JsonView jsonData={draftTransaction} />
             {transaction
             ?

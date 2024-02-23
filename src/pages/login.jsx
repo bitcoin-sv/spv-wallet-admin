@@ -1,4 +1,4 @@
-import {BuxClient} from "@buxorg/js-buxclient";
+import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 import {Box, Button, Container, Select, TextField, Typography} from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import bsv from "bsv";
@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async function (e) {
     e.preventDefault();
     if (loginKey && (config.serverUrl || serverUrl) && (config.transportType || transport)) {
-      let buxClient;
+      let spvWalletClient;
       let useTransport = transport || config.transportType;
       let useServerUrl = serverUrl || config.serverUrl
       try {
@@ -32,13 +32,13 @@ const Login = () => {
         }
 
         // try to make a connection and get the xpub
-        buxClient = new BuxClient(useServerUrl, {
+        spvWalletClient = new SpvWalletClient(useServerUrl, {
           transportType: useTransport,
           xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
           signRequest: true,
         });
-        await buxClient.GetXPub();
+        await spvWalletClient.GetXPub();
 
         if (loginKey.match(/^xprv/)) {
           bsv.HDPrivateKey.fromString(loginKey);
@@ -53,8 +53,8 @@ const Login = () => {
         // check whether this is an admin only login
         try {
           if (loginKey.match(/^xprv/)) {
-            buxClient.SetAdminKey(loginKey);
-            const admin = await buxClient.AdminGetStatus();
+            spvWalletClient.SetAdminKey(loginKey);
+            const admin = await spvWalletClient.AdminGetStatus();
             if (admin === true) {
               setAdminKey(loginKey);
               setServer(useServerUrl);
@@ -92,7 +92,7 @@ const Login = () => {
               color="textPrimary"
               variant="h4"
             >
-              {config.loginTitle || "Sign in to a Bux server"}
+              {config.loginTitle || "Sign in to a SPV Wallet"}
             </Typography>
             <Typography
               color="textSecondary"

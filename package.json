@@ -1,49 +1,34 @@
 {
-  "name": "@buxorg/bux-console",
-  "version": "0.0.0",
+  "name": "@bitcoin-sv/spv-wallet-admin",
+  "version": "0.2.0",
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
-  "author": "Siggi <github@icellan.com>",
-  "homepage": "https://getbux.io",
   "license": "MIT",
   "keywords": [
-    "bux",
+    "spv-wallet-admin",
     "bitcoin",
     "bitcoinsv",
     "bsv"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/BuxOrg/bux-console"
+    "url": "https://github.com/bitcoin-sv/spv-wallet-admin"
   },
   "bugs": {
-    "url": "https://github.com/BuxOrg/bux-console/issues"
+    "url": "https://github.com/bitcoin-sv/spv-wallet-admin/issues"
   },
-  "contributors": [
-    {
-      "name": "Siggi",
-      "url": "https://github.com/icellan/"
-    },
-    {
-      "name": "MrZ",
-      "url": "https://github.com/mrz1836/"
-    },
-    {
-      "name": "dorzepowski",
-      "url": "https://github.com/dorzepowski/"
-    }
-  ],
+  "contributors": [],
   "engines": {
     "node": "^20.0.0"
   },
   "proxy": "http://localhost:3003",
   "dependencies": {
     "@4chain-ag/react-configuration": "^1.0.4",
-    "@buxorg/js-buxclient": "^1.4.5",
+    "@bsv/spv-wallet-js-client": "^0.1.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",

@@ -6,7 +6,7 @@ import {useModifyCredentials} from "../hooks/use-credentials";
 
 import { useUser } from "../hooks/user";
 import { SeverityPill } from "../components/severity-pill";
-import { BuxClient } from "@buxorg/js-buxclient";
+import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 import logger from "../logger";
 
 const AdminLogin = () => {
@@ -20,15 +20,15 @@ const AdminLogin = () => {
     if (xPriv) {
       try {
         // try to make a connection and get the xpub
-        const buxClient = new BuxClient(server, {
+        const spvWalletClient = new SpvWalletClient(server, {
           transportType: transportType,
           xPrivString: xPrivString,
           xPubString: xPubString,
           accessKeyString: accessKey,
           signRequest: true,
         });
-        buxClient.SetAdminKey(xPriv)
-        const status = await buxClient.AdminGetStatus();
+        spvWalletClient.SetAdminKey(xPriv)
+        const status = await spvWalletClient.AdminGetStatus();
 
         const key = bsv.HDPrivateKey.fromString(xPriv);
         setAdminKey(xPriv);

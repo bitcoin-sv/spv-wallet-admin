@@ -15,17 +15,17 @@ import { UtxosByType } from "../components/dashboard/utxos-by-type";
 import logger from "../logger";
 
 const Dashboard = () => {
-  const { buxAdminClient, adminId } = useUser();
+  const { spvWalletAdminClient, adminId } = useUser();
 
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!buxAdminClient) return
+    if (!spvWalletAdminClient) return
 
     setLoading(true)
-    buxAdminClient.AdminGetStats().then(stats => {
+    spvWalletAdminClient.AdminGetStats().then(stats => {
       setStats(stats);
       setError('');
       setLoading(false);
@@ -36,7 +36,7 @@ const Dashboard = () => {
     });
   }, [adminId]);
 
-  if (!buxAdminClient) {
+  if (!spvWalletAdminClient) {
     return (
       <DashboardLayout>
         <AdminLogin/>

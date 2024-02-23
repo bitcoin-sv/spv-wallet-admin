@@ -1,5 +1,5 @@
 import bsv from 'bsv';
-import {BuxClient} from "@buxorg/js-buxclient";
+import {SpvWalletClient} from "@bsv/spv-wallet-js-client";
 import {useCredentials} from "./use-credentials";
 export const useUser = () => {
   const {
@@ -36,9 +36,9 @@ export const useUser = () => {
     adminId = bsv.crypto.Hash.sha256(Buffer.from(adminKeyString)).toString('hex')
   }
 
-  let buxClient, buxAdminClient;
+  let spvWalletClient, spvWalletAdminClient;
   if (server && transportType) {
-    buxClient = new BuxClient(server, {
+    spvWalletClient = new SpvWalletClient(server, {
       transportType: transportType,
       xPriv,
       xPub,
@@ -46,14 +46,14 @@ export const useUser = () => {
       signRequest: true,
     });
     if (adminKey) {
-      buxAdminClient = new BuxClient(server, {
+      spvWalletAdminClient = new SpvWalletClient(server, {
         transportType: transportType,
         xPriv,
         xPub,
         accessKey,
         signRequest: true,
       });
-      buxAdminClient.SetAdminKey(adminKey);
+      spvWalletAdminClient.SetAdminKey(adminKey);
     }
   }
 
@@ -69,7 +69,7 @@ export const useUser = () => {
     server,
     adminKey,
     adminId,
-    buxClient,
-    buxAdminClient,
+    spvWalletClient,
+    spvWalletAdminClient,
   };
 };

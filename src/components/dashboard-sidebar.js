@@ -163,7 +163,7 @@ export const DashboardSidebar = (props) => {
               <Typography
                 variant="h4"
               >
-                Bux
+                SPV Wallet
               </Typography>
               <Typography
                 variant="p"
