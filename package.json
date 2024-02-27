@@ -1,6 +1,6 @@
 {
-  "name": "@bitcoin-sv/spv-wallet-admin",
-  "version": "0.2.0",
+  "name": "@bsv/spv-wallet-admin",
+  "version": "0.0.0",
   "scripts": {
     "start": "craco start",
     "build": "craco build",
