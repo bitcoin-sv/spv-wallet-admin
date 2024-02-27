@@ -1245,10 +1245,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bsv/spv-wallet-js-client@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-0.2.0.tgz#52c9f77c1a5fe5fb573c0409bbf4fcc8d68c78ae"
-  integrity sha512-161QpogF03RhpvBCIlhHC0QhTkMIeBxyHooMeHvHiAW4ug/SGX6ST96xx06oSJ4QfkYxQnUCsLEwcRfVpZJHFw==
+"@bsv/spv-wallet-js-client@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-0.2.1.tgz#fa1c85da4d5a3dd4e4310675a1390656cdfd57c8"
+  integrity sha512-7Nms5ioMtZgqM9LzoItpiPBiVbCNQkNIggeRv1etEMv5VCYTf+gDizsYjkzvErVIpcyk9j4/MfQAXPVDZA4J3Q==
   dependencies:
     "@apollo/client" "^3.5.8"
     "@types/rollup-plugin-node-builtins" "^2.1.5"
