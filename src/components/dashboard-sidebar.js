@@ -40,11 +40,6 @@ const adminItems = [
         title: 'Access Keys'
       },
       {
-        href: '/admin/block-headers',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: 'Block Headers'
-      },
-      {
         href: '/admin/destinations',
         icon: (<LocationSearchingIcon fontSize="small" />),
         title: 'Destinations'
