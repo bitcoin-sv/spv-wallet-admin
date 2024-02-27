@@ -30,14 +30,14 @@ export const AdminListing = function(
     error,
     Pagination,
     setRefreshData,
-    buxAdminClient,
+    spvWalletAdminClient,
   } = useQueryList({ modelFunction, admin: true, conditions });
 
   useEffect(() => {
-    if (!buxAdminClient) {
+    if (!spvWalletAdminClient) {
       navigate('/');
     }
-  }, [buxAdminClient]);
+  }, [spvWalletAdminClient]);
 
   useEffect(() => {
     if (initialFilter) {

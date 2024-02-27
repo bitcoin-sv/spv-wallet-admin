@@ -1,4 +1,4 @@
-# Bux Console
+# SPV Wallet Admin
 
 ---
 

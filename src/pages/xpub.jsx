@@ -8,7 +8,7 @@ import { JsonView } from "../components/json-view";
 import logger from "../logger";
 
 export const XPub = () => {
-  const { buxClient } = useUser();
+  const { spvWalletClient } = useUser();
 
   const [ xPubData, setXPubData ] = useState(null);
   const [ loading, setLoading ] = useState(false);
@@ -16,7 +16,7 @@ export const XPub = () => {
 
   useEffect(() => {
     setLoading(true);
-    buxClient.GetXPub().then(xPub => {
+    spvWalletClient.GetXPub().then(xPub => {
       setXPubData(xPub);
       setError('');
       setLoading(false);

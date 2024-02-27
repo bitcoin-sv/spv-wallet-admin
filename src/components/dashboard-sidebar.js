@@ -40,11 +40,6 @@ const adminItems = [
         title: 'Access Keys'
       },
       {
-        href: '/admin/block-headers',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: 'Block Headers'
-      },
-      {
         href: '/admin/destinations',
         icon: (<LocationSearchingIcon fontSize="small" />),
         title: 'Destinations'
@@ -163,7 +158,7 @@ export const DashboardSidebar = (props) => {
               <Typography
                 variant="h4"
               >
-                Bux
+                SPV Wallet
               </Typography>
               <Typography
                 variant="p"

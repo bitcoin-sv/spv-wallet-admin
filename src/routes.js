@@ -4,7 +4,6 @@ import {useUser} from "./hooks/user";
 import NotFound from "./pages/404";
 import {AccessKeys} from "./pages/access-keys";
 import {AdminAccessKeys} from "./pages/admin/access-keys";
-import {AdminBlockHeaders} from "./pages/admin/block-headers";
 import {AdminDestinations} from "./pages/admin/destinations";
 import {AdminPaymails} from "./pages/admin/paymails";
 import {AdminRegisterXPub} from "./pages/admin/register-xpub";
@@ -47,7 +46,6 @@ export const AppRouter = () => {
         <Route exact path="/admin/dashboard" name="Admin dashboard" element={<Dashboard/>}/>
         <Route exact path="/admin/register-xpub" name="Admin register xpub" element={<AdminRegisterXPub/>}/>
         <Route exact path="/admin/access-keys" name="Admin access keys" element={<AdminAccessKeys/>}/>
-        <Route exact path="/admin/block-headers" name="Admin block headers" element={<AdminBlockHeaders/>}/>
         <Route exact path="/admin/destinations" name="Admin destinations" element={<AdminDestinations/>}/>
         <Route exact path="/admin/paymails" name="Admin paymails" element={<AdminPaymails/>}/>
         <Route exact path="/admin/transaction-record" name="Admin record transactions"

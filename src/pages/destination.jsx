@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BuxClient } from '@buxorg/js-buxclient';
+import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 
 import { Alert, Box, TextField, Typography } from "@mui/material";
 
@@ -24,7 +24,7 @@ export const Destination = () => {
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
 
-  const buxClient = new BuxClient(server, {
+  const spvWalletClient = new SpvWalletClient(server, {
     transportType: transportType,
     xPriv,
     xPub,
@@ -56,7 +56,7 @@ export const Destination = () => {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      buxClient.GetDestinationByID(id).then(d => {
+      spvWalletClient.GetDestinationByID(id).then(d => {
         setDestination(d);
         setError('');
         setLoading(false);
@@ -68,7 +68,7 @@ export const Destination = () => {
       });
     } else if (address) {
       setLoading(true);
-      buxClient.GetDestinationByAddress(address).then(d => {
+      spvWalletClient.GetDestinationByAddress(address).then(d => {
         setDestination(d);
         setError('');
         setLoading(false);
@@ -80,7 +80,7 @@ export const Destination = () => {
       });
     } else if (lockingScript) {
       setLoading(true);
-      buxClient.GetDestinationByLockingScript(lockingScript).then(d => {
+      spvWalletClient.GetDestinationByLockingScript(lockingScript).then(d => {
         setDestination(d);
         setError('');
         setLoading(false);
@@ -139,7 +139,7 @@ export const Destination = () => {
           <Alert severity="error">{error}</Alert>
           }
           {destination && <>
-            <h2>Bux destination</h2>
+            <h2>SPV Wallet destination</h2>
             <JsonView jsonData={destination} />
             <Box display="flex" justifyContent="center">
               <QRCode value={`bitcoinsv:${destination.address}`} />

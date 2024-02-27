@@ -1245,14 +1245,15 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@buxorg/js-buxclient@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@buxorg/js-buxclient/-/js-buxclient-1.4.5.tgz#d432c4f746aac75fb9a77d29dd6ed0fdb940d705"
-  integrity sha512-IWtPW+EEQ1/QcS8SQ3rqbuoLBRHFWAzxSoYAp/HaZTbAtPzePIYXdd8ZsPm9zSTX+wxWkzj1o5mrsZOjMowooA==
+"@bsv/spv-wallet-js-client@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-0.2.1.tgz#fa1c85da4d5a3dd4e4310675a1390656cdfd57c8"
+  integrity sha512-7Nms5ioMtZgqM9LzoItpiPBiVbCNQkNIggeRv1etEMv5VCYTf+gDizsYjkzvErVIpcyk9j4/MfQAXPVDZA4J3Q==
   dependencies:
     "@apollo/client" "^3.5.8"
+    "@types/rollup-plugin-node-builtins" "^2.1.5"
     cross-fetch "^4.0.0"
-    graphql "^16.3.0"
+    pino "^8.16.2"
 
 "@craco/craco@^7.1.0":
   version "7.1.0"
@@ -2649,6 +2650,14 @@
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.0.tgz#2b35eccfcee7d38cd72ad99232fbd58bffb3c84d"
   integrity sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==
+
+"@types/rollup-plugin-node-builtins@^2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@types/rollup-plugin-node-builtins/-/rollup-plugin-node-builtins-2.1.5.tgz#29f23ee809afed3b80cd6528b4bea8c3e305f01f"
+  integrity sha512-RxfnrNq8+kU+t3IdCt4Y3TeACVyystMV7Wkjo7KVyMAH3SvQ4VbJPIJM5qFe0v3XrScN1D6Y3qPEH1xSfVwJsQ==
+  dependencies:
+    "@types/node" "*"
+    rollup "^0.63.4"
 
 "@types/scheduler@*":
   version "0.16.2"
@@ -5893,11 +5902,6 @@ graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql@^16.3.0:
-  version "16.8.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
-  integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==
-
 gzip-size@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/gzip-size/-/gzip-size-6.0.0.tgz#065367fd50c239c0671cbcbad5be3e2eeb10e462"
@@ -8257,6 +8261,23 @@ pino-std-serializers@^6.0.0:
   resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-6.2.2.tgz#d9a9b5f2b9a402486a5fc4db0a737570a860aab3"
   integrity sha512-cHjPPsE+vhj/tnhCy/wiMh3M3z3h/j15zHQX+S9GkTBgqJuTuJzYJ4gUyACLhDaJ7kk9ba9iRDmbH2tJU03OiA==
 
+pino@^8.16.2:
+  version "8.19.0"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-8.19.0.tgz#ccc15ef736f103ec02cfbead0912bc436dc92ce4"
+  integrity sha512-oswmokxkav9bADfJ2ifrvfHUwad6MLp73Uat0IkQWY3iAw5xTRoznXbXksZs8oaOUMpmhVWD+PZogNzllWpJaA==
+  dependencies:
+    atomic-sleep "^1.0.0"
+    fast-redact "^3.1.1"
+    on-exit-leak-free "^2.1.0"
+    pino-abstract-transport v1.1.0
+    pino-std-serializers "^6.0.0"
+    process-warning "^3.0.0"
+    quick-format-unescaped "^4.0.3"
+    real-require "^0.2.0"
+    safe-stable-stringify "^2.3.1"
+    sonic-boom "^3.7.0"
+    thread-stream "^2.0.0"
+
 pino@^8.18.0:
   version "8.18.0"
   resolved "https://registry.yarnpkg.com/pino/-/pino-8.18.0.tgz#f2bfbb4e827ed2049ee1e88372268efdcd1505f6"
@@ -9549,6 +9570,14 @@ rollup-plugin-terser@^7.0.0:
     jest-worker "^26.2.1"
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
+
+rollup@^0.63.4:
+  version "0.63.5"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.63.5.tgz#5543eecac9a1b83b7e1be598b5be84c9c0a089db"
+  integrity sha512-dFf8LpUNzIj3oE0vCvobX6rqOzHzLBoblyFp+3znPbjiSmSvOoK2kMKx+Fv9jYduG1rvcCfCveSgEaQHjWRF6g==
+  dependencies:
+    "@types/estree" "0.0.39"
+    "@types/node" "*"
 
 rollup@^2.43.1:
   version "2.79.1"

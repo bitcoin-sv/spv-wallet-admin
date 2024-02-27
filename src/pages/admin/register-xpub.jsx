@@ -10,7 +10,7 @@ import logger from "../../logger";
 
 export const AdminRegisterXPub = () => {
   const navigate = useNavigate();
-  const { buxAdminClient } = useUser();
+  const { spvWalletAdminClient } = useUser();
 
   const [ newXPub, setNewXPub ] = useState("");
   const [ xPrivInput, setXPrivInput ] = useState("");
@@ -18,10 +18,10 @@ export const AdminRegisterXPub = () => {
   const [ error, setError ] = useState('');
 
   useEffect(() => {
-    if (!buxAdminClient) {
+    if (!spvWalletAdminClient) {
       navigate('/');
     }
-  }, [buxAdminClient]);
+  }, [spvWalletAdminClient]);
 
   useEffect(() => {
     if (xPrivInput) {
@@ -44,7 +44,7 @@ export const AdminRegisterXPub = () => {
     setLoading(true);
     try {
       const xPubHD = bsv.HDPublicKey.fromString(newXPub); // will throw on error
-      buxAdminClient.RegisterXpub(newXPub);
+        spvWalletAdminClient.RegisterXpub(newXPub);
       alert("XPub added");
       logger.info("XPub added")
       setNewXPub("");
@@ -53,7 +53,7 @@ export const AdminRegisterXPub = () => {
       setError(e.message);
     }
     setLoading(false);
-  }, [buxAdminClient]);
+  }, [spvWalletAdminClient]);
 
   return (
     <DashboardLayout>

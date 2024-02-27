@@ -3,11 +3,11 @@ import pino from 'pino'
 const levels = { 60: "fatal", 50: "error", 40: "warn", 30: "info", 20: "debug", 10: "trace" }
 
 const getDefaultObject = (o) => ({ ...o, level: levels[o.level],
-    name: 'bux-console'})
+    name: 'spv-wallet-admin'})
 
 const pinoLogger = pino({
     level: 'trace',
-    name: "bux-console",
+    name: "spv-wallet-admin",
     browser: {
         asObject: true,
         write: {

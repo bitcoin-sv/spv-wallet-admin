@@ -15,14 +15,14 @@ export const PaymailsList = (
     refetch,
   }
 ) => {
-  const { buxAdminClient } = useUser();
+  const { spvWalletAdminClient } = useUser();
 
   const [selectedPaymails, setSelectedPaymails] = useState([]);
 
   const handleDeletePaymail = useCallback(async paymailAddress => {
     // eslint-disable-next-line no-restricted-globals
     if (paymailAddress && confirm('Are you sure you want to delete the paymail address from this user?')) {
-      const paymailDeleted = await buxAdminClient.AdminDeletePaymail(`${paymailAddress.alias}@${paymailAddress.domain}`).catch(e => {
+      const paymailDeleted = await spvWalletAdminClient.AdminDeletePaymail(`${paymailAddress.alias}@${paymailAddress.domain}`).catch(e => {
         logger.error("Could not delete paymail" + e.message)
         alert("ERROR: Could not delete paymail: " + e.message);
       });
@@ -32,7 +32,7 @@ export const PaymailsList = (
         refetch();
       }
     }
-  }, [buxAdminClient, refetch]);
+  }, [spvWalletAdminClient, refetch]);
 
   return (
     <Table>
