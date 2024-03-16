@@ -1,6 +1,5 @@
 import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
-import {Box, Button, Container, Select, TextField, Typography} from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
+import {Box, Button, Container, TextField, Typography} from '@mui/material';
 import bsv from "bsv";
 import React, {useState} from 'react';
 import {SeverityPill} from "../components/severity-pill";
@@ -13,27 +12,23 @@ const Login = () => {
 
   const { config } = useConfig();
   const [loginKey, setLoginKey] = useState('');
-  const [transport, setTransport] = useLocalStorage('login.transport', config.transportType);
   const [serverUrl, setServerUrl] = useLocalStorage('login.serverUrl', config.serverUrl);
   const [error, setError] = useState('');
-  const {setAccessKeyString, setAdminKey, setServer, setTransportType, setXPrivString} = useModifyCredentials();
+  const {setAccessKeyString, setAdminKey, setServer, setXPrivString} = useModifyCredentials();
 
   const handleSubmit = async function (e) {
     e.preventDefault();
-    if (loginKey && (config.serverUrl || serverUrl) && (config.transportType || transport)) {
+    if (loginKey && (config.serverUrl || serverUrl)) {
       let spvWalletClient;
-      let useTransport = transport || config.transportType;
       let useServerUrl = serverUrl || config.serverUrl
       try {
-        if (config.transportType && config.serverUrl) {
-          // use the hardcoded defaults for transport and server url
-          useTransport = config.transportType;
+        if (config.serverUrl) {
+          // use the hardcoded defaults for server url
           useServerUrl = config.serverUrl;
         }
 
         // try to make a connection and get the xpub
         spvWalletClient = new SpvWalletClient(useServerUrl, {
-          transportType: useTransport,
           xPrivString: loginKey.match(/^xprv/) ? loginKey : '',
           accessKeyString: loginKey.match(/^[^xp]/) ? loginKey : '',
           signRequest: true,
@@ -48,7 +43,6 @@ const Login = () => {
           setAccessKeyString(loginKey);
         }
         setServer(useServerUrl);
-        setTransportType(useTransport);
       } catch (e) {
         // check whether this is an admin only login
         try {
@@ -58,7 +52,6 @@ const Login = () => {
             if (admin === true) {
               setAdminKey(loginKey);
               setServer(useServerUrl);
-              setTransportType(useTransport);
             }
           }
           return
@@ -114,13 +107,13 @@ const Login = () => {
               }}
             />
           </Box>
-          {!!(config.transportType && config.serverUrl)
+          {!!config.serverUrl
             ?
             (!config.hideServerUrl &&
               <>
                 <TextField
                   fullWidth
-                  label={config.transportType}
+                  label={"http"}
                   margin="dense"
                   value={config.serverUrl}
                   type="text"
@@ -131,18 +124,6 @@ const Login = () => {
             )
             :
             <>
-              <Select
-                fullWidth
-                label="Server transport"
-                margin="dense"
-                value={transport}
-                onChange={(e) => setTransport(e.target.value)}
-                type="text"
-                variant="outlined"
-              >
-                <MenuItem value="graphql">GraphQL</MenuItem>
-                <MenuItem value="http">HTTP</MenuItem>
-              </Select>
               <TextField
                 fullWidth
                 label="Server"
