@@ -12,7 +12,7 @@
 <br />
 
 ## What is SPV-Wallet?
-[Read more about SPV-Wallet](https://replace-after-moving-spv-wallet)
+[Read more about SPV-Wallet](https://github.com/bitcoin-sv/spv-wallet/blob/master/README.md)
 
 <br />
 
@@ -76,7 +76,7 @@ Please read our [standards document](.github/CODE_STANDARDS.md)
 <br />
 
 ## Contributing
-View the [contributing guidelines](.github/CONTRIBUTING.md) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
+View the [contributing guidelines](.github/CODE_STANDARDS.md#3-contributing) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
 
 <br/>
 

@@ -10,7 +10,7 @@ import { JsonView } from "../components/json-view";
 import logger from "../logger";
 
 export const DestinationNew = () => {
-  const { xPriv, server, transportType } = useUser();
+  const { xPriv, server } = useUser();
 
   const [ destination, setDestination ] = useState(null);
 
@@ -18,7 +18,6 @@ export const DestinationNew = () => {
   const [ error, setError ] = useState('');
 
   const spvWalletClient = new SpvWalletClient(server, {
-    transportType: transportType,
     xPriv,
     signRequest: true,
   });

@@ -10,7 +10,7 @@ import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 import logger from "../logger";
 
 const AdminLogin = () => {
-  const { server, transportType, xPrivString, xPubString, accessKey } = useUser();
+  const { server, xPrivString, xPubString, accessKey } = useUser();
   const {setAdminKey} = useModifyCredentials();
   const [ xPriv, setXPriv ] = useState('');
   const [ error, setError ] = useState('');
@@ -21,7 +21,6 @@ const AdminLogin = () => {
       try {
         // try to make a connection and get the xpub
         const spvWalletClient = new SpvWalletClient(server, {
-          transportType: transportType,
           xPrivString: xPrivString,
           xPubString: xPubString,
           accessKeyString: accessKey,
