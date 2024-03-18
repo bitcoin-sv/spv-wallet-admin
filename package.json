@@ -36,7 +36,7 @@
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@mui/icons-material": "^5.15.8",
     "@mui/lab": "^5.0.0-alpha.164",
-    "@mui/material": "^5.15.7",
+    "@mui/material": "^5.15.13",
     "@mui/styles": "^5.15.8",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
