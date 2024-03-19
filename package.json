@@ -28,7 +28,7 @@
   "proxy": "http://localhost:3003",
   "dependencies": {
     "@4chain-ag/react-configuration": "^1.0.4",
-    "@bsv/spv-wallet-js-client": "^0.2.1",
+    "@bsv/spv-wallet-js-client": "^0.3.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",
