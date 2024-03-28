@@ -14,6 +14,8 @@
 ## What is SPV-Wallet?
 [Read more about SPV-Wallet](https://replace-after-moving-spv-wallet)
 
+[SPV Wallet GitBook](https://bsvblockchain.gitbook.io/docs)
+
 <br />
 
 ## Installation
