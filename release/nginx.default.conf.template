@@ -5,6 +5,12 @@ server {
     index index.html;
     server_tokens off;
 
+    add_header X-Frame-Options SAMEORIGIN;
+    add_header X-Content-Type-Options nosniff;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains always";
+    add_header Content-Security-Policy "default-src 'self'; style-src 'self' fonts.googleapis.com 'unsafe-inline'; font-src 'self' fonts.gstatic.com; script-src 'self'; connect-src 'self' ${SPV_WALLET_ADMIN_PROXY_API_DOMAIN}; img-src *; base-uri 'self'; form-action 'self'; frame-src 'self'; object-src 'none'; media-src 'none'; frame-ancestors 'self'";
+
+
     location /v1 {
         proxy_pass ${SPV_WALLET_ADMIN_PROXY_API_DOMAIN};
         proxy_set_header Host $host;
