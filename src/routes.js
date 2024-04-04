@@ -34,8 +34,13 @@ export const AppRouter = () => {
         <Route exact path="/transactions" name="Transactions" element={<Transactions/>}/>
         <Route exact path="/transaction-new" name="New Transactions" element={<TransactionNew/>}/>
         <Route exact path="/access-keys" name="Access Keys" element={<AccessKeys/>}/>
-        {(!!xPub || !!accessKeyString) &&
-            <Route exact path="/" name="xPub" element={<XPub />} />
+        {(!!xPub || !!accessKeyString)
+          ?
+          <Route exact path="/" name="xPub" element={<XPub/>}/>
+          :
+          <>
+            <Route exact path="/" name="Admin register xpub" element={<AdminRegisterXPub/>}/>
+          </>
         }
         <Route exact path="/admin/register-xpub" name="Admin register xpub" element={<AdminRegisterXPub/>}/>
         <Route exact path="/admin/access-keys" name="Admin access keys" element={<AdminAccessKeys/>}/>
