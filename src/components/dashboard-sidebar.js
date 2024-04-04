@@ -17,7 +17,6 @@ import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 import PaymailIcon from '@mui/icons-material/Message';
 import {useModifyCredentials} from "../hooks/use-credentials";
 
-import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { useUser } from "../hooks/user";
