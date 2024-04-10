@@ -44,7 +44,6 @@
     "assert": "npm:assert-browserify@^2.0.0",
     "bsv": "^1.5.6",
     "buffer": "6.0.3",
-    "chart.js": "^4.4.1",
     "crypto": "npm:crypto-browserify@^3.12.0",
     "formik": "^2.4.5",
     "history": "^5.0.0",
