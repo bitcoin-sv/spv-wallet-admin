@@ -39,7 +39,7 @@
     "@mui/material": "^5.15.7",
     "@mui/styles": "^5.15.8",
     "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
+    "@testing-library/react": "^14.3.0",
     "@testing-library/user-event": "^14.5.2",
     "assert": "npm:assert-browserify@^2.0.0",
     "bsv": "^1.5.6",
