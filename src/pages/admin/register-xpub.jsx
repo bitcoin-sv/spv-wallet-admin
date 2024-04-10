@@ -44,7 +44,7 @@ export const AdminRegisterXPub = () => {
     setLoading(true);
     try {
       const xPubHD = bsv.HDPublicKey.fromString(newXPub); // will throw on error
-        spvWalletAdminClient.RegisterXpub(newXPub);
+        spvWalletAdminClient.AdminNewXpub(newXPub);
       alert("XPub added");
       logger.info("XPub added")
       setNewXPub("");

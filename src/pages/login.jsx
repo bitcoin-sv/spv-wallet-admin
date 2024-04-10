@@ -110,7 +110,6 @@ const Login = () => {
           {!!config.serverUrl
             ?
             (!config.hideServerUrl &&
-              <>
                 <TextField
                   fullWidth
                   label={"http"}
@@ -120,10 +119,8 @@ const Login = () => {
                   variant="outlined"
                   disabled={true}
                 />
-              </>
             )
             :
-            <>
               <TextField
                 fullWidth
                 label="Server"
@@ -133,7 +130,6 @@ const Login = () => {
                 type="text"
                 variant="outlined"
               />
-            </>
           }
           <TextField
             fullWidth
