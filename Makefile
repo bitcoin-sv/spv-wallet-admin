@@ -13,7 +13,7 @@ endif
 
 ## Default branch
 ifndef REPO_BRANCH
-	override REPO_BRANCH="master"
+	override REPO_BRANCH="main"
 endif
 
 .PHONY: audit
