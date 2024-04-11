@@ -112,7 +112,7 @@ const Login = () => {
             (!config.hideServerUrl &&
                 <TextField
                   fullWidth
-                  label={"http"}
+                  label="http"
                   margin="dense"
                   value={config.serverUrl}
                   type="text"
