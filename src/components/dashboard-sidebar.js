@@ -17,7 +17,6 @@ import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 import PaymailIcon from '@mui/icons-material/Message';
 import {useModifyCredentials} from "../hooks/use-credentials";
 
-import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { useUser } from "../hooks/user";
@@ -25,51 +24,44 @@ import { Lock as LockIcon } from "../icons/lock";
 
 const adminItems = [
   {
-    href: '/admin/dashboard',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Admin Dashboard',
-    children: [
-      {
-        href: '/admin/register-xpub',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: '+ xPub'
-      },
-      {
-        href: '/admin/access-keys',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: 'Access Keys'
-      },
-      {
-        href: '/admin/destinations',
-        icon: (<LocationSearchingIcon fontSize="small" />),
-        title: 'Destinations'
-      },
-      {
-        href: '/admin/paymails',
-        icon: (<PaymailIcon fontSize="small" />),
-        title: 'Paymails'
-      },
-      {
-        href: '/admin/transactions',
-        icon: (<ViewListIcon fontSize="small" />),
-        title: 'Transactions'
-      },
-      {
-        href: '/admin/transaction-record',
-        icon: (<AddIcon fontSize="small" />),
-        title: 'Transactions'
-      },
-      {
-        href: '/admin/utxos',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: 'Utxos'
-      },
-      {
-        href: '/admin/xpubs',
-        icon: (<BitcoinIcon fontSize="small" />),
-        title: 'XPubs'
-      },
-    ]
+    href: '/admin/register-xpub',
+    icon: (<BitcoinIcon fontSize="small" />),
+    title: '+ xPub'
+  },
+  {
+    href: '/admin/access-keys',
+    icon: (<BitcoinIcon fontSize="small" />),
+    title: 'Access Keys'
+  },
+  {
+    href: '/admin/destinations',
+    icon: (<LocationSearchingIcon fontSize="small" />),
+    title: 'Destinations'
+  },
+  {
+    href: '/admin/paymails',
+    icon: (<PaymailIcon fontSize="small" />),
+    title: 'Paymails'
+  },
+  {
+    href: '/admin/transactions',
+    icon: (<ViewListIcon fontSize="small" />),
+    title: 'Transactions'
+  },
+  {
+    href: '/admin/transaction-record',
+    icon: (<AddIcon fontSize="small" />),
+    title: 'Transactions'
+  },
+  {
+    href: '/admin/utxos',
+    icon: (<BitcoinIcon fontSize="small" />),
+    title: 'Utxos'
+  },
+  {
+    href: '/admin/xpubs',
+    icon: (<BitcoinIcon fontSize="small" />),
+    title: 'XPubs'
   },
 ];
 

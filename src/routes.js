@@ -11,7 +11,6 @@ import {AdminTransactionRecord} from "./pages/admin/transaction-record";
 import {AdminTransactions} from "./pages/admin/transactions";
 import {AdminUtxos} from "./pages/admin/utxos";
 import {AdminXPubs} from "./pages/admin/xpubs";
-import Dashboard from "./pages/dashboard";
 import {Destination} from "./pages/destination";
 import {DestinationNew} from "./pages/destination-new";
 import {Destinations} from "./pages/destinations";
@@ -40,10 +39,9 @@ export const AppRouter = () => {
           <Route exact path="/" name="xPub" element={<XPub/>}/>
           :
           <>
-            <Route exact path="/" name="Admin dashboard" element={<Dashboard/>}/>
+            <Route exact path="/" name="Admin register xpub" element={<AdminRegisterXPub/>}/>
           </>
         }
-        <Route exact path="/admin/dashboard" name="Admin dashboard" element={<Dashboard/>}/>
         <Route exact path="/admin/register-xpub" name="Admin register xpub" element={<AdminRegisterXPub/>}/>
         <Route exact path="/admin/access-keys" name="Admin access keys" element={<AdminAccessKeys/>}/>
         <Route exact path="/admin/destinations" name="Admin destinations" element={<AdminDestinations/>}/>

@@ -28,7 +28,7 @@
   "proxy": "http://localhost:3003",
   "dependencies": {
     "@4chain-ag/react-configuration": "^1.0.4",
-    "@bsv/spv-wallet-js-client": "^0.2.1",
+    "@bsv/spv-wallet-js-client": "^0.3.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",
@@ -44,7 +44,6 @@
     "assert": "npm:assert-browserify@^2.0.0",
     "bsv": "^1.5.6",
     "buffer": "6.0.3",
-    "chart.js": "^4.4.1",
     "crypto": "npm:crypto-browserify@^3.12.0",
     "formik": "^2.4.5",
     "history": "^5.0.0",
