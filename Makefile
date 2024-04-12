@@ -3,17 +3,17 @@ include .make/common.mk
 
 ## Not defined? Use default repo name which is the application
 ifeq ($(REPO_NAME),)
-	REPO_NAME="bux-console"
+	REPO_NAME="spv-wallet-admin"
 endif
 
 ## Not defined? Use default repo owner
 ifeq ($(REPO_OWNER),)
-	REPO_OWNER="BuxOrg"
+	REPO_OWNER="bitcoin-sv"
 endif
 
 ## Default branch
 ifndef REPO_BRANCH
-	override REPO_BRANCH="master"
+	override REPO_BRANCH="main"
 endif
 
 .PHONY: audit

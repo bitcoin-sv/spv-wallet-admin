@@ -10,7 +10,7 @@ import { JsonView } from "../../components/json-view";
 import logger from "../../logger";
 
 export const AdminTransactionRecord = () => {
-  const { buxAdminClient } = useUser();
+  const { spvWalletAdminClient } = useUser();
   const location = useLocation();
   const params = new URLSearchParams(location.search)
 
@@ -43,7 +43,7 @@ export const AdminTransactionRecord = () => {
       }
 
       setLoading(true);
-      buxAdminClient.AdminRecordTransaction(txHex).then(tx => {
+      spvWalletAdminClient.AdminRecordTransaction(txHex).then(tx => {
         setTransaction(tx);
         setError('');
         setLoading(false);
@@ -97,7 +97,7 @@ export const AdminTransactionRecord = () => {
           <Alert severity="error">{error}</Alert>
           }
           {txHex && transaction && <>
-            <h2>Bux transaction</h2>
+            <h2>SPV Wallet transaction</h2>
             <JsonView jsonData={transaction} />
             <h2>Bitcoin transaction</h2>
             <JsonView jsonData={(new bsv.Transaction(transaction.hex)).toObject()} />

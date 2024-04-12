@@ -10,7 +10,7 @@ export const useQueryList = function (
     conditions,
   }
 ) {
-  const {buxClient, buxAdminClient} = useUser();
+  const {spvWalletClient, spvWalletAdminClient} = useUser();
 
   const [items, setItems] = useState([]);
   const [itemsCount, setItemsCount] = useState(0);
@@ -34,7 +34,7 @@ export const useQueryList = function (
   }, [limit]);
 
   useEffect(() => {
-    const client = admin ? buxAdminClient : buxClient;
+    const client = admin ? spvWalletAdminClient : spvWalletClient;
     if (!client) return;
     client[`${modelFunction}Count`](conditions || {}, {}).then(count => {
       setItemsCount(count);
@@ -54,7 +54,7 @@ export const useQueryList = function (
       order_by_field: 'created_at',
       sort_direction: 'desc',
     };
-    const client = admin ? buxAdminClient : buxClient;
+    const client = admin ? spvWalletAdminClient : spvWalletClient;
     if (!client) return;
     client[`${modelFunction}`](conditions || {}, {}, queryParams).then(items => {
       setItems([...items]);
@@ -91,7 +91,7 @@ export const useQueryList = function (
     Pagination,
     refreshData,
     setRefreshData,
-    buxClient,
-    buxAdminClient,
+    spvWalletClient,
+    spvWalletAdminClient,
   }
 }

@@ -1,0 +1,387 @@
+name: 'Release JS server application'
+permissions:
+  contents: write
+  packages: write
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: "Version of the app to release"
+      node-version:
+        required: false
+        type: string
+        description: "Version of Node.js which should be used to perform the checks. Takes precedence over node-version-file."
+      node-version-file:
+        required: false
+        type: string
+        default: 'package.json'
+        description: |
+          File containing the version Spec of the version to use.  Examples: package.json, .nvmrc, .node-version, .tool-versions.
+          If node-version and node-version-file are both provided the action will use version from node-version.
+      docker_image:
+        required: false
+        type: string
+        description: |
+          Set whole docker image name and should be in pattern: {registry}/{organisation}/{image_name} 
+          where registry can be omitted if this should be dockerhub registry
+          takes precedence over other options.
+      docker_registry:
+        required: false
+        type: string
+        default: 'dockerhub'
+        description: "Set registry for docker image. Defaults to dockerhub."
+      docker_org:
+        required: false
+        type: string
+        description: |
+          Set organisation docker image.
+          Equivalent of variable DOCKER_ORG.
+          If not set then defaults to secret DOCKER_USERNAME.
+          If secret DOCKER_USERNAME is not set, then defaults to GitHub repository owner (organisation)
+      docker_image_name:
+        required: false
+        type: string
+        description: |
+          Set name of docker image.
+          Equivalent of variable DOCKER_IMAGE_NAME.
+          If not set, then defaults to then defaults to GitHub repository name.
+    secrets:
+      DOCKER_USERNAME:
+        required: false
+        description: |
+          Username of docker repository.
+          If not set, then defaults to GitHub repository owner (organisation)
+
+      DOCKER_PASSWORD:
+        required: false
+        description: |
+          Password used to authenticate in docker repository.
+          If is not set, and registry is ghcr.io, then defaults to GitHub Token.
+
+      SLACK_WEBHOOK_URL:
+        required: false
+        description: 'Provide a Slack incoming webhook url, if you want to have a notification on the slack channel'
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  resolve-config:
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.os.outputs.result }}
+      workflow: ${{ steps.workflow.outputs.result }}
+    steps:
+      - id: workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflowRef = '${{github.workflow_ref}}'
+            const parts = workflowRef.split('@')[0].split('/')
+            return {
+              repository: `${{github.server_url}}/${parts[0]}/${parts[1]}`,
+              owner: parts[0],
+              repo_name: parts[1],
+              file: parts.slice(2).join('/')
+            }
+
+  build:
+    name: Build bundle
+    needs: [resolve-config]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          node-version-file: ${{ inputs.node-version-file }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Build
+        run: yarn build
+        env:
+          # FIXME: prevents failing build when there are warnings from linter, temporary solution until linter is ok
+          CI: false
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build/**
+
+      - name: Check if release exists
+        run: |
+          echo "GH_RELEASE_NAME=$(GH_PAGER=cat gh release view ${{ inputs.version }} --json name --jq .name)" >> $GITHUB_ENV
+
+      - name: Prepare draft of release
+        if: env.GH_RELEASE_NAME == ''
+        run: |
+          gh release create ${{ inputs.version }} --draft --generate-notes -t "Release ${{ inputs.version }}"
+
+  dockerize:
+    name: Dockerize
+    needs: [build]
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ env.VERSION }}
+      image: ${{ env.DOCKER_IMAGE }}
+      image_encoded: ${{ env.DOCKER_IMAGE_ENCODED }}
+      html: ${{ env.DOCKER_IMAGE_HTML }}
+      html_encoded: ${{ env.DOCKER_IMAGE_HTML_ENCODED }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: "Prepare working directories"
+        run: |
+          mkdir -p dist
+      - name: Download
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+
+      - name: Resolve docker configuration
+        id: resolve-docker
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let image = '${{ inputs.docker_image }}'
+            let registry
+            let organisation
+            let imageName
+            if(image) {
+                const parts = image.split('/')
+                registry = parts.length === 3 ? parts[0] : 'dockerhub'
+                organisation = parts.length === 3 ? parts[1] : parts[0]
+                imageName = parts.length === 3 ? parts[2] : parts[1]
+            } else {
+                registry = "${{ inputs.docker_registry || 'dockerhub' }}"
+                organisation = '${{ inputs.docker_org || vars.DOCKER_ORG || secrets.DOCKER_USERNAME || github.repository_owner }}'
+                imageName = '${{ inputs.docker_image_name || vars.DOCKER_IMAGE_NAME || github.event.repository.name }}'
+                image = `${registry !== 'dockerhub' ? registry + '/' : ''}${organisation}/${imageName}`
+            }
+            const isDockerhub = registry === 'dockerhub'
+            const isGhcr = registry === 'ghcr.io'
+            const username = '${{ secrets.DOCKER_USERNAME || github.repository_owner }}'
+            const password = '${{ secrets.DOCKER_PASSWORD }}'
+            const ghToken = '${{ github.token }}'
+            let dockerImageHtml=''
+            if(isDockerhub) {
+                dockerImageHtml = `https://hub.docker.com/r/${image}`
+            } else if(isGhcr) {
+                dockerImageHtml = `https://github.com/${organisation}/${imageName}/pkgs/container/${imageName}`
+            }   
+            
+            return {
+                image: image,
+                username: username,
+                password: password ? password : isGhcr ? ghToken : '',
+                registry: isDockerhub ? '' : registry,
+                isDockerhub,
+                isGhcr,
+                dockerImageHtml
+            }
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ fromJSON(steps.resolve-docker.outputs.result).image }}
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{version}}
+          labels: |
+            ${{ fromJSON(steps.resolve-docker.outputs.result).isDockerhub && format('org.opencontainers.image.url="https://hub.docker.com/r/{0}"', fromJSON(steps.resolve-docker.outputs.result).image) }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ fromJSON(steps.resolve-docker.outputs.result).registry }}
+          username: ${{ fromJSON(steps.resolve-docker.outputs.result).username }}
+          password: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./release/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            project_name=${{ github.event.repository.name }}
+            repository_owner=${{ github.repository_owner }}
+            tag=${{ github.ref_name }}
+            src_url=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.source'] }}
+            version=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            revision=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+
+      - name: Add additional variables to env
+        run: |
+          echo "DOCKER_IMAGE=${{ fromJSON(steps.resolve-docker.outputs.result).image }}" >> $GITHUB_ENV
+          echo "VERSION=${{ env.DOCKER_METADATA_OUTPUT_VERSION }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_HTML=${{ fromJSON(steps.resolve-docker.outputs.result).dockerImageHtml }}" >> $GITHUB_ENV
+
+      ### Solve the issue when part of image name is resolved as secret.DOCKER_USERNAME
+      - name: Encoded outputs
+        id: encoded-outputs
+        run: |
+          echo "DOCKER_IMAGE_ENCODED=$(echo "$DOCKER_IMAGE" | base64 -w0 | base64 -w0 )" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_HTML_ENCODED=$(echo "$DOCKER_IMAGE_HTML" | base64 -w0 | base64 -w0 )" >> $GITHUB_ENV
+      - name: Choose dockerhub readme file template
+        if: success() && fromJSON(steps.resolve-docker.outputs.result).isDockerhub
+        run: |
+          readmeFile=$([ -f ./README.md ] && echo "./README.md" || echo '')
+          readmeFile=$([ -f ./README.DOCKER.md ] && echo './README.DOCKER.md' || echo $readmeFile)
+          readmeFile=$([ -f ./release/README.DOCKER.md ] && echo './release/README.DOCKER.md' || echo $readmeFile)
+          echo "DOCKER_README_FILE=$readmeFile" >> $GITHUB_ENV
+
+      - name: Prepare README for dockerhub
+        if: success() && fromJSON(steps.resolve-docker.outputs.result).isDockerhub && env.DOCKER_README_FILE != ''
+        run: |
+          envsubst < $DOCKER_README_FILE > ./dist/README.DOCKER.md
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        if: success() && env.DOCKER_README_FILE != ''
+        with:
+          username: ${{ fromJSON(steps.resolve-docker.outputs.result).username }}
+          password: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
+          short-description: ${{ github.event.repository.description }}
+          repository: ${{ fromJSON(steps.resolve-docker.outputs.result).image }}
+          readme-filepath: ./dist/README.DOCKER.md
+
+  publish-release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    needs: [dockerize]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish
+        run: |
+          gh release edit ${{ inputs.version }} --draft=false --repo ${{ github.repository }}
+
+  notify:
+    name: "Notify"
+    runs-on: ubuntu-latest
+    needs: [dockerize, publish-release]
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      REPO_URL: ${{github.server_url}}/${{ github.repository }}
+      RELEASE_URL: ${{github.server_url}}/${{ github.repository }}/releases/tag/${{ inputs.version }}
+    steps:
+      - name: "Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set"
+        if: ${{ env.SLACK_WEBHOOK_URL == '' }}
+        run: echo "::notice::Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set"
+
+      - name: "Resolve docker outputs"
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          echo "DOCKER_IMAGE=${{ needs.dockerize.outputs.image }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_HTML=${{ needs.dockerize.outputs.html }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_VERSION=${{ needs.dockerize.outputs.version }}" >> $GITHUB_ENV
+
+      # Sometime GH can treat image name and image url as containing secrets,
+      # therefore if they're missing we need to resolve them again
+      - name: Resolve docker configuration
+        id: resolve-docker
+        uses: actions/github-script@v7
+        if: env.SLACK_WEBHOOK_URL != '' && (env.DOCKER_IMAGE == '' || env.DOCKER_IMAGE_HTML == '')
+        with:
+          script: |
+            let image = '${{ inputs.docker_image }}'
+            let registry
+            let organisation
+            let imageName
+            if(image) {
+                const parts = image.split('/')
+                registry = parts.length === 3 ? parts[0] : 'dockerhub'
+                organisation = parts.length === 3 ? parts[1] : parts[0]
+                imageName = parts.length === 3 ? parts[2] : parts[1]
+            } else {
+                registry = "${{ inputs.docker_registry || 'dockerhub' }}"
+                organisation = '${{ inputs.docker_org || vars.DOCKER_ORG || secrets.DOCKER_USERNAME || github.repository_owner }}'
+                imageName = '${{ inputs.docker_image_name || vars.DOCKER_IMAGE_NAME || github.event.repository.name }}'
+                image = `${registry !== 'dockerhub' ? registry + '/' : ''}${organisation}/${imageName}`
+            }
+            const isDockerhub = registry === 'dockerhub'
+            const isGhcr = registry === 'ghcr.io'
+            const username = '${{ secrets.DOCKER_USERNAME || github.repository_owner }}'
+            const password = '${{ secrets.DOCKER_PASSWORD }}'
+            const ghToken = '${{ github.token }}'
+            let dockerImageHtml=''
+            if(isDockerhub) {
+                dockerImageHtml = `https://hub.docker.com/r/${image}`
+            } else if(isGhcr) {
+                dockerImageHtml = `https://github.com/${organisation}/${imageName}/pkgs/container/${imageName}`
+            }   
+            
+            return {
+                image: image,
+                username: username,
+                password: password ? password : isGhcr ? ghToken : '',
+                registry: isDockerhub ? '' : registry,
+                isDockerhub,
+                isGhcr,
+                dockerImageHtml
+            }
+
+      - name: "Set missing docker image and image html"
+        if: env.SLACK_WEBHOOK_URL != '' && (env.DOCKER_IMAGE == '' || env.DOCKER_IMAGE_HTML == '')
+        run: |
+          echo "DOCKER_IMAGE=${{ fromJSON(steps.resolve-docker.outputs.result).image }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_HTML=${{ fromJSON(steps.resolve-docker.outputs.result).dockerImageHtml }}" >> $GITHUB_ENV
+
+      - name: "Notify successful release"
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "block_id": "release",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*${{ github.event.repository.name || github.repository }}* <${{ env.RELEASE_URL }}|${{ inputs.version }}> is out! :rocket:"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://www.docker.com/favicon.ico",
+                      "alt_text": "docker"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Docker image <${{ env.DOCKER_IMAGE_HTML }}|${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_IMAGE_VERSION }}> pushed!"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
