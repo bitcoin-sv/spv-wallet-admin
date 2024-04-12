@@ -5,14 +5,16 @@
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Code Standards](#code-standards)
-- [Usage](#usage)
+- [Running](#running)
 - [Contributing](#contributing)
 - [License](#license)
 
 <br />
 
 ## What is SPV-Wallet?
-[Read more about SPV-Wallet](https://github.com/bitcoin-sv/spv-wallet/blob/master/README.md)
+[Read more about SPV-Wallet](https://github.com/bitcoin-sv/spv-wallet/blob/main/README.md)
+
+For in-depth information and guidance, please refer to the [SPV Wallet Documentation](https://bsvblockchain.gitbook.io/docs).
 
 <br />
 
