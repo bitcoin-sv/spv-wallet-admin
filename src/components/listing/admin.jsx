@@ -1,43 +1,39 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from 'prop-types'
-import { useNavigate } from "react-router-dom";
-import PerfectScrollbar from "react-perfect-scrollbar";
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
-import { Alert, Box, Card, TextField, Typography } from "@mui/material";
+import { Alert, Box, Card, TextField, Typography } from '@mui/material';
 
-import { useQueryList } from "../../hooks/use-query-list";
-import { useDebounce } from "../../hooks/debounce";
+import { useQueryList } from '../../hooks/use-query-list';
+import { useDebounce } from '../../hooks/debounce';
+import { useUser } from '../../hooks/user';
 
-export const AdminListing = function(
-  {
-    modelFunction,
-    title,
-    ListingComponent,
-    conditions,
-    filter: initialFilter,
-    setFilter,
-    additionalFilters,
-  }
-) {
+export const AdminListing = function ({
+  modelFunction,
+  title,
+  ListingComponent,
+  conditions,
+  filter: initialFilter,
+  setFilter,
+  additionalFilters,
+}) {
   const navigate = useNavigate();
 
-  const [ searchFilter, setSearchFilter ] = useState('');
+  const [searchFilter, setSearchFilter] = useState('');
   const debouncedFilter = useDebounce(searchFilter, 500);
 
-  const {
-    items,
-    loading,
-    error,
-    Pagination,
-    setRefreshData,
-    spvWalletAdminClient,
-  } = useQueryList({ modelFunction, admin: true, conditions });
+  const { admin } = useUser();
+  const { items, loading, error, Pagination, setRefreshData } = useQueryList({
+    modelFunction,
+    conditions,
+  });
 
   useEffect(() => {
-    if (!spvWalletAdminClient) {
+    if (!admin) {
       navigate('/');
     }
-  }, [spvWalletAdminClient]);
+  }, [navigate, admin]);
 
   useEffect(() => {
     if (initialFilter) {
@@ -54,10 +50,7 @@ export const AdminListing = function(
   return (
     <>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography
-          color="inherit"
-          variant="h4"
-        >
+        <Typography color="inherit" variant="h4">
           {title}
         </Typography>
         <Box display="flex" flex={1} flexDirection="row" alignItems="center">
@@ -70,34 +63,28 @@ export const AdminListing = function(
             type="text"
             variant="outlined"
             style={{
-              marginLeft: 20
+              marginLeft: 20,
             }}
           />
           {additionalFilters ? additionalFilters() : ''}
         </Box>
       </Box>
-      {loading
-        ?
+      {loading ? (
         <>Loading...</>
-        :
+      ) : (
         <>
-          {!!error &&
-          <Alert severity="error">{error}</Alert>
-          }
+          {!!error && <Alert severity="error">{error}</Alert>}
           <Card>
             <PerfectScrollbar>
-              <ListingComponent
-                items={items}
-                refetch={() => setRefreshData(+new Date())}
-              />
+              <ListingComponent items={items} refetch={() => setRefreshData(+new Date())} />
             </PerfectScrollbar>
-            <Pagination/>
+            <Pagination />
           </Card>
         </>
-      }
+      )}
     </>
   );
-}
+};
 
 AdminListing.propTypes = {
   ListingComponent: PropTypes.func.isRequired,
@@ -107,4 +94,4 @@ AdminListing.propTypes = {
   filter: PropTypes.string,
   setFilter: PropTypes.func,
   additionalFilters: PropTypes.func,
-}
+};

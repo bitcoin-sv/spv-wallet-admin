@@ -1,42 +1,42 @@
 import React, { useCallback, useState } from 'react';
-import { SpvWalletClient} from "@bsv/spv-wallet-js-client";
 
-import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from '@mui/material';
 
-import { DashboardLayout } from "../components/dashboard-layout";
-import { useUser } from "../hooks/user";
-import { JsonView } from "../components/json-view";
-import logger from "../logger";
+import { DashboardLayout } from '../components/dashboard-layout';
+import { useUser } from '../hooks/user';
+import { JsonView } from '../components/json-view';
+import logger from '../logger';
 
 export const TransactionNew = () => {
-  const { xPriv, server } = useUser();
+  const { spvWalletClient } = useUser();
 
-  const [ recipients, setRecipients ] = useState([{}]);
-  const [ draftTransaction, setDraftTransaction ] = useState(null);
-  const [ transaction, setTransaction ] = useState(null);
+  const [recipients, setRecipients] = useState([{}]);
+  const [draftTransaction, setDraftTransaction] = useState(null);
+  const [transaction, setTransaction] = useState(null);
 
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const spvWalletClient = new SpvWalletClient(server, {
-    xPriv,
-    signRequest: true,
-  });
+  const handleNewTransaction = useCallback(
+    (recipients) => {
+      setLoading(true);
+      spvWalletClient
+        .DraftToRecipients(recipients, { agent: 'SPV Wallet client test' })
+        .then((d) => {
+          setDraftTransaction(d);
+          setError('');
+          setLoading(false);
+        })
+        .catch((e) => {
+          logger.error(e);
+          setError(e.message);
+          setLoading(false);
+        });
+    },
+    [spvWalletClient],
+  );
 
-  const handleNewTransaction = useCallback((recipients) => {
-    setLoading(true);
-    spvWalletClient.DraftToRecipients(recipients, { agent: 'SPV Wallet client test' }).then(d => {
-      setDraftTransaction(d);
-      setError('');
-      setLoading(false);
-    }).catch(e => {
-      logger.error(e)
-      setError(e.message);
-      setLoading(false);
-    });
-  },[]);
-
-  const handleSendTransaction = useCallback(draftTransaction => {
+  const handleSendTransaction = useCallback((draftTransaction) => {
     setLoading(true);
     let transactionHex;
     try {
@@ -45,30 +45,30 @@ export const TransactionNew = () => {
       setDraftTransaction(null);
       setTransaction(null);
       setError(e.message);
-      logger.error(e)
+      logger.error(e);
       setLoading(false);
     }
 
     if (transactionHex) {
-      spvWalletClient.RecordTransaction(transactionHex, draftTransaction.id, {}).then(t => {
-        setTransaction(t);
-        setError('');
-        setLoading(false);
-      }).catch(e => {
-        setTransaction(null);
-        setError(e.message);
-        logger.error(e)
-        setLoading(false);
-      });
+      spvWalletClient
+        .RecordTransaction(transactionHex, draftTransaction.id, {})
+        .then((t) => {
+          setTransaction(t);
+          setError('');
+          setLoading(false);
+        })
+        .catch((e) => {
+          setTransaction(null);
+          setError(e.message);
+          logger.error(e);
+          setLoading(false);
+        });
     }
-  },[]);
+  }, []);
 
   return (
     <DashboardLayout>
-      <Typography
-        color="inherit"
-        variant="h4"
-      >
+      <Typography color="inherit" variant="h4">
         New Transaction
       </Typography>
       {recipients.map((recipient, index) => {
@@ -82,7 +82,7 @@ export const TransactionNew = () => {
               onChange={(e) => {
                 const newRecipients = [...recipients];
                 newRecipients[index].to = e.target.value;
-                setRecipients(newRecipients)
+                setRecipients(newRecipients);
               }}
               type="text"
               variant="outlined"
@@ -96,12 +96,12 @@ export const TransactionNew = () => {
               onChange={(e) => {
                 const newRecipients = [...recipients];
                 newRecipients[index].satoshis = Number(e.target.value);
-                setRecipients(newRecipients)
+                setRecipients(newRecipients);
               }}
               variant="outlined"
             />
           </Box>
-        )
+        );
       })}
       <Button
         fullWidth={false}
@@ -118,32 +118,30 @@ export const TransactionNew = () => {
       >
         Create draft transaction
       </Button>
-      {loading
-      ?
+      {loading ? (
         <>Loading...</>
-      :
+      ) : (
         <>
-          {!!error &&
-          <Alert severity="error">{error}</Alert>
-          }
-          {draftTransaction && <>
-            <h2>SPV Wallet draft transaction</h2>
-            <JsonView jsonData={draftTransaction} />
-            {transaction
-            ?
-              <JsonView jsonData={transaction} />
-            :
-              <Button
-                onClick={() => {
-                  handleSendTransaction(draftTransaction);
-                }}
-              >
-                Sign and send transaction
-              </Button>
-            }
-          </>}
+          {!!error && <Alert severity="error">{error}</Alert>}
+          {draftTransaction && (
+            <>
+              <h2>SPV Wallet draft transaction</h2>
+              <JsonView jsonData={draftTransaction} />
+              {transaction ? (
+                <JsonView jsonData={transaction} />
+              ) : (
+                <Button
+                  onClick={() => {
+                    handleSendTransaction(draftTransaction);
+                  }}
+                >
+                  Sign and send transaction
+                </Button>
+              )}
+            </>
+          )}
         </>
-      }
+      )}
     </DashboardLayout>
   );
 };
