@@ -117,15 +117,20 @@ export const DashboardSidebar = (props) => {
     if (credType === CredTypeNone) {
       return '';
     }
-    if (credType === CredTypeAdmin) {
-      return bsv.crypto.Hash.sha256(Buffer.from(cred)).toString('hex');
+    try {
+      if (credType === CredTypeAdmin) {
+        return bsv.crypto.Hash.sha256(Buffer.from(cred)).toString('hex');
+      }
+      // below calculate the hash for xPriv or accessKey cred
+      const keyObj =
+        credType === CredTypeXPriv
+          ? bsv.HDPrivateKey.fromString(cred).hdPublicKey
+          : bsv.PrivateKey.fromString(cred).publicKey;
+      return bsv.crypto.Hash.sha256(Buffer.from(keyObj.toString())).toString('hex');
+    } catch (e) {
+      console.error('Cannot calculate keyId', e);
+      return '';
     }
-    // below calculate the hash for xPriv or accessKey cred
-    const keyObj =
-      credType === CredTypeXPriv
-        ? bsv.HDPrivateKey.fromString(cred).hdPublicKey
-        : bsv.PrivateKey.fromString(cred).publicKey;
-    return bsv.crypto.Hash.sha256(keyObj.toString()).toString('hex');
   }, [cred, credType]);
 
   const currentItems = credType === CredTypeAdmin ? adminItems : items;
