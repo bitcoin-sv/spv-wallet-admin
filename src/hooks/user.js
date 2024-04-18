@@ -6,7 +6,6 @@ export const useUser = () => {
     xPrivString,
     xPubString: xPubStringCtx,
     accessKeyString,
-    transportType,
     server,
     adminKeyString,
   } = useCredentials()
@@ -37,9 +36,8 @@ export const useUser = () => {
   }
 
   let spvWalletClient, spvWalletAdminClient;
-  if (server && transportType) {
+  if (server) {
     spvWalletClient = new SpvWalletClient(server, {
-      transportType: transportType,
       xPriv,
       xPub,
       accessKey,
@@ -47,7 +45,6 @@ export const useUser = () => {
     });
     if (adminKey) {
       spvWalletAdminClient = new SpvWalletClient(server, {
-        transportType: transportType,
         xPriv,
         xPub,
         accessKey,
@@ -65,7 +62,6 @@ export const useUser = () => {
     xPubId,
     accessKey,
     accessKeyString,
-    transportType,
     server,
     adminKey,
     adminId,
