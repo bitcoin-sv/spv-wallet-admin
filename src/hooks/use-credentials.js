@@ -42,7 +42,6 @@ export function useModifyCredentials() {
     setXPubString: (value) => dispatch({type: 'setXPubString', value}),
     setAccessKeyString: (value) => dispatch({type: 'setAccessKeyString', value}),
     setServer: (value) => dispatch({type: 'setServer', value}),
-    setTransportType: (value) => dispatch({type: 'setTransportType', value}),
     setAdminKey: (value) => dispatch({type: 'setAdminKey', value}),
   }
 }
@@ -69,11 +68,6 @@ function credentialsReducer(credentials, action) {
         ...credentials,
         server: action.value
       }
-    case 'setTransportType':
-      return {
-        ...credentials,
-        transportType: action.value
-      }
     case 'setAdminKey':
       return {
         ...credentials,
@@ -89,7 +83,6 @@ const initialCredentials = {
   xPrivString: null,
   xPubString: null,
   accessKeyString: null,
-  transportType: null,
   server: null,
   adminKeyString: null,
 }

@@ -11,7 +11,7 @@ import { JsonView } from "../components/json-view";
 import logger from "../logger";
 
 export const Transaction = () => {
-  const { xPriv, xPub, accessKey, server, transportType } = useUser();
+  const { xPriv, xPub, accessKey, server } = useUser();
   const location = useLocation();
   const params = new URLSearchParams(location.search)
 
@@ -21,7 +21,6 @@ export const Transaction = () => {
   const [ error, setError ] = useState('');
 
   const spvWalletClient = new SpvWalletClient(server, {
-    transportType: transportType,
     xPriv,
     xPub,
     accessKey,

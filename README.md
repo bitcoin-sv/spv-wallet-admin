@@ -5,15 +5,14 @@
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Code Standards](#code-standards)
-- [Usage](#usage)
+- [Running](#running)
 - [Contributing](#contributing)
 - [License](#license)
 
 <br />
 
 ## What is SPV-Wallet?
-[Read more about SPV-Wallet](https://replace-after-moving-spv-wallet)
-## Documentation
+[Read more about SPV-Wallet](https://github.com/bitcoin-sv/spv-wallet/blob/main/README.md)
 
 For in-depth information and guidance, please refer to the [SPV Wallet Documentation](https://bsvblockchain.gitbook.io/docs).
 
@@ -79,7 +78,7 @@ Please read our [standards document](.github/CODE_STANDARDS.md)
 <br />
 
 ## Contributing
-View the [contributing guidelines](.github/CONTRIBUTING.md) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
+View the [contributing guidelines](.github/CODE_STANDARDS.md#3-contributing) and follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
 
 <br/>
 
