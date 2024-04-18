@@ -1,7 +1,6 @@
+import bsv from 'bsv';
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
-
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
@@ -13,14 +12,12 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddIcon from '@mui/icons-material/Add';
 import KeyIcon from '@mui/icons-material/Key';
 import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 import PaymailIcon from '@mui/icons-material/Message';
-import { useCredentials } from '../hooks/useCredentials';
+import { CredTypeAdmin, CredTypeXPriv, useCredentials, CredTypeNone } from '../hooks/useCredentials';
 
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { Lock as LockIcon } from '../icons/lock';
-import { useKeys } from '../hooks/use-keys';
 
 const adminItems = [
   {
@@ -110,20 +107,28 @@ const items = [
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
-  const { xPubId, adminId } = useKeys();
-  const { clear: clearCredentials, server } = useCredentials();
-  const navigate = useNavigate();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
   });
 
-  const useItems = useMemo(() => {
-    if (adminId) {
-      return xPubId ? [...adminItems, ...items] : [...adminItems];
+  const { type: credType, cred, clear: clearCredentials, server } = useCredentials();
+  const keyId = useMemo(() => {
+    if (credType === CredTypeNone) {
+      return '';
     }
-    return [...items];
-  }, [adminId, xPubId]);
+    if (credType === CredTypeAdmin) {
+      return bsv.crypto.Hash.sha256(Buffer.from(cred)).toString('hex');
+    }
+    // below calculate the hash for xPriv or accessKey cred
+    const keyObj =
+      credType === CredTypeXPriv
+        ? bsv.HDPrivateKey.fromString(cred).hdPublicKey
+        : bsv.PrivateKey.fromString(cred).publicKey;
+    return bsv.crypto.Hash.sha256(keyObj.toString()).toString('hex');
+  }, [cred, credType]);
+
+  const currentItems = credType === CredTypeAdmin ? adminItems : items;
 
   const content = (
     <>
@@ -169,7 +174,7 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography color="inherit" variant="subtitle1">
-                  XpubID
+                  {credType === CredTypeAdmin ? 'Admin ID' : 'xPub ID'}
                 </Typography>
                 <Typography
                   color="inherit"
@@ -180,51 +185,10 @@ export const DashboardSidebar = (props) => {
                     width: '220px',
                   }}
                 >
-                  {xPubId}
+                  {keyId}
                 </Typography>
               </div>
             </Box>
-            {adminId ? (
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  px: 3,
-                  py: '11px',
-                  borderRadius: 1,
-                }}
-              >
-                <div>
-                  <Typography color="inherit" variant="subtitle1">
-                    Admin ID
-                  </Typography>
-                  <Typography
-                    color="inherit"
-                    variant="body2"
-                    style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      width: '220px',
-                    }}
-                  >
-                    {adminId}
-                  </Typography>
-                </div>
-              </Box>
-            ) : (
-              <Button
-                startIcon={<AdminIcon fontSize="small" />}
-                sx={{ mr: 1 }}
-                onClick={() => {
-                  navigate('/admin/dashboard');
-                }}
-              >
-                Login Admin
-              </Button>
-            )}
             <Button startIcon={<LockIcon fontSize="small" />} sx={{ mr: 1 }} onClick={clearCredentials}>
               Logout
             </Button>
@@ -237,18 +201,9 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {useItems.map((item) => (
-            <div key={`${item.title}-${item.href}`}>
+          {currentItems.map((item, index) => (
+            <div key={index}>
               <NavItem icon={item.icon} href={item.href} title={item.title} />
-              {item.children?.length > 0 && (
-                <>
-                  {item.children.map((child) => (
-                    <Box key={`sidebar-child-${child.title}-${child.href}`} sx={{ flexGrow: 1, marginLeft: 4 }}>
-                      <NavItem key={child.title} icon={child.icon} href={child.href} title={child.title} />
-                    </Box>
-                  ))}
-                </>
-              )}
             </div>
           ))}
         </Box>

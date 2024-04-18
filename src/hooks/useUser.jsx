@@ -15,7 +15,7 @@ export function UserProvider({ children }) {
     if (!options) {
       return undefined;
     }
-    return new SpvWalletClient(server, options);
+    return new SpvWalletClient(server, options, { level: 'warn' });
   }, [cred, server, type]);
 
   const contextValue = useMemo(() => {
@@ -35,6 +35,7 @@ export const useUser = () => {
 };
 
 // creates a proper key object for SpvWalletClient constructor
+// e.g { xPriv: cred} or { adminKey: cred } or { accessKey: cred }
 const makeClientOptions = (cred, type) => {
   const clientOptionsKey = keyObjectMapper?.[type];
   return clientOptionsKey

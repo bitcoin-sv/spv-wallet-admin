@@ -3,7 +3,7 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { CredentialsProvider } from './hooks/useCredentials';
-import { UserProvider } from './hooks/user';
+import { UserProvider } from './hooks/useUser';
 import { AppRouter } from './routes';
 import { theme } from './theme';
 import { createEmotionCache } from './utils/create-emotion-cache';

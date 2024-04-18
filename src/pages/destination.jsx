@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Box, TextField, Typography } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 import { useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { JsonView } from '../components/json-view';

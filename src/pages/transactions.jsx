@@ -5,7 +5,7 @@ import { Alert, Card, Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { TransactionsList } from '../components/transactions';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useQueryList } from '../hooks/use-query-list';
+import { useQueryList } from '../hooks/useQueryList';
 
 export const Transactions = () => {
   const { items, loading, error, Pagination } = useQueryList({ modelFunction: 'GetTransactions' });

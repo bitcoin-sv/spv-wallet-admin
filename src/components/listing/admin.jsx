@@ -5,9 +5,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import { Alert, Box, Card, TextField, Typography } from '@mui/material';
 
-import { useQueryList } from '../../hooks/use-query-list';
-import { useDebounce } from '../../hooks/debounce';
-import { useUser } from '../../hooks/user';
+import { useQueryList } from '../../hooks/useQueryList';
+import { useDebounce } from '../../hooks/useDebounce';
+import { useUser } from '../../hooks/useUser';
 
 export const AdminListing = function ({
   modelFunction,

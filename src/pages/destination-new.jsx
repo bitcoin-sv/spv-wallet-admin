@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import QRCode from 'react-qr-code';
 
 import { Alert, Box, Button, Typography } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 import { JsonView } from '../components/json-view';
 import logger from '../logger';
 

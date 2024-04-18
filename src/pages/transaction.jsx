@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Alert, TextField, Typography } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 import { useLocation } from 'react-router-dom';
 import { JsonView } from '../components/json-view';
 import logger from '../logger';

@@ -2,7 +2,7 @@ import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { SeverityPill } from '../components/severity-pill';
-import { useLocalStorage } from '../hooks/localstorage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useConfig } from '@4chain-ag/react-configuration';
 import { CredTypeAccessKey, CredTypeAdmin, CredTypeXPriv, useCredentials } from '../hooks/useCredentials';
 import logger from '../logger';
@@ -22,11 +22,7 @@ const Login = () => {
       return;
     }
 
-    let useServerUrl = serverUrl || config.serverUrl;
-    if (config.serverUrl) {
-      // use the hardcoded defaults for server url
-      useServerUrl = config.serverUrl;
-    }
+    const currentServerUrl = config.serverUrl || serverUrl;
 
     // NOTE: the login procedure is as follows:
     // 1. If the loginKey fits the xpriv pattern, then try to login with it:
@@ -36,22 +32,18 @@ const Login = () => {
 
     if (loginKey.match(/^xprv/)) {
       try {
-        const testerClient = new SpvWalletClient(useServerUrl, {
-          xPriv: loginKey,
-        });
+        const testerClient = new SpvWalletClient(currentServerUrl, { xPriv: loginKey }, { level: 'disabled' });
         await testerClient.GetXPub(); //should throw an error if the xpriv is invalid
 
-        setCredentials(useServerUrl, loginKey, CredTypeXPriv);
+        setCredentials(currentServerUrl, loginKey, CredTypeXPriv);
         return;
       } catch (e) {
         // check whether this is an admin only login
         try {
-          const testerClient = new SpvWalletClient(useServerUrl, {
-            adminKey: loginKey,
-          });
+          const testerClient = new SpvWalletClient(currentServerUrl, { adminKey: loginKey }, { level: 'disabled' });
           await testerClient.AdminGetStatus(); //should throw an error if the admin key is invalid
 
-          setCredentials(useServerUrl, loginKey, CredTypeAdmin);
+          setCredentials(currentServerUrl, loginKey, CredTypeAdmin);
           return;
         } catch (e) {
           logger.error(e);
@@ -61,12 +53,10 @@ const Login = () => {
 
     //if the login is not an xpriv nor an admin key, then it must be an access key (or invalid)
     try {
-      const testerClient = new SpvWalletClient(useServerUrl, {
-        accessKey: loginKey,
-      });
+      const testerClient = new SpvWalletClient(currentServerUrl, { accessKey: loginKey }, { level: 'disabled' });
       await testerClient.GetXPub(); //should throw an error if the accessKey is invalid
 
-      setCredentials(useServerUrl, loginKey, CredTypeAccessKey);
+      setCredentials(currentServerUrl, loginKey, CredTypeAccessKey);
       return;
     } catch (e) {
       setError('Please set a server and a valid key to connect');

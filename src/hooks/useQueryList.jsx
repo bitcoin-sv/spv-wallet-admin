@@ -1,4 +1,4 @@
-import { useUser } from './user';
+import { useUser } from './useUser';
 import React, { useEffect, useState } from 'react';
 import { TablePagination } from '@mui/material';
 import logger from '../logger';

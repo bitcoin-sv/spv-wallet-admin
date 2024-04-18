@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Alert, Box, Button, TextField, Typography } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 import { JsonView } from '../components/json-view';
 import logger from '../logger';
 

@@ -6,10 +6,10 @@ import Button from '@mui/material/Button';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { Alert, Card } from '@mui/material';
 import { AccessKeysList } from '../components/access-keys';
-import { useQueryList } from '../hooks/use-query-list';
+import { useQueryList } from '../hooks/useQueryList';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import logger from '../logger';
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 
 export const AccessKeys = () => {
   const { items, loading, error, setError, Pagination, setRefreshData } = useQueryList({

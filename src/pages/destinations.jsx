@@ -5,7 +5,7 @@ import { Alert, Card, Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { DestinationsList } from '../components/destinations';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useQueryList } from '../hooks/use-query-list';
+import { useQueryList } from '../hooks/useQueryList';
 
 export const Destinations = () => {
   const { items, loading, error, Pagination } = useQueryList({ modelFunction: 'GetDestinations' });

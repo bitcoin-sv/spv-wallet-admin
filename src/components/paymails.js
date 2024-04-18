@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useUser } from '../hooks/user';
+import { useUser } from '../hooks/useUser';
 import logger from '../logger';
 import { JsonView } from './json-view';
 
