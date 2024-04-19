@@ -52,7 +52,7 @@ export const useQueryList = function ({ modelFunction, conditions }) {
       sort_direction: 'desc',
     };
     if (!spvWalletClient) {
-      return spvWalletClient;
+      return;
     }
     spvWalletClient[`${modelFunction}`](conditions || {}, {}, queryParams)
       .then((items) => {

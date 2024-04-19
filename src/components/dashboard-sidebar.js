@@ -1,4 +1,3 @@
-import bsv from 'bsv';
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
@@ -13,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import KeyIcon from '@mui/icons-material/Key';
 import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import PaymailIcon from '@mui/icons-material/Message';
-import { CredTypeAdmin, CredTypeXPriv, useCredentials, CredTypeNone } from '../hooks/useCredentials';
+import { CredTypeAdmin, useCredentials } from '../hooks/useCredentials';
 
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
@@ -114,24 +113,16 @@ export const DashboardSidebar = (props) => {
 
   const { type: credType, cred, clear: clearCredentials, server } = useCredentials();
   const keyId = useMemo(() => {
-    if (credType === CredTypeNone) {
+    //keyId is the first 6 and last 6 characters of the cred
+    //e.g. xprv9s****19CESK
+    const visibleChars = 6;
+    if (!cred || cred.length < 3 * visibleChars) {
       return '';
     }
-    try {
-      if (credType === CredTypeAdmin) {
-        return bsv.crypto.Hash.sha256(Buffer.from(cred)).toString('hex');
-      }
-      // below calculate the hash for xPriv or accessKey cred
-      const keyObj =
-        credType === CredTypeXPriv
-          ? bsv.HDPrivateKey.fromString(cred).hdPublicKey
-          : bsv.PrivateKey.fromString(cred).publicKey;
-      return bsv.crypto.Hash.sha256(Buffer.from(keyObj.toString())).toString('hex');
-    } catch (e) {
-      console.error('Cannot calculate keyId', e);
-      return '';
-    }
-  }, [cred, credType]);
+    const pre = cred.substring(0, visibleChars);
+    const post = cred.substring(cred.length - visibleChars);
+    return `${pre}****${post}`;
+  }, [cred]);
 
   const currentItems = credType === CredTypeAdmin ? adminItems : items;
 
