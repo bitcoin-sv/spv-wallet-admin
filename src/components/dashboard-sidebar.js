@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from "react-router-dom";
-
 import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
@@ -13,121 +11,120 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddIcon from '@mui/icons-material/Add';
 import KeyIcon from '@mui/icons-material/Key';
 import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 import PaymailIcon from '@mui/icons-material/Message';
-import {useModifyCredentials} from "../hooks/use-credentials";
+import { CredTypeAdmin, useCredentials } from '../hooks/useCredentials';
 
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
-import { useUser } from "../hooks/user";
-import { Lock as LockIcon } from "../icons/lock";
+import { Lock as LockIcon } from '../icons/lock';
 
 const adminItems = [
   {
     href: '/admin/register-xpub',
-    icon: (<BitcoinIcon fontSize="small" />),
-    title: '+ xPub'
+    icon: <BitcoinIcon fontSize="small" />,
+    title: '+ xPub',
   },
   {
     href: '/admin/access-keys',
-    icon: (<BitcoinIcon fontSize="small" />),
-    title: 'Access Keys'
+    icon: <BitcoinIcon fontSize="small" />,
+    title: 'Access Keys',
   },
   {
     href: '/admin/destinations',
-    icon: (<LocationSearchingIcon fontSize="small" />),
-    title: 'Destinations'
+    icon: <LocationSearchingIcon fontSize="small" />,
+    title: 'Destinations',
   },
   {
     href: '/admin/paymails',
-    icon: (<PaymailIcon fontSize="small" />),
-    title: 'Paymails'
+    icon: <PaymailIcon fontSize="small" />,
+    title: 'Paymails',
   },
   {
     href: '/admin/transactions',
-    icon: (<ViewListIcon fontSize="small" />),
-    title: 'Transactions'
+    icon: <ViewListIcon fontSize="small" />,
+    title: 'Transactions',
   },
   {
     href: '/admin/transaction-record',
-    icon: (<AddIcon fontSize="small" />),
-    title: 'Transactions'
+    icon: <AddIcon fontSize="small" />,
+    title: 'Transactions',
   },
   {
     href: '/admin/utxos',
-    icon: (<BitcoinIcon fontSize="small" />),
-    title: 'Utxos'
+    icon: <BitcoinIcon fontSize="small" />,
+    title: 'Utxos',
   },
   {
     href: '/admin/xpubs',
-    icon: (<BitcoinIcon fontSize="small" />),
-    title: 'XPubs'
+    icon: <BitcoinIcon fontSize="small" />,
+    title: 'XPubs',
   },
 ];
 
 const items = [
   {
     href: '/xpub',
-    icon: (<AutoFixHighIcon fontSize="small" />),
-    title: 'xPub'
+    icon: <AutoFixHighIcon fontSize="small" />,
+    title: 'xPub',
   },
   {
     href: '/destination',
-    icon: (<LocationOnIcon fontSize="small" />),
-    title: 'Destination'
+    icon: <LocationOnIcon fontSize="small" />,
+    title: 'Destination',
   },
   {
     href: '/destinations',
-    icon: (<LocationSearchingIcon fontSize="small" />),
-    title: 'Destinations'
+    icon: <LocationSearchingIcon fontSize="small" />,
+    title: 'Destinations',
   },
   {
     href: '/destination-new',
-    icon: (<AddLocationIcon fontSize="small" />),
-    title: 'New Destination'
+    icon: <AddLocationIcon fontSize="small" />,
+    title: 'New Destination',
   },
   {
     href: '/transaction',
-    icon: (<MonetizationOnIcon fontSize="small" />),
-    title: 'Transaction'
+    icon: <MonetizationOnIcon fontSize="small" />,
+    title: 'Transaction',
   },
   {
     href: '/transactions',
-    icon: (<ViewListIcon fontSize="small" />),
-    title: 'Transactions'
+    icon: <ViewListIcon fontSize="small" />,
+    title: 'Transactions',
   },
   {
     href: '/transaction-new',
-    icon: (<AddIcon fontSize="small" />),
-    title: 'New Transaction'
+    icon: <AddIcon fontSize="small" />,
+    title: 'New Transaction',
   },
   {
     href: '/access-keys',
-    icon: (<KeyIcon fontSize="small" />),
-    title: 'Access Keys'
+    icon: <KeyIcon fontSize="small" />,
+    title: 'Access Keys',
   },
 ];
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
-  const { xPubId, adminId, server } = useUser();
-  const { setAccessKeyString, setAdminKey, setXPrivString, setXPubString} = useModifyCredentials()
-  const navigate = useNavigate();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
-    noSsr: false
+    noSsr: false,
   });
 
-  const useItems = useMemo(() => {
-    if (adminId) {
-      if (xPubId) {
-        return [...adminItems, ...items];
-      }
-      return [...adminItems];
-    } else {
-      return [...items];
+  const { type: credType, cred, clear: clearCredentials, server } = useCredentials();
+  const keyId = useMemo(() => {
+    //keyId is the first 6 and last 6 characters of the cred
+    //e.g. xprv9s****19CESK
+    const visibleChars = 6;
+    if (!cred || cred.length < 3 * visibleChars) {
+      return '';
     }
-  }, [adminId, xPubId]);
+    const pre = cred.substring(0, visibleChars);
+    const post = cred.substring(cred.length - visibleChars);
+    return `${pre}****${post}`;
+  }, [cred]);
+
+  const currentItems = credType === CredTypeAdmin ? adminItems : items;
 
   const content = (
     <>
@@ -135,7 +132,7 @@ export const DashboardSidebar = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100%'
+          height: '100%',
         }}
       >
         <div>
@@ -143,19 +140,15 @@ export const DashboardSidebar = (props) => {
             <Logo
               sx={{
                 height: 42,
-                width: 42
+                width: 42,
               }}
             />
             <Box sx={{ ml: 2 }}>
-              <Typography
-                variant="h4"
-              >
-                SPV Wallet
-              </Typography>
+              <Typography variant="h4">SPV Wallet</Typography>
               <Typography
                 variant="p"
                 style={{
-                  wordBreak: 'break-all'
+                  wordBreak: 'break-all',
                 }}
               >
                 {server}
@@ -172,15 +165,12 @@ export const DashboardSidebar = (props) => {
                 justifyContent: 'space-between',
                 px: 3,
                 py: '11px',
-                borderRadius: 1
+                borderRadius: 1,
               }}
             >
               <div>
-                <Typography
-                  color="inherit"
-                  variant="subtitle1"
-                >
-                  XpubID
+                <Typography color="inherit" variant="subtitle1">
+                  {credType === CredTypeAdmin ? 'Admin ID' : 'xPub ID'}
                 </Typography>
                 <Typography
                   color="inherit"
@@ -191,65 +181,11 @@ export const DashboardSidebar = (props) => {
                     width: '220px',
                   }}
                 >
-                  {xPubId}
+                  {keyId}
                 </Typography>
               </div>
             </Box>
-            {adminId
-              ?
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  px: 3,
-                  py: '11px',
-                  borderRadius: 1
-                }}
-              >
-                <div>
-                  <Typography
-                    color="inherit"
-                    variant="subtitle1"
-                  >
-                    Admin ID
-                  </Typography>
-                  <Typography
-                    color="inherit"
-                    variant="body2"
-                    style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      width: '220px',
-                    }}
-                  >
-                    {adminId}
-                  </Typography>
-                </div>
-              </Box>
-              :
-              <Button
-                startIcon={(<AdminIcon fontSize="small"/>)}
-                sx={{mr: 1}}
-                onClick={() => {
-                  navigate('/admin/dashboard');
-                }}
-              >
-                Login Admin
-              </Button>
-            }
-            <Button
-              startIcon={(<LockIcon fontSize="small" />)}
-              sx={{ mr: 1 }}
-              onClick={() => {
-                setXPrivString('');
-                setXPubString('');
-                setAccessKeyString('');
-                setAdminKey('');
-              }}
-            >
+            <Button startIcon={<LockIcon fontSize="small" />} sx={{ mr: 1 }} onClick={clearCredentials}>
               Logout
             </Button>
           </Box>
@@ -257,29 +193,13 @@ export const DashboardSidebar = (props) => {
         <Divider
           sx={{
             borderColor: '#2D3748',
-            my: 3
+            my: 3,
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {useItems.map((item) => (
-            <div key={`${item.title}-${item.href}`}>
-              <NavItem
-                icon={item.icon}
-                href={item.href}
-                title={item.title}
-              />
-              {item.children?.length > 0 && <>
-                {item.children.map((child) => (
-                  <Box key={`sidebar-child-${child.title}-${child.href}`} sx={{ flexGrow: 1, marginLeft: 4 }}>
-                    <NavItem
-                      key={child.title}
-                      icon={child.icon}
-                      href={child.href}
-                      title={child.title}
-                    />
-                  </Box>
-                ))}
-              </>}
+          {currentItems.map((item, index) => (
+            <div key={index}>
+              <NavItem icon={item.icon} href={item.href} title={item.title} />
             </div>
           ))}
         </Box>
@@ -296,8 +216,8 @@ export const DashboardSidebar = (props) => {
           sx: {
             backgroundColor: 'neutral.900',
             color: '#FFFFFF',
-            width: 280
-          }
+            width: 280,
+          },
         }}
         variant="permanent"
       >
@@ -315,8 +235,8 @@ export const DashboardSidebar = (props) => {
         sx: {
           backgroundColor: 'neutral.900',
           color: '#FFFFFF',
-          width: 280
-        }
+          width: 280,
+        },
       }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
       variant="temporary"
@@ -328,5 +248,5 @@ export const DashboardSidebar = (props) => {
 
 DashboardSidebar.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

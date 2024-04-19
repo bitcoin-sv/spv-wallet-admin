@@ -1,23 +1,23 @@
 import bsv from 'bsv';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from "react-router-dom";
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import { Alert, Button, TextareaAutosize, Typography } from "@mui/material";
+import { Alert, Button, TextareaAutosize, Typography } from '@mui/material';
 
-import { DashboardLayout } from "../../components/dashboard-layout";
-import { useUser } from "../../hooks/user";
-import { JsonView } from "../../components/json-view";
-import logger from "../../logger";
+import { DashboardLayout } from '../../components/dashboard-layout';
+import { useUser } from '../../hooks/useUser';
+import { JsonView } from '../../components/json-view';
+import logger from '../../logger';
 
 export const AdminTransactionRecord = () => {
-  const { spvWalletAdminClient } = useUser();
+  const { spvWalletClient } = useUser();
   const location = useLocation();
-  const params = new URLSearchParams(location.search)
+  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
-  const [ txHex, setTxHex ] = useState('');
-  const [ transaction, setTransaction ] = useState(null);
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState('');
+  const [txHex, setTxHex] = useState('');
+  const [transaction, setTransaction] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const tx_id = params.get('tx_id');
@@ -33,35 +33,35 @@ export const AdminTransactionRecord = () => {
         const response = await fetch(`https://api.whatsonchain.com/v1/bsv/main/tx/${txHex}/hex`);
         const hex = await response.text();
         if (hex && hex.length > 64) {
-          txHex = hex
+          txHex = hex;
         } else {
           setTransaction(null);
-          setError("Failed getting transaction from WhatsOnChain");
-          logger.error("Failed getting transaction from WhatsOnChain")
+          setError('Failed getting transaction from WhatsOnChain');
+          logger.error('Failed getting transaction from WhatsOnChain');
           return;
         }
       }
 
       setLoading(true);
-      spvWalletAdminClient.AdminRecordTransaction(txHex).then(tx => {
-        setTransaction(tx);
-        setError('');
-        setLoading(false);
-      }).catch(e => {
-        setTransaction(null);
-        setError(e.message);
-        logger.error(e)
-        setLoading(false);
-      });
+      spvWalletClient
+        .AdminRecordTransaction(txHex)
+        .then((tx) => {
+          setTransaction(tx);
+          setError('');
+          setLoading(false);
+        })
+        .catch((e) => {
+          setTransaction(null);
+          setError(e.message);
+          logger.error(e);
+          setLoading(false);
+        });
     }
-  },[]);
+  }, []);
 
   return (
     <DashboardLayout>
-      <Typography
-        color="inherit"
-        variant="h4"
-      >
+      <Typography color="inherit" variant="h4">
         Record a Transaction
       </Typography>
       <TextareaAutosize
@@ -88,22 +88,21 @@ export const AdminTransactionRecord = () => {
       >
         Record transaction
       </Button>
-      {loading
-      ?
+      {loading ? (
         <>Loading...</>
-      :
+      ) : (
         <>
-          {!!error &&
-          <Alert severity="error">{error}</Alert>
-          }
-          {txHex && transaction && <>
-            <h2>SPV Wallet transaction</h2>
-            <JsonView jsonData={transaction} />
-            <h2>Bitcoin transaction</h2>
-            <JsonView jsonData={(new bsv.Transaction(transaction.hex)).toObject()} />
-          </>}
+          {!!error && <Alert severity="error">{error}</Alert>}
+          {txHex && transaction && (
+            <>
+              <h2>SPV Wallet transaction</h2>
+              <JsonView jsonData={transaction} />
+              <h2>Bitcoin transaction</h2>
+              <JsonView jsonData={new bsv.Transaction(transaction.hex).toObject()} />
+            </>
+          )}
         </>
-      }
+      )}
     </DashboardLayout>
   );
 };

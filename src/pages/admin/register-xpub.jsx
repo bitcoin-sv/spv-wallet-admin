@@ -1,66 +1,66 @@
 import bsv from 'bsv';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import { Alert, Button, TextField, Typography } from '@mui/material';
 
-import { DashboardLayout } from "../../components/dashboard-layout";
-import { useUser } from "../../hooks/user";
-import logger from "../../logger";
+import { DashboardLayout } from '../../components/dashboard-layout';
+import { useUser } from '../../hooks/useUser';
+import logger from '../../logger';
 
 export const AdminRegisterXPub = () => {
   const navigate = useNavigate();
-  const { spvWalletAdminClient } = useUser();
+  const { spvWalletClient, admin } = useUser();
 
-  const [ newXPub, setNewXPub ] = useState("");
-  const [ xPrivInput, setXPrivInput ] = useState("");
-  const [ loading, setLoading ] = useState(false);
-  const [ error, setError ] = useState('');
+  const [newXPub, setNewXPub] = useState('');
+  const [xPrivInput, setXPrivInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!spvWalletAdminClient) {
+    if (!admin) {
       navigate('/');
     }
-  }, [spvWalletAdminClient]);
+  }, [navigate, admin]);
 
   useEffect(() => {
     if (xPrivInput) {
       try {
         const xPrivHD = bsv.HDPrivateKey.fromString(xPrivInput); // will throw on error
         setNewXPub(xPrivHD.hdPublicKey.toString());
-        setXPrivInput("");
-      } catch(e) {
-          logger.error(e)
+        setXPrivInput('');
+      } catch (e) {
+        logger.error(e);
         setError(e.message);
       }
     }
   }, [xPrivInput]);
 
-  const handleRegisterXPub = useCallback((newXPub) => {
-    if (!newXPub) {
-      setError("No xPub to add")
-        logger.info("No xPub to add")
-    }
-    setLoading(true);
-    try {
-      const xPubHD = bsv.HDPublicKey.fromString(newXPub); // will throw on error
-        spvWalletAdminClient.AdminNewXpub(newXPub);
-      alert("XPub added");
-      logger.info("XPub added")
-      setNewXPub("");
-    } catch(e) {
-        logger.error(e)
-      setError(e.message);
-    }
-    setLoading(false);
-  }, [spvWalletAdminClient]);
+  const handleRegisterXPub = useCallback(
+    (newXPub) => {
+      if (!newXPub) {
+        setError('No xPub to add');
+        logger.info('No xPub to add');
+      }
+      setLoading(true);
+      try {
+        bsv.HDPublicKey.fromString(newXPub); // will throw on error
+        spvWalletClient.AdminNewXpub(newXPub);
+        alert('XPub added');
+        logger.info('XPub added');
+        setNewXPub('');
+      } catch (e) {
+        logger.error(e);
+        setError(e.message);
+      }
+      setLoading(false);
+    },
+    [spvWalletClient],
+  );
 
   return (
     <DashboardLayout>
-      <Typography
-        color="inherit"
-        variant="h4"
-      >
+      <Typography color="inherit" variant="h4">
         Register xPub
       </Typography>
       <Typography
@@ -71,7 +71,8 @@ export const AdminRegisterXPub = () => {
           marginRight: 20,
         }}
       >
-        Only register xPub's that are new or not registered with another server. If multiple servers are managing an xPub, the xPub state can get out of synch.
+        Only register xPub's that are new or not registered with another server. If multiple servers are managing an
+        xPub, the xPub state can get out of synch.
       </Typography>
       <TextField
         fullWidth
@@ -101,22 +102,10 @@ export const AdminRegisterXPub = () => {
         type="text"
         variant="outlined"
       />
-      <Button
-        sx={{ mr: 1 }}
-        onClick={() => handleRegisterXPub(newXPub)}
-      >
+      <Button sx={{ mr: 1 }} onClick={() => handleRegisterXPub(newXPub)}>
         + Register xPub
       </Button>
-      {loading
-      ?
-        <>Loading...</>
-      :
-        <>
-          {!!error &&
-            <Alert severity="error">{error}</Alert>
-          }
-        </>
-      }
+      {loading ? <>Loading...</> : <>{!!error && <Alert severity="error">{error}</Alert>}</>}
     </DashboardLayout>
   );
 };
