@@ -1245,12 +1245,18 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bsv/spv-wallet-js-client@1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-1.0.0-beta.1.tgz#38ed59ab4db6eeee6f7f7b84ed403908f782d4bc"
-  integrity sha512-+QoEnTZeyBCeNzXw2BQQ7RhojR4aibcJa95/hoPghhz8gOmlLAnOgNQsXW1lz9S9069j3iIr2804eWIuEIJ0bQ==
+"@bsv/sdk@^1.0.17":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@bsv/sdk/-/sdk-1.0.20.tgz#b085cdeab423847f72c58e9125e430f1e097ae01"
+  integrity sha512-3I6OSCc7GT4zBZvTLFJxmCL2yvAAn9cmB7SEC8wS9pB12EgC7DFeABHEl2tooenib9HE0N5BdRa4IS+BhfEZjQ==
+
+"@bsv/spv-wallet-js-client@1.0.0-beta.2":
+  version "1.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-1.0.0-beta.2.tgz#5a8a054652c481dafe5514404e822a0c8db5e174"
+  integrity sha512-EDHVtS/4lBvUtsNR5LDevIU0AqnkSGSpSp41CLPHIWkrkq48DfoyZjoS2H8aAOOOkT6JNPRim2wbT5rrQQUr1g==
   dependencies:
     "@apollo/client" "^3.5.8"
+    "@bsv/sdk" "^1.0.17"
     "@types/rollup-plugin-node-builtins" "^2.1.5"
     cross-fetch "^4.0.0"
 
