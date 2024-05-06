@@ -1,4 +1,4 @@
-import bsv from 'bsv';
+import { Transaction as TransactionModel } from '@bsv/sdk';
 import React, { useEffect, useState, useMemo } from 'react';
 
 import { Alert, TextField, Typography } from '@mui/material';
@@ -45,6 +45,11 @@ export const Transaction = () => {
     }
   }, [spvWalletClient, txId]);
 
+  const asDataObject = useMemo(() => {
+    const model = TransactionModel.fromHex(transaction?.hex);
+    return JSON.parse(JSON.stringify(model));
+  }, [transaction?.hex]);
+
   return (
     <DashboardLayout>
       <Typography color="inherit" variant="h4">
@@ -69,7 +74,7 @@ export const Transaction = () => {
               <h2>SPV Wallet transaction</h2>
               <JsonView jsonData={transaction} />
               <h2>Bitcoin transaction</h2>
-              <JsonView jsonData={new bsv.Transaction(transaction.hex).toObject()} />
+              <JsonView jsonData={asDataObject} />
             </>
           )}
         </>

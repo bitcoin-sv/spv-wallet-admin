@@ -1,5 +1,5 @@
-import bsv from 'bsv';
-import React, { useCallback, useEffect, useState } from 'react';
+import { HD } from '@bsv/sdk';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Alert, Button, TextField, Typography } from '@mui/material';
@@ -24,39 +24,43 @@ export const AdminRegisterXPub = () => {
   }, [navigate, admin]);
 
   useEffect(() => {
-    if (xPrivInput) {
-      try {
-        const xPrivHD = bsv.HDPrivateKey.fromString(xPrivInput); // will throw on error
-        setNewXPub(xPrivHD.hdPublicKey.toString());
-        setXPrivInput('');
-      } catch (e) {
-        logger.error(e);
-        setError(e.message);
-      }
+    if (!xPrivInput) {
+      return;
+    }
+    try {
+      const xPrivHD = HD.fromString(xPrivInput);
+      setNewXPub(xPrivHD.toPublic().toString());
+      setXPrivInput('');
+    } catch (e) {
+      logger.error(e);
+      setError(e.message);
     }
   }, [xPrivInput]);
 
-  const handleRegisterXPub = useCallback(
-    (newXPub) => {
-      if (!newXPub) {
-        setError('No xPub to add');
-        logger.info('No xPub to add');
-      }
-      setLoading(true);
-      try {
-        bsv.HDPublicKey.fromString(newXPub); // will throw on error
-        spvWalletClient.AdminNewXpub(newXPub);
-        alert('XPub added');
-        logger.info('XPub added');
-        setNewXPub('');
-      } catch (e) {
-        logger.error(e);
-        setError(e.message);
-      }
+  const handleRegisterXPub = async () => {
+    setError('');
+    if (!newXPub) {
+      setError('No xPub to add');
+      logger.info('No xPub to add');
+      return;
+    }
+    if (!checkXPub(newXPub)) {
+      setError('Wrong format of your xPub');
+      return;
+    }
+    setLoading(true);
+    try {
+      await spvWalletClient.AdminNewXpub(newXPub);
+      alert('XPub added');
+      logger.info('XPub added');
+      setNewXPub('');
+    } catch (e) {
+      logger.error(e);
+      setError(e.message);
+    } finally {
       setLoading(false);
-    },
-    [spvWalletClient],
-  );
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -102,10 +106,19 @@ export const AdminRegisterXPub = () => {
         type="text"
         variant="outlined"
       />
-      <Button sx={{ mr: 1 }} onClick={() => handleRegisterXPub(newXPub)}>
+      <Button sx={{ mr: 1 }} onClick={handleRegisterXPub}>
         + Register xPub
       </Button>
       {loading ? <>Loading...</> : <>{!!error && <Alert severity="error">{error}</Alert>}</>}
     </DashboardLayout>
   );
+};
+
+const checkXPub = (xpub) => {
+  try {
+    HD.fromString(xpub);
+    return true;
+  } catch {
+    return false;
+  }
 };
