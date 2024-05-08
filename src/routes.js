@@ -19,6 +19,9 @@ import { Transaction } from './pages/transaction';
 import { TransactionNew } from './pages/transaction-new';
 import { Transactions } from './pages/transactions';
 import { XPub } from './pages/xpub';
+import {Contacts} from "./pages/contacts";
+import {AdminContacts} from "./pages/admin/contacts";
+import {ContactNew} from "./pages/contacts-new";
 
 export const AppRouter = () => {
   const { logged, admin } = useUser();
@@ -38,6 +41,8 @@ export const AppRouter = () => {
         <Route exact path="/transactions" name="Transactions" element={<Transactions />} />
         <Route exact path="/transaction-new" name="New Transactions" element={<TransactionNew />} />
         <Route exact path="/access-keys" name="Access Keys" element={<AccessKeys />} />
+        <Route exact path="/contacts" name="Contacts" element={<Contacts />} />
+        <Route exact path="/contacts-new" name="New Contact" element={<ContactNew />} />
         {!admin ? (
           <Route exact path="/" name="xPub" element={<XPub />} />
         ) : (
@@ -56,6 +61,7 @@ export const AppRouter = () => {
         <Route exact path="/admin/transactions" name="Admin transactions" element={<AdminTransactions />} />
         <Route exact path="/admin/utxos" name="Admin utxos" element={<AdminUtxos />} />
         <Route exact path="/admin/xpubs" name="Admin xPubs" element={<AdminXPubs />} />
+        <Route exact path="/admin/contacts" name="Admin Contacts" element={<AdminContacts />} />
         <Route path="/" name="404" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
