@@ -56,7 +56,7 @@ export const Contacts = () => {
 
     const handleConfirmContact = function (contact) {
         // eslint-disable-next-line no-restricted-globals
-        if (confirm('Confirm contact?')) {
+        if (confirm('Confirm contact? Be careful, you don\'t use TOTP to confirm identity')) {
             spvWalletClient
                 .ConfirmContact(contact.paymail)
                 .then((r) => {

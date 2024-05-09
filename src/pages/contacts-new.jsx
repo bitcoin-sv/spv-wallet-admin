@@ -1,5 +1,4 @@
-import bsv from 'bsv';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {Alert, Box, Button, TextField, Typography} from '@mui/material';
@@ -8,7 +7,6 @@ import logger from '../logger';
 import {DashboardLayout} from "../components/dashboard-layout";
 
 export const ContactNew = () => {
-    const navigate = useNavigate();
     const { spvWalletClient, admin } = useUser();
 
     const [paymail, setPaymail] = useState('');
