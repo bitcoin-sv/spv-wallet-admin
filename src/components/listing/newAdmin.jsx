@@ -11,88 +11,88 @@ import { useUser } from '../../hooks/useUser';
 
 // TODO: refactor this name after adjusting every view to new search endpoints
 export const NewAdminListing = function ({
-                                          modelFunction,
-                                          title,
-                                          ListingComponent,
-                                          conditions,
-                                          filter: initialFilter,
-                                          setFilter,
-                                          additionalFilters,
-                                      }) {
-    const navigate = useNavigate();
+  modelFunction,
+  title,
+  ListingComponent,
+  conditions,
+  filter: initialFilter,
+  setFilter,
+  additionalFilters,
+}) {
+  const navigate = useNavigate();
 
-    const [searchFilter, setSearchFilter] = useState('');
-    const debouncedFilter = useDebounce(searchFilter, 500);
+  const [searchFilter, setSearchFilter] = useState('');
+  const debouncedFilter = useDebounce(searchFilter, 500);
 
-    const { admin } = useUser();
-    const { items, loading, error, Pagination, setRefreshData } = useNewQueryList({
-        modelFunction,
-        conditions,
-    });
+  const { admin } = useUser();
+  const { items, loading, error, Pagination, setRefreshData } = useNewQueryList({
+    modelFunction,
+    conditions,
+  });
 
-    useEffect(() => {
-        if (!admin) {
-            navigate('/');
-        }
-    }, [navigate, admin]);
+  useEffect(() => {
+    if (!admin) {
+      navigate('/');
+    }
+  }, [navigate, admin]);
 
-    useEffect(() => {
-        if (initialFilter) {
-            setSearchFilter(initialFilter);
-        }
-    }, [initialFilter]);
+  useEffect(() => {
+    if (initialFilter) {
+      setSearchFilter(initialFilter);
+    }
+  }, [initialFilter]);
 
-    useEffect(() => {
-        if (setFilter) {
-            setFilter(debouncedFilter);
-        }
-    }, [setFilter, debouncedFilter]);
+  useEffect(() => {
+    if (setFilter) {
+      setFilter(debouncedFilter);
+    }
+  }, [setFilter, debouncedFilter]);
 
-    return (
+  return (
+    <>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        <Typography color="inherit" variant="h4">
+          {title}
+        </Typography>
+        <Box display="flex" flex={1} flexDirection="row" alignItems="center">
+          <TextField
+            fullWidth
+            label="Filter"
+            margin="normal"
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            type="text"
+            variant="outlined"
+            style={{
+              marginLeft: 20,
+            }}
+          />
+          {additionalFilters ? additionalFilters() : ''}
+        </Box>
+      </Box>
+      {loading ? (
+        <>Loading...</>
+      ) : (
         <>
-            <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography color="inherit" variant="h4">
-                    {title}
-                </Typography>
-                <Box display="flex" flex={1} flexDirection="row" alignItems="center">
-                    <TextField
-                        fullWidth
-                        label="Filter"
-                        margin="normal"
-                        value={searchFilter}
-                        onChange={(e) => setSearchFilter(e.target.value)}
-                        type="text"
-                        variant="outlined"
-                        style={{
-                            marginLeft: 20,
-                        }}
-                    />
-                    {additionalFilters ? additionalFilters() : ''}
-                </Box>
-            </Box>
-            {loading ? (
-                <>Loading...</>
-            ) : (
-                <>
-                    {!!error && <Alert severity="error">{error}</Alert>}
-                    <Card>
-                        <PerfectScrollbar>
-                            <ListingComponent items={items} refetch={() => setRefreshData(+new Date())} />
-                        </PerfectScrollbar>
-                        <Pagination />
-                    </Card>
-                </>
-            )}
+          {!!error && <Alert severity="error">{error}</Alert>}
+          <Card>
+            <PerfectScrollbar>
+              <ListingComponent items={items} refetch={() => setRefreshData(+new Date())} />
+            </PerfectScrollbar>
+            <Pagination />
+          </Card>
         </>
-    );
+      )}
+    </>
+  );
 };
 
 NewAdminListing.propTypes = {
-    ListingComponent: PropTypes.func.isRequired,
-    modelFunction: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    conditions: PropTypes.object,
-    filter: PropTypes.string,
-    setFilter: PropTypes.func,
-    additionalFilters: PropTypes.func,
+  ListingComponent: PropTypes.func.isRequired,
+  modelFunction: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  conditions: PropTypes.object,
+  filter: PropTypes.string,
+  setFilter: PropTypes.func,
+  additionalFilters: PropTypes.func,
 };
