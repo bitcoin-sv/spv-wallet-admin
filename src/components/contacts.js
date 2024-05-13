@@ -1,50 +1,45 @@
 import {Button, Table, TableBody, TableCell, TableHead, TableRow,} from '@mui/material';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {JsonView} from "./json-view";
 import {useUser} from "../hooks/useUser";
 import logger from "../logger";
 
 
-const RejectContactButton = ({contactToReject, handleRejectContact}) => {
-    if(handleRejectContact) {
+const EventButton = ({contact, event, handleContactEvent, admin}) => {
+    if(handleContactEvent) {
+        let method = `${event}Contact`;
+        let param = contact.paymail;
+        if (admin){
+            method = `Admin${event}Contact`;
+            param = contact.id;
+        }
         return <Button
-            onClick={() => handleRejectContact(contactToReject)}
+            onClick={() => handleContactEvent(param, method, `${event} contact?`)}
         >
-            Reject contact
+            {event} contact
         </Button>
-    } else {
-        return null;
     }
 }
 
-const AcceptContactButton = ({contactToAccept, handleAcceptContact}) => {
-    if(handleAcceptContact) {
-        return <Button
-            onClick={() => handleAcceptContact(contactToAccept)}
-        >
-            Accept contact
-        </Button>
-    } else {
-        return null;
-    }
-}
-
-
-const ConfirmContactButton = ({contactToConfirm, handleConfirmContact}) => {
-    if(handleConfirmContact) {
-        return <Button
-            onClick={() => handleConfirmContact(contactToConfirm)}
-        >
-            Confirm contact
-        </Button>
-    } else {
-        return null;
-    }
-}
-
-export const ContactsList = ({items, handleRejectContact, handleAcceptContact, handleConfirmContact}) => {
+export const ContactsList = ({items, refetch}) => {
+    const { spvWalletClient, admin } = useUser();
     const [selectedContacts, setSelectedContacts] = useState([]);
+
+    const handleContactEvent = function (param, method, msg) {
+        // eslint-disable-next-line no-restricted-globals
+        if (confirm(msg)) {
+            spvWalletClient[`${method}`](param)
+                .then((r) => {
+                    logger.info(`Operation performed successfully`);
+                    refetch();
+                })
+                .catch((e) => {
+                    logger.error(e);
+                    alert("ERROR: Could not perform operation "+e.message);
+                });
+        }
+    }
 
     return (
         <Table>
@@ -57,7 +52,7 @@ export const ContactsList = ({items, handleRejectContact, handleAcceptContact, h
                     <TableCell>Created</TableCell>
                     <TableCell>Reject</TableCell>
                     <TableCell>Accept</TableCell>
-                    <TableCell>Confirm</TableCell>
+                    {admin ? null : <TableCell>Confirm</TableCell>}
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -90,7 +85,7 @@ export const ContactsList = ({items, handleRejectContact, handleAcceptContact, h
                                     ? <span title={`Rejected at ${contact.deleted_at}`}>Already rejected</span>
                                     : contact.status !== 'awaiting'
                                         ? <span title={`Status have to be awaiting to perform this operation`}>Wrong status</span>
-                                        : <RejectContactButton contactToReject={contact} handleRejectContact={handleRejectContact} />
+                                        : <EventButton contact={contact} event='Reject' handleContactEvent={handleContactEvent} admin={admin}/>
                                 }
                             </TableCell>
 
@@ -99,18 +94,19 @@ export const ContactsList = ({items, handleRejectContact, handleAcceptContact, h
                                     ? contact.status === 'unconfirmed'
                                         ? <span>Already accepted</span>
                                         : <span title={`Status have to be awaiting to perform this operation`}>Wrong status</span>
-                                    : <AcceptContactButton contactToAccept={contact} handleAcceptContact={handleAcceptContact} />
+                                    : <EventButton contact={contact} event='Accept' handleContactEvent={handleContactEvent} admin={admin}/>
                                 }
                             </TableCell>
-
-                            <TableCell>
-                                {contact.status !== 'unconfirmed'
-                                    ? contact.status === 'confirmed'
-                                        ? <span>Already confirmed</span>
-                                        : <span title={`Status have to be unconfirmed to perform this operation`}>Wrong status</span>
-                                    : <ConfirmContactButton contactToConfirm={contact} handleConfirmContact={handleConfirmContact}/>
-                                }
-                            </TableCell>
+                            {admin ? null
+                                : <TableCell>
+                                    {contact.status !== 'unconfirmed'
+                                        ? contact.status === 'confirmed'
+                                            ? <span>Already confirmed</span>
+                                            : <span title={`Status have to be unconfirmed to perform this operation`}>Wrong status</span>
+                                        : <EventButton contact={contact} event='Confirm' handleContactEvent={handleContactEvent} admin={admin}/>
+                                    }
+                                </TableCell>
+                            }
                         </TableRow>
                         {selectedContacts.indexOf(contact.id) !== -1 &&
                             <TableRow>
@@ -128,7 +124,4 @@ export const ContactsList = ({items, handleRejectContact, handleAcceptContact, h
 
 ContactsList.propTypes = {
     items: PropTypes.array.isRequired,
-    handleRejectContact: PropTypes.func,
-    handleAcceptContact: PropTypes.func,
-    handleConfirmContact: PropTypes.func,
 };

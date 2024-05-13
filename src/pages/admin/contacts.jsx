@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 import { DashboardLayout } from "../../components/dashboard-layout";
-import { AdminListing } from "../../components/listing/admin";
-import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
-import {AdminContactsList} from "../../components/admin-contacts";
+import {ContactsList} from "../../components/contacts";
+import {NewAdminListing} from "../../components/listing/newAdmin";
 
 export const AdminContacts = () => {
-    const navigate = useNavigate();
-    // eslint-disable-next-line no-restricted-globals
-    const params = new URLSearchParams(location.search)
-
     const [ filter, setFilter ] = useState('');
     const [ showRejected, setShowRejected ] = useState(false);
     const [ conditions, setConditions ] = useState(null);
@@ -37,11 +32,11 @@ export const AdminContacts = () => {
 
     return (
         <DashboardLayout>
-            <AdminListing
+            <NewAdminListing
                 key="admin_contacts_listing"
                 modelFunction="AdminGetContacts"
                 title="Contacts"
-                ListingComponent={AdminContactsList}
+                ListingComponent={ContactsList}
                 filter={filter}
                 setFilter={setFilter}
                 conditions={conditions}
