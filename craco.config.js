@@ -5,8 +5,6 @@ module.exports = {
     plugins: {
       add: [
         new webpack.ProvidePlugin({
-          process: 'process/browser.js',
-          Buffer: ['buffer/index.js', 'Buffer'],
         }),
       ]
     },
