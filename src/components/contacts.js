@@ -47,7 +47,6 @@ export const ContactsList = ({ items, refetch }) => {
           <TableCell>Created</TableCell>
           <TableCell>Reject</TableCell>
           <TableCell>Accept</TableCell>
-          {admin ? null : <TableCell>Confirm</TableCell>}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -94,24 +93,6 @@ export const ContactsList = ({ items, refetch }) => {
                   <EventButton contact={contact} event="Accept" handleContactEvent={handleContactEvent} admin={admin} />
                 )}
               </TableCell>
-              {admin ? null : (
-                <TableCell>
-                  {contact.status !== 'unconfirmed' ? (
-                    contact.status === 'confirmed' ? (
-                      <span>Already confirmed</span>
-                    ) : (
-                      <span title={`Status have to be unconfirmed to perform this operation`}>Wrong status</span>
-                    )
-                  ) : (
-                    <EventButton
-                      contact={contact}
-                      event="Confirm"
-                      handleContactEvent={handleContactEvent}
-                      admin={admin}
-                    />
-                  )}
-                </TableCell>
-              )}
             </TableRow>
             {selectedContacts.indexOf(contact.id) !== -1 && (
               <TableRow>
