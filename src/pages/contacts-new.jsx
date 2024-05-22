@@ -52,6 +52,7 @@ export const ContactNew = () => {
                     onChange={(e) => setPaymail(e.target.value)}
                     type="text"
                     variant="outlined"
+                    required={true}
                 />
                 <TextField
                     fullWidth
@@ -61,6 +62,7 @@ export const ContactNew = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     variant="outlined"
+                    required={true}
                 />
             </Box>
 
