@@ -1,6 +1,6 @@
 {
   "loginTitle": "Sign in to a SPV Wallet",
   "loginSubtitle": "Sign in using your xPriv",
-  "serverUrl": "",
+  "serverUrl": "http://localhost:3003",
   "hideServerUrl": false
 }

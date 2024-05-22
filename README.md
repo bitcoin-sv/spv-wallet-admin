@@ -26,7 +26,7 @@ yarn install
 
 ## Running
 ```shell
-yarn start
+yarn dev
 ```
 
 ## Documentation
