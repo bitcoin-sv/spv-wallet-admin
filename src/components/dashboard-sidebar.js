@@ -10,6 +10,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddIcon from '@mui/icons-material/Add';
 import KeyIcon from '@mui/icons-material/Key';
+import ContactsIcon from '@mui/icons-material/Contacts';
 import BitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import PaymailIcon from '@mui/icons-material/Message';
 import { CredTypeAdmin, useCredentials } from '../hooks/useCredentials';
@@ -59,6 +60,11 @@ const adminItems = [
     icon: <BitcoinIcon fontSize="small" />,
     title: 'XPubs',
   },
+  {
+    href: '/admin/contacts',
+    icon: <ContactsIcon fontSize="small" />,
+    title: 'Contacts',
+  },
 ];
 
 const items = [
@@ -101,6 +107,16 @@ const items = [
     href: '/access-keys',
     icon: <KeyIcon fontSize="small" />,
     title: 'Access Keys',
+  },
+  {
+    href: '/contacts',
+    icon: <ContactsIcon fontSize="small" />,
+    title: 'Contacts',
+  },
+  {
+    href: '/contacts-new',
+    icon: <AddIcon fontSize="small" />,
+    title: 'New Contact',
   },
 ];
 
