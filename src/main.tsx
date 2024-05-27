@@ -24,11 +24,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <SpvWalletProvider>
-        <ConfigProvider>
+      <ConfigProvider>
+        <SpvWalletProvider>
           <RouterProvider router={router} />
-        </ConfigProvider>
-      </SpvWalletProvider>
+        </SpvWalletProvider>
+      </ConfigProvider>
     </StrictMode>,
   );
 }

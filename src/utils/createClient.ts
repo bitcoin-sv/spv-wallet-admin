@@ -1,8 +1,8 @@
-import { Role } from '@/contexts/SpvWalletContext.tsx';
+import {Role, SpvWalletClientExtended} from '@/contexts/SpvWalletContext.tsx';
 import { AccessKeyWithSigning, AdminKey, SpvWalletClient, XprivWithSigning } from '@bsv/spv-wallet-js-client';
 import logger from '@/logger/intex.ts';
 
-export const checkKey = async (role: Role, key: string) => {
+export const createClient = async (role: Role, key: string) => {
   const serverUrl = window.localStorage.getItem('login.serverUrl') ?? '';
 
   let clientOptions: any = {};
@@ -21,18 +21,27 @@ export const checkKey = async (role: Role, key: string) => {
     throw new Error('Invalid role or key format');
   }
 
-  const checkClient = new SpvWalletClient(serverUrl, clientOptions, { level: 'disabled' });
+  const client = new SpvWalletClient(serverUrl, clientOptions, { level: 'disabled' }) as SpvWalletClientExtended;
 
   try {
     if (role === 'admin') {
-      await checkClient.AdminGetStatus();
-      return checkClient;
+      await client.AdminGetStatus();
+      client.role = "admin";
+      return client;
     } else if (role === 'user') {
-      await checkClient.GetXPub();
-      return checkClient;
+      await client.GetXPub();
+      client.role = "user";
+      return client;
+    } else {
+      return null
     }
   } catch (error) {
-    console.log('Error', error);
-    logger.error({ msg: error.message, stack: error.stack, err: error });
+    if (error instanceof Error) {
+      logger.error({ msg: error.message, stack: error.stack, err: error });
+      return null
+    } else {
+      console.error('Unknown error', error);
+      throw new Error('An unknown error occurred');
+    }
   }
 };

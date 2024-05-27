@@ -1,25 +1,31 @@
-import { createContext, useMemo, useState } from 'react';
+import React, { createContext, useMemo, useState } from 'react';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
+import { useServerUrl } from '@/hooks/useServerUrl.tsx';
 
 export type Role = 'user' | 'admin' | null;
 
-const initialServerUrl = 'config.serverUrl' || 'some default value';
+export interface SpvWalletClientExtended extends SpvWalletClient {
+  role?: Role;
+}
 
-const defaultValue = {
-  serverUrl: initialServerUrl,
-  // spvWalletClient: new SpvWalletClient(initialServerUrl, { xPriv: '' }, { level: 'disabled' }),
-  spvWalletClient: {},
-  // setSpvWalletClient: null,
-};
+export interface SpvWalletContextType {
+  serverUrl: string;
+  setServerUrl: React.Dispatch<React.SetStateAction<string>>;
+  spvWalletClient: SpvWalletClientExtended | null;
+  setSpvWalletClient: React.Dispatch<React.SetStateAction<SpvWalletClientExtended | null>>;
+  userRole: Role;
+  setUserRole: React.Dispatch<React.SetStateAction<Role>>;
+}
 
-export const SpvWalletContext = createContext(defaultValue);
+export const SpvWalletContext = createContext<SpvWalletContextType | null>(null);
 
-export const SpvWalletProvider = ({ children }) => {
-  // const [serverUrl, _] = useLocalStorage('login.serverUrl', 'config.serverUrl');
-  const [serverUrl, setServerUrl] = useState(window.localStorage.getItem('login.serverUrl') ?? 'config.serverUrl');
-  const [role, setRole] = useState<Role>(null);
+export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
+  const { serverUrl, setServerUrl } = useServerUrl();
+  const [userRole, setUserRole] = useState<Role | null>(null);
 
-  const [spvWalletClient, setSpvWalletClient] = useState({} as SpvWalletClient);
+  const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletClientExtended | null>(null);
+
+  const isAuthenticated = !!spvWalletClient;
 
   const contextValue = useMemo(
     () => ({
@@ -27,8 +33,9 @@ export const SpvWalletProvider = ({ children }) => {
       setServerUrl,
       spvWalletClient,
       setSpvWalletClient,
-        role,
-        setRole
+      userRole,
+      setUserRole,
+      isAuthenticated
     }),
     [serverUrl, spvWalletClient, setSpvWalletClient],
   );

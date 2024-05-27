@@ -3,15 +3,17 @@ import { useConfig } from '@4chain-ag/react-configuration';
 
 export const useServerUrl = () => {
   const { config } = useConfig();
-  const [serverUrl, setServerUrl] = useState(config.serverUrl);
+  const { localStorage } = window
+  const storedUrl = localStorage.getItem('login.serverUrl');
+  const [serverUrl, setServerUrl] = useState<string>(storedUrl ?? config.serverUrl);
 
   useEffect(() => {
     setServerUrl(config.serverUrl);
-    window.localStorage.setItem('login.serverUrl', config.serverUrl);
+    localStorage.setItem('login.serverUrl', config.serverUrl);
   }, [config.serverUrl]);
 
   useEffect(() => {
-    window.localStorage.setItem('login.serverUrl', config.serverUrl);
+    localStorage.setItem('login.serverUrl', serverUrl);
   }, [serverUrl]);
 
   return {
