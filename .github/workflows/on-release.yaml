@@ -203,6 +203,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{version}}
+            type=semver,pattern={{raw}}
           labels: |
             ${{ fromJSON(steps.resolve-docker.outputs.result).isDockerhub && format('org.opencontainers.image.url="https://hub.docker.com/r/{0}"', fromJSON(steps.resolve-docker.outputs.result).image) }}
 
