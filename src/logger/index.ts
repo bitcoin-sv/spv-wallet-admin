@@ -16,15 +16,6 @@ type LogObject = {
   [key: string]: any;
 };
 
-const serializers = {
-  err: pino.stdSerializers.err,
-};
-
-const prettyOptions = {
-  translateTime: 'SYS:standard',
-  ignore: 'pid,hostname', // Customize to ignore specific fields if needed
-};
-
 // Add types to the getDefaultObject function
 const getDefaultObject = (o: any): any => ({
   ...o,
@@ -37,9 +28,6 @@ const getDefaultObject = (o: any): any => ({
 const pinoLogger: Logger = pino({
   level: 'trace',
   name: 'spv-wallet-admin',
-  // serializers,
-  // prettyfier: pino.pretty,
-  // prettyPrint: prettyOptions,
   browser: {
     asObject: true,
     write: {
@@ -55,14 +43,8 @@ const pinoLogger: Logger = pino({
       warn: (o: LogObject = {}) => {
         console.warn(getDefaultObject(o));
       },
-      // error: (o: LogObject = {}) => {
-      //   console.log('TEst', o);
-      //   console.error(getDefaultObject(o));
-      // },
       error: (o: LogObject = {}) => {
-        // console.log('TEst', o);
-        console.error('error', o);
-        // console.error(getDefaultObject(o));
+        console.error(getDefaultObject(o));
       },
       fatal: (o: LogObject = {}) => {
         console.error(getDefaultObject(o));
@@ -76,12 +58,7 @@ const logger = {
   debug: (o: unknown) => pinoLogger.debug(o),
   info: (o: unknown) => pinoLogger.info(o),
   warn: (o: unknown) => pinoLogger.warn(o),
-  // error: (o: unknown) => pinoLogger.error(o),
-  error: (o: unknown) => {
-    // console.log('OO', o.message);
-    // console.log('start', o.stack);
-    return pinoLogger.error(o);
-  },
+  error: (o: unknown) => pinoLogger.error(o),
   fatal: (o: unknown) => pinoLogger.fatal(o),
 };
 
