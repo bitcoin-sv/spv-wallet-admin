@@ -632,6 +632,30 @@ body {
   left: 0.5rem;
 }
 
+.right-4 {
+  right: 1rem;
+}
+
+.top-4 {
+  top: 1rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
+.top-10 {
+  top: 2.5rem;
+}
+
+.top-8 {
+  top: 2rem;
+}
+
+.right-8 {
+  right: 2rem;
+}
+
 .z-50 {
   z-index: 50;
 }
@@ -759,12 +783,12 @@ body {
   min-width: var(--radix-select-trigger-width);
 }
 
-.max-w-sm {
-  max-width: 24rem;
-}
-
 .max-w-\[765px\] {
   max-width: 765px;
+}
+
+.max-w-sm {
+  max-width: 24rem;
 }
 
 .rotate-0 {
@@ -805,10 +829,6 @@ body {
 
 .flex-col {
   flex-direction: column;
-}
-
-.content-center {
-  align-content: center;
 }
 
 .items-center {
