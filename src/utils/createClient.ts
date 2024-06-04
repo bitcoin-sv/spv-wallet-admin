@@ -1,9 +1,9 @@
 import { SpvWalletClientExtended } from '@/contexts/SpvWalletContext.tsx';
 import { AccessKeyWithSigning, AdminKey, SpvWalletClient, XprivWithSigning } from '@bsv/spv-wallet-js-client';
-import { Role, TRole } from '@/contexts/AuthContext.tsx';
-import logger from '@/logger';
+import { Role } from '@/contexts/AuthContext.tsx';
+import { errorWrapper } from '@/utils/errorWrapper.ts';
 
-export const createClient = async (role: TRole, key: string) => {
+export const createClient = async (role: Role, key: string) => {
   const serverUrl = window.localStorage.getItem('login.serverUrl') ?? '';
 
   let clientOptions: any = {};
@@ -34,16 +34,10 @@ export const createClient = async (role: TRole, key: string) => {
       client.role = Role.User;
       return client;
     } else {
-      return null;
+      return client;
     }
   } catch (error) {
-    if (error instanceof Error) {
-      console.log("hege",error)
-      logger.error({ msg: error.message, stack: error.stack, err: error });
-      return null;
-    } else {
-      console.error('Unknown error', error);
-      throw new Error('An unknown error occurred');
-    }
+    errorWrapper(error);
+    return client;
   }
 };

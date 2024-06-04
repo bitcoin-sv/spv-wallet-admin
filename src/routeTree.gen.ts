@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as AdminImport } from './routes/_admin'
 import { Route as AdminXpubImport } from './routes/_admin.xpub'
 
 // Create Virtual Routes
@@ -32,15 +33,27 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminRoute = AdminImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminXpubRoute = AdminXpubImport.update({
   path: '/xpub',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -60,7 +73,7 @@ declare module '@tanstack/react-router' {
       path: '/xpub'
       fullPath: '/xpub'
       preLoaderRoute: typeof AdminXpubImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AdminImport
     }
   }
 }
@@ -68,9 +81,9 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
+  AdminRoute: AdminRoute.addChildren({ AdminXpubRoute }),
   LoginRoute,
   AboutLazyRoute,
-  AdminXpubRoute,
 })
 
 /* prettier-ignore-end */

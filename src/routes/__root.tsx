@@ -1,9 +1,11 @@
-import {  createRootRouteWithContext, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import type { AuthContext } from '@/contexts';
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { AuthContext } from '@/contexts';
+import { QueryClient } from '@tanstack/react-query';
 
 interface RouterContext {
-  auth: AuthContext
+  auth: AuthContext;
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -13,4 +15,4 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <TanStackRouterDevtools />
     </>
   ),
-})
+});
