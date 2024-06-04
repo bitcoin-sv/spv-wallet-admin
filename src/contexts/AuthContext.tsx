@@ -8,35 +8,29 @@ export const enum Role {
 
 export type TRole = Role | null | undefined;
 
-export interface AuthContext  {
-  isAuthenticated: boolean
-  isAdmin: boolean
+export interface AuthContext {
+  isAuthenticated: boolean;
+  isAdmin: boolean;
 }
 
-const initialState:AuthContext = {
-  isAuthenticated: false,
-  isAdmin: false
-}
-
-const AuthContext = createContext<AuthContext>(initialState)
+const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-
-  const  {spvWalletClient} = useContext(SpvWalletContext) || {}
+  const { spvWalletClient } = useContext(SpvWalletContext) || {};
 
   const isAuthenticated = !!spvWalletClient;
   const isAdmin = isAuthenticated && spvWalletClient?.role === Role.Admin;
   const contextValue = {
     isAuthenticated,
-    isAdmin
-  }
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-}
+    isAdmin,
+  };
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+};
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
-}
+  return context;
+};

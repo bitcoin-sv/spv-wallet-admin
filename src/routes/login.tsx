@@ -16,22 +16,15 @@ import { useConfig } from '@4chain-ag/react-configuration';
 import { createClient } from '@/utils/createClient.ts';
 import logger from '@/logger';
 import { useSpvWalletClient } from '@/hooks';
-import { ModeToggle } from '@/components/ModeToggle/modeToggle.tsx';
+import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
 
 export const Route = createFileRoute('/login')({
-  // beforeLoad: async ({ context, location }) => {
-  // if (!context.auth.isAdmin) {
-  // throw redirect({ to: '/about' });
-  // }
-  // },
   component: LoginForm,
 });
 
 export function LoginForm() {
   const [role, setRole] = useState<TRole>(Role.Admin);
-  const [key, setKey] = useState(
-    'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK',
-  );
+  const [key, setKey] = useState('');
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
   const { config } = useConfig();
