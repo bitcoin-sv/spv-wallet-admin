@@ -1,11 +1,10 @@
 import React, { createContext, useMemo, useState } from 'react';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import { useServerUrl } from '@/hooks/useServerUrl.tsx';
-
-export type Role = 'user' | 'admin' | null;
+import { TRole } from './AuthContext';
 
 export interface SpvWalletClientExtended extends SpvWalletClient {
-  role?: Role;
+  role?: TRole;
 }
 
 export interface SpvWalletContextType {
@@ -13,19 +12,17 @@ export interface SpvWalletContextType {
   setServerUrl: React.Dispatch<React.SetStateAction<string>>;
   spvWalletClient: SpvWalletClientExtended | null;
   setSpvWalletClient: React.Dispatch<React.SetStateAction<SpvWalletClientExtended | null>>;
-  userRole: Role;
-  setUserRole: React.Dispatch<React.SetStateAction<Role>>;
+  userRole: TRole;
+  setUserRole: React.Dispatch<React.SetStateAction<TRole>>;
 }
 
 export const SpvWalletContext = createContext<SpvWalletContextType | null>(null);
 
 export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { serverUrl, setServerUrl } = useServerUrl();
-  const [userRole, setUserRole] = useState<Role | null>(null);
+  const [userRole, setUserRole] = useState<TRole | null>(null);
 
   const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletClientExtended | null>(null);
-
-  const isAuthenticated = !!spvWalletClient;
 
   const contextValue = useMemo(
     () => ({
@@ -35,7 +32,6 @@ export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) =
       setSpvWalletClient,
       userRole,
       setUserRole,
-      isAuthenticated
     }),
     [serverUrl, spvWalletClient, setSpvWalletClient],
   );

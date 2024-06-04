@@ -1,46 +1,43 @@
-import {Role, SpvWalletClientExtended} from '@/contexts/SpvWalletContext.tsx';
-import { AccessKeyWithSigning, AdminKey, SpvWalletClient, XprivWithSigning } from '@bsv/spv-wallet-js-client';
-import logger from '@/logger/intex.ts';
+import { SpvWalletClientExtended } from '@/contexts/SpvWalletContext.tsx';
+import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
+import { Role } from '@/contexts/AuthContext.tsx';
+import logger from '@/logger';
 
 export const createClient = async (role: Role, key: string) => {
   const serverUrl = window.localStorage.getItem('login.serverUrl') ?? '';
 
-  let clientOptions: any = {};
+  let client: SpvWalletClientExtended;
 
-  if (role === 'admin' && key.startsWith('xprv')) {
-    clientOptions = { adminKey: key } as AdminKey;
-  } else if (role === 'user') {
+  if (role === Role.Admin && key.startsWith('xprv')) {
+    client = new SpvWalletClient(serverUrl, { adminKey: key }, { level: 'disabled' }) as SpvWalletClientExtended;
+  } else if (role === Role.User) {
     if (key.startsWith('xprv')) {
-      clientOptions = { xPriv: key } as XprivWithSigning;
+      client = new SpvWalletClient(serverUrl, { xPriv: key }, { level: 'disabled' }) as SpvWalletClientExtended;
     } else {
-      clientOptions = { accessKey: key } as AccessKeyWithSigning;
+      client = new SpvWalletClient(serverUrl, { accessKey: key }, { level: 'disabled' }) as SpvWalletClientExtended;
     }
-  }
-
-  if (!clientOptions) {
+  } else {
     throw new Error('Invalid role or key format');
   }
-
-  const client = new SpvWalletClient(serverUrl, clientOptions, { level: 'disabled' }) as SpvWalletClientExtended;
 
   try {
     if (role === 'admin') {
       await client.AdminGetStatus();
-      client.role = "admin";
+      client.role = Role.Admin;
       return client;
     } else if (role === 'user') {
       await client.GetXPub();
-      client.role = "user";
+      client.role = Role.User;
       return client;
     } else {
-      return null
+      return null;
     }
   } catch (error) {
     if (error instanceof Error) {
       logger.error({ msg: error.message, stack: error.stack, err: error });
-      return null
+      return null;
     } else {
-      console.error('Unknown error', error);
+      logger.error({ err: error });
       throw new Error('An unknown error occurred');
     }
   }

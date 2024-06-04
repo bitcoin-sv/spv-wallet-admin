@@ -13,45 +13,39 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
+import { Route as AdminXpubImport } from './routes/_admin.xpub'
 
 // Create Virtual Routes
 
-const XpubsLazyImport = createFileRoute('/xpubs')()
-const LoginLazyImport = createFileRoute('/login')()
 const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
-
-const XpubsLazyRoute = XpubsLazyImport.update({
-  path: '/xpubs',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/xpubs.lazy').then((d) => d.Route))
-
-const LoginLazyRoute = LoginLazyImport.update({
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
-const IndexLazyRoute = IndexLazyImport.update({
-  path: '/',
+const LoginRoute = LoginImport.update({
+  path: '/login',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
+
+const AdminXpubRoute = AdminXpubImport.update({
+  path: '/xpub',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -61,18 +55,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/xpubs': {
-      id: '/xpubs'
-      path: '/xpubs'
-      fullPath: '/xpubs'
-      preLoaderRoute: typeof XpubsLazyImport
+    '/_admin/xpub': {
+      id: '/_admin/xpub'
+      path: '/xpub'
+      fullPath: '/xpub'
+      preLoaderRoute: typeof AdminXpubImport
       parentRoute: typeof rootRoute
     }
   }
@@ -81,10 +68,9 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexLazyRoute,
+  LoginRoute,
   AboutLazyRoute,
-  LoginLazyRoute,
-  XpubsLazyRoute,
+  AdminXpubRoute,
 })
 
 /* prettier-ignore-end */
