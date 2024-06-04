@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
@@ -11,35 +11,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import React, { useEffect, useState } from 'react';
 import { Toaster } from '@/components/ui/sonner.tsx';
 import { toast } from 'sonner';
-import { Role, TRole, useAuth } from '@/contexts';
+import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 import { useConfig } from '@4chain-ag/react-configuration';
 import { createClient } from '@/utils/createClient.ts';
 import logger from '@/logger';
-import { useSpvWalletClient } from '@/hooks';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
 
 export const Route = createFileRoute('/login')({
-  // beforeLoad: async ({ context, location }) => {
-  // if (!context.auth.isAdmin) {
-  // throw redirect({ to: '/about' });
-  // }
-  // },
   component: LoginForm,
 });
 
-export async function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function LoginForm() {
-  const [role, setRole] = useState<TRole>(Role.Admin);
+  const [role, setRole] = useState<Role>(Role.Admin);
   const [key, setKey] = useState(
     'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK',
   );
   const { setSpvWalletClient, serverUrl, setServerUrl, spvWalletClient } = useSpvWalletClient();
 
   const { login } = useAuth();
-  const router = useRouter();
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
@@ -54,7 +43,7 @@ export function LoginForm() {
   }, [spvWalletClient]);
 
   const handleSelect = (value: string) => {
-    setRole(value as TRole);
+    setRole(value as Role);
   };
 
   const onChangeKey = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,8 +60,7 @@ export function LoginForm() {
     try {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
-      // console.log(1, spvWalletClient);
-      // await sleep(1);
+
       login(client);
 
       if (client?.role === Role.Admin) {
@@ -103,9 +91,9 @@ export function LoginForm() {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Admin" />
                   </SelectTrigger>
-                  <SelectContent defaultValue={'admin'}>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
+                  <SelectContent defaultValue={role}>
+                    <SelectItem value={Role.Admin}>Admin</SelectItem>
+                    <SelectItem value={Role.User}>User</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

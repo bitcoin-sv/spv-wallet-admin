@@ -1,6 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { useSpvWalletClient } from '@/hooks';
 import { Suspense, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
@@ -9,6 +7,8 @@ import { Toaster } from '@/components/ui/sonner.tsx';
 import { DataTable } from '@/components/XPubTable/DataTable.tsx';
 import { columns } from '@/components/XPubTable/columns.tsx';
 import { XpubExtended } from '@/interfaces';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSpvWalletClient } from '@/contexts';
 
 export const Route = createFileRoute('/_admin/xpub')({
   component: Xpub,

@@ -1,1 +1,1 @@
-export * from './XPubTable.tsx';
+export * from './DataTable';

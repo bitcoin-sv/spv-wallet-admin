@@ -16,8 +16,8 @@ import { HD } from '@bsv/sdk';
 import { errorWrapper } from '@/utils';
 import { toast } from 'sonner';
 import { useDebounce } from 'use-debounce';
-import { useSpvWalletClient } from '@/hooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSpvWalletClient } from '@/contexts';
 
 export const AddXpubDialog = () => {
   const [xPriv, setXPriv] = useState<string>('');
@@ -42,7 +42,8 @@ export const AddXpubDialog = () => {
 
     try {
       const xPrivHD = HD.fromString(debouncedXPriv);
-      setXPub(xPrivHD.toPublic().toString());
+      const xPubString = xPrivHD.toPublic().toString();
+      setXPub(xPubString);
       toast.success('Converted xPriv to xPub');
     } catch (error) {
       toast.error('Unable to convert xPriv to xPub');

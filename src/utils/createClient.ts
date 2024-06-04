@@ -25,11 +25,11 @@ export const createClient = async (role: Role, key: string) => {
   const client = new SpvWalletClient(serverUrl, clientOptions, { level: 'disabled' }) as SpvWalletClientExtended;
 
   try {
-    if (role === 'admin') {
+    if (role === Role.Admin) {
       await client.AdminGetStatus();
       client.role = Role.Admin;
       return client;
-    } else if (role === 'user') {
+    } else if (role === Role.User) {
       await client.GetXPub();
       client.role = Role.User;
       return client;

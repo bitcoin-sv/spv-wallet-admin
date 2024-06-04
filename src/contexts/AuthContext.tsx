@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { SpvWalletClientExtended, SpvWalletContext, SpvWalletContextType } from '@/contexts/SpvWalletContext.tsx';
+import { SpvWalletClientExtended, useSpvWalletClient } from '@/contexts/SpvWalletContext.tsx';
 
 export const enum Role {
   Admin = 'admin',
@@ -12,12 +12,13 @@ export interface AuthContext {
   isAuthenticated: boolean;
   isAdmin: boolean;
   login: (client: SpvWalletClientExtended) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { spvWalletClient } = useContext(SpvWalletContext) as SpvWalletContextType;
+  const { spvWalletClient } = useSpvWalletClient();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -39,18 +40,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [spvWalletClient],
   );
 
-  const logout = useCallback(
-    (client: SpvWalletClientExtended) => {
-      if (client) {
-        setIsAuthenticated(false);
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
 
-        setIsAdmin(true);
-      }
-    },
-    [spvWalletClient],
-  );
+    setIsAdmin(true);
+  }, []);
 
-  return <AuthContext.Provider value={{ isAdmin, isAuthenticated, login }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAdmin, isAuthenticated, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

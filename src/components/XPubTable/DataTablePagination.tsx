@@ -1,5 +1,3 @@
-// import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
-// import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from 'lucide-react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
