@@ -38,6 +38,7 @@ export const AddXpubDialog = () => {
   };
 
   useEffect(() => {
+    setXPub('');
     if (!xPriv) return;
 
     try {
