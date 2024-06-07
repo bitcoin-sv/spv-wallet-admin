@@ -10,7 +10,15 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DataTablePagination } from '@/components/XPubTable/DataTablePagination.tsx';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog.tsx';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,6 +40,18 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     },
   });
 
+  const renderInfo = (obj: any) =>
+    Object.entries(obj).map((item) => {
+      if (item[0] === 'status') {
+        return;
+      }
+      return (
+        <div key={item[0]}>
+          {item[0]}: {item[1] as React.ReactNode}
+        </div>
+      );
+    });
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -51,11 +71,22 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
+              <Dialog key={row.id}>
+                <DialogTrigger asChild>
+                  <TableRow className="cursor-pointer" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    ))}
+                  </TableRow>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>XPub Details</DialogTitle>
+                    <DialogDescription>Show full xPub information</DialogDescription>
+                  </DialogHeader>
+                  {renderInfo(row.original)}
+                </DialogContent>
+              </Dialog>
             ))
           ) : (
             <TableRow>

@@ -59,7 +59,7 @@ export function LoginForm() {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
 
-      login(client);
+      login(client, key);
 
       if (client?.role === Role.Admin) {
         await navigate({ to: '/xpub' });
