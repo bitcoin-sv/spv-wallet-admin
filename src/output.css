@@ -706,6 +706,10 @@ body {
   top: 50%;
 }
 
+.top-3 {
+  top: 0.75rem;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -757,8 +761,12 @@ body {
   margin-left: auto;
 }
 
-.mr-2 {
-  margin-right: 0.5rem;
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mr-6 {
+  margin-right: 1.5rem;
 }
 
 .mt-2 {
@@ -767,6 +775,10 @@ body {
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
 .flex {
@@ -866,6 +878,22 @@ body {
   height: 100vh;
 }
 
+.h-4\/5 {
+  height: 80%;
+}
+
+.h-\[300px\] {
+  height: 300px;
+}
+
+.h-\[55px\] {
+  height: 55px;
+}
+
+.h-\[72px\] {
+  height: 72px;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -930,12 +958,32 @@ body {
   width: 100%;
 }
 
+.w-\[123px\] {
+  width: 123px;
+}
+
+.w-\[124px\] {
+  width: 124px;
+}
+
+.w-\[336px\] {
+  width: 336px;
+}
+
+.w-\[111\.5px\] {
+  width: 111.5px;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
 
 .min-w-\[var\(--radix-select-trigger-width\)\] {
   min-width: var(--radix-select-trigger-width);
+}
+
+.max-w-2xl {
+  max-width: 42rem;
 }
 
 .max-w-\[765px\] {
@@ -950,12 +998,24 @@ body {
   max-width: 24rem;
 }
 
+.max-w-\[124px\] {
+  max-width: 124px;
+}
+
+.max-w-\[336px\] {
+  max-width: 336px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
 
 .shrink-0 {
   flex-shrink: 0;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .caption-bottom {
@@ -994,8 +1054,22 @@ body {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes pulse {
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .cursor-default {
   cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .select-none {
@@ -1010,6 +1084,22 @@ body {
 
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-cols-\[4fr_1fr_1fr-3fr\] {
+  grid-template-columns: 4fr 1fr 1fr-3fr;
+}
+
+.grid-cols-\[4fr_1fr_1fr_3fr\] {
+  grid-template-columns: 4fr 1fr 1fr 3fr;
+}
+
+.grid-cols-\[4fr_1fr_1fr_1\.5fr\] {
+  grid-template-columns: 4fr 1fr 1fr 1.5fr;
+}
+
+.grid-cols-\[4\.5fr_1fr_1fr_1\.5fr\] {
+  grid-template-columns: 4.5fr 1fr 1fr 1.5fr;
 }
 
 .flex-col {
@@ -1266,6 +1356,15 @@ body {
   padding-bottom: 1rem;
 }
 
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
 .pl-8 {
   padding-left: 2rem;
 }
@@ -1447,6 +1546,12 @@ body {
 
 .transition-opacity {
   transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-transform {
+  transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1696,6 +1801,34 @@ body {
 .data-\[side\=top\]\:-translate-y-1[data-side=top] {
   --tw-translate-y: -0.25rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+
+  to {
+    height: 0;
+  }
+}
+
+.data-\[state\=closed\]\:animate-accordion-up[data-state=closed] {
+  animation: accordion-up 0.2s ease-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+.data-\[state\=open\]\:animate-accordion-down[data-state=open] {
+  animation: accordion-down 0.2s ease-out;
 }
 
 .data-\[state\=active\]\:bg-background[data-state=active] {
@@ -2014,6 +2147,11 @@ body {
 
 .\[\&\>tr\]\:last\:border-b-0:last-child>tr {
   border-bottom-width: 0px;
+}
+
+.\[\&\[data-state\=open\]\>svg\]\:rotate-180[data-state=open]>svg {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .\[\&_tr\:last-child\]\:border-0 tr:last-child {

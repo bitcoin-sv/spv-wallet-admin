@@ -23,10 +23,12 @@ export const Route = createFileRoute('/login')({
 
 export function LoginForm() {
   const [role, setRole] = useState<Role>(Role.Admin);
-  const [key, setKey] = useState('');
+  const [key, setKey] = useState(
+    'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK',
+  );
   const { setSpvWalletClient, serverUrl, setServerUrl, spvWalletClient } = useSpvWalletClient();
 
-  const { login } = useAuth();
+  const { isAdmin } = useAuth();
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
@@ -59,9 +61,7 @@ export function LoginForm() {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
 
-      login(client);
-
-      if (client?.role === Role.Admin) {
+      if (isAdmin) {
         await navigate({ to: '/xpub' });
       }
     } catch (error) {
