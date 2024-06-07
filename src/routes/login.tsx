@@ -36,7 +36,7 @@ export function LoginForm() {
 
   useEffect(() => {
     (async () => {
-      if (spvWalletClient?.role === Role.Admin) {
+      if (isAdmin) {
         await navigate({ to: '/xpub' });
       }
     })();
