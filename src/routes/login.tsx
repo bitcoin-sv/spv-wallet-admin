@@ -26,7 +26,7 @@ export function LoginForm() {
   const [key, setKey] = useState('');
   const { setSpvWalletClient, serverUrl, setServerUrl, spvWalletClient } = useSpvWalletClient();
 
-  const { login } = useAuth();
+  const { isAdmin } = useAuth();
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
@@ -34,7 +34,7 @@ export function LoginForm() {
 
   useEffect(() => {
     (async () => {
-      if (spvWalletClient?.role === Role.Admin) {
+      if (isAdmin) {
         await navigate({ to: '/xpub' });
       }
     })();
@@ -59,9 +59,7 @@ export function LoginForm() {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
 
-      login(client, key);
-
-      if (client?.role === Role.Admin) {
+      if (isAdmin) {
         await navigate({ to: '/xpub' });
       }
     } catch (error) {
