@@ -12,15 +12,12 @@ export interface SpvWalletContext {
   setServerUrl: React.Dispatch<React.SetStateAction<string>>;
   spvWalletClient: SpvWalletClientExtended | null;
   setSpvWalletClient: React.Dispatch<React.SetStateAction<SpvWalletClientExtended | null>>;
-  userRole: TRole;
-  setUserRole: React.Dispatch<React.SetStateAction<TRole>>;
 }
 
 export const SpvWalletContext = createContext<SpvWalletContext | null>(null);
 
 export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { serverUrl, setServerUrl } = useServerUrl();
-  const [userRole, setUserRole] = useState<TRole | null>(null);
 
   const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletClientExtended | null>(null);
 
@@ -30,8 +27,6 @@ export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) =
       setServerUrl,
       spvWalletClient,
       setSpvWalletClient,
-      userRole,
-      setUserRole,
     }),
     [serverUrl, spvWalletClient, setSpvWalletClient],
   );

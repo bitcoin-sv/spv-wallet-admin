@@ -21,7 +21,9 @@ export const columns: ColumnDef<XpubsColumns>[] = [
             sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
           }}
         >
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          {/*<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>*/}
+          <Button variant="ghost" onClick={() => column.toggleSorting()}>
+            {/*<Button variant="ghost">*/}
             Id
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>

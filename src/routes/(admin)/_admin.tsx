@@ -1,13 +1,4 @@
-import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
-
-export const Route = createFileRoute('/_admin')({
-  beforeLoad: ({ context }) => {
-    if (!context.auth.isAdmin) {
-      throw redirect({ to: '/login', search: { redirect: location.href } });
-    }
-  },
-  component: LayoutComponent,
-});
+import { Outlet, createFileRoute, Link, useLocation, redirect, useRouter } from '@tanstack/react-router';
 
 import {
   Home,
@@ -43,15 +34,30 @@ import { Logo } from '@/components/Logo/Logo.tsx';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
 import { useAuth, useSpvWalletClient } from '@/contexts';
 
+export const Route = createFileRoute('/(admin)/_admin')({
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.isAdmin) {
+      throw redirect({ to: '/login', search: { redirect: location.href } });
+    }
+  },
+  component: LayoutComponent,
+});
+
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/xpub');
   const { pathname } = useLocation();
-  const { loginKey, logout } = useAuth();
-  const { serverUrl } = useSpvWalletClient();
+  const { loginKey } = useAuth();
+  const { serverUrl, setSpvWalletClient } = useSpvWalletClient();
+  const router = useRouter();
 
   useEffect(() => {
     setRoute(pathname);
   }, [pathname]);
+
+  const handleLogout = async () => {
+    setSpvWalletClient(null);
+    await router.invalidate();
+  };
 
   const highlightRoute = (path: string) => {
     if (path === route) {
@@ -84,7 +90,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/access-keys"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/access-keys')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <KeySquare className="h-5 w-5" />
@@ -219,7 +225,7 @@ function LayoutComponent() {
               <DropdownMenuItem>Server: {serverUrl}</DropdownMenuItem>
               <DropdownMenuSeparator />
               <Link to={'/login'}>
-                <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>

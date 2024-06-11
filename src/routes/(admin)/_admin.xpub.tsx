@@ -12,7 +12,7 @@ import { useSpvWalletClient } from '@/contexts';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input.tsx';
 import { useDebounce } from 'use-debounce';
-import { xPubQueryOptions } from '@/utils/queryOptions.tsx';
+import { xPubQueryOptions } from '@/utils';
 import { z } from 'zod';
 import { XpubsSkeleton } from '@/components/XpubsSkeleton/XpubsSkeleton.tsx';
 
@@ -21,7 +21,7 @@ const xPubSearchSchema = z.object({
   sort_direction: z.string().optional().catch('asc'),
 });
 
-export const Route = createFileRoute('/_admin/xpub')({
+export const Route = createFileRoute('/(admin)/_admin/xpub')({
   validateSearch: xPubSearchSchema,
   component: Xpub,
   pendingComponent: () => <XpubsSkeleton />,

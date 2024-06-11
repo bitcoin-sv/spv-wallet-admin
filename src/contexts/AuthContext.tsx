@@ -1,6 +1,5 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { SpvWalletClientExtended, useSpvWalletClient } from '@/contexts/SpvWalletContext.tsx';
-import { getShortXprv } from '@/utils/getShortXprv.ts';
+import React, { createContext, useContext, useState } from 'react';
+import { useSpvWalletClient } from '@/contexts';
 
 export const enum Role {
   Admin = 'admin',
@@ -12,50 +11,22 @@ export type TRole = Role | null | undefined;
 export interface AuthContext {
   isAuthenticated: boolean;
   isAdmin: boolean;
-  login: (client: SpvWalletClientExtended, key: string) => void;
-  logout: () => void;
   loginKey: string;
+  setLoginKey: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { spvWalletClient, setSpvWalletClient } = useSpvWalletClient();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const { spvWalletClient } = useSpvWalletClient();
+
   const [loginKey, setLoginKey] = useState<string>('');
+  const isAuthenticated = !!spvWalletClient;
 
-  useEffect(() => {
-    setIsAuthenticated(!!spvWalletClient);
-    setIsAdmin(isAuthenticated && spvWalletClient?.role === Role.Admin);
-  }, [spvWalletClient, spvWalletClient?.role]);
-
-  const login = useCallback(
-    (client: SpvWalletClientExtended, key: string) => {
-      if (client) {
-        setIsAuthenticated(true);
-        const shortenedKey = getShortXprv(key);
-        setLoginKey(shortenedKey);
-
-        if (client?.role === Role.Admin) {
-          setIsAdmin(true);
-        }
-      }
-    },
-    [spvWalletClient],
-  );
-
-  const logout = useCallback(() => {
-    setSpvWalletClient(null);
-    setIsAuthenticated(false);
-
-    setIsAdmin(false);
-  }, []);
+  const isAdmin = isAuthenticated && spvWalletClient?.role === Role.Admin;
 
   return (
-    <AuthContext.Provider value={{ isAdmin, isAuthenticated, login, logout, loginKey }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ isAdmin, isAuthenticated, loginKey, setLoginKey }}>{children}</AuthContext.Provider>
   );
 };
 

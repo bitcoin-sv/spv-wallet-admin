@@ -14,14 +14,21 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
-import { Route as AdminImport } from './routes/_admin'
-import { Route as AdminXpubImport } from './routes/_admin.xpub'
+import { Route as adminAdminImport } from './routes/(admin)/_admin'
+import { Route as adminAdminXpubImport } from './routes/(admin)/_admin.xpub'
+import { Route as adminAdminAccessKeysImport } from './routes/(admin)/_admin.access-keys'
 
 // Create Virtual Routes
 
+const adminImport = createFileRoute('/(admin)')()
 const AboutLazyImport = createFileRoute('/about')()
 
 // Create/Update Routes
+
+const adminRoute = adminImport.update({
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -33,27 +40,25 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AdminRoute = AdminImport.update({
+const adminAdminRoute = adminAdminImport.update({
   id: '/_admin',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminRoute,
 } as any)
 
-const AdminXpubRoute = AdminXpubImport.update({
+const adminAdminXpubRoute = adminAdminXpubImport.update({
   path: '/xpub',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => adminAdminRoute,
+} as any)
+
+const adminAdminAccessKeysRoute = adminAdminAccessKeysImport.update({
+  path: '/access-keys',
+  getParentRoute: () => adminAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_admin': {
-      id: '/_admin'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -68,12 +73,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_admin/xpub': {
+    '/(admin)': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof adminImport
+      parentRoute: typeof rootRoute
+    }
+    '/(admin)/_admin': {
+      id: '/_admin'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof adminAdminImport
+      parentRoute: typeof adminRoute
+    }
+    '/(admin)/_admin/access-keys': {
+      id: '/_admin/access-keys'
+      path: '/access-keys'
+      fullPath: '/access-keys'
+      preLoaderRoute: typeof adminAdminAccessKeysImport
+      parentRoute: typeof adminAdminImport
+    }
+    '/(admin)/_admin/xpub': {
       id: '/_admin/xpub'
       path: '/xpub'
       fullPath: '/xpub'
-      preLoaderRoute: typeof AdminXpubImport
-      parentRoute: typeof AdminImport
+      preLoaderRoute: typeof adminAdminXpubImport
+      parentRoute: typeof adminAdminImport
     }
   }
 }
@@ -81,9 +107,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  AdminRoute: AdminRoute.addChildren({ AdminXpubRoute }),
   LoginRoute,
   AboutLazyRoute,
+  adminRoute: adminRoute.addChildren({
+    adminAdminRoute: adminAdminRoute.addChildren({
+      adminAdminAccessKeysRoute,
+      adminAdminXpubRoute,
+    }),
+  }),
 })
 
 /* prettier-ignore-end */
