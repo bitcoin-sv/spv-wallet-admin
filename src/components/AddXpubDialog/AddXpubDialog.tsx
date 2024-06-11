@@ -29,7 +29,7 @@ export const AddXpubDialog = () => {
 
   const mutation = useMutation({
     mutationFn: async (xpub: string) => {
-      // TypeScript thinks that spvWalletClient is not defined since the initial state is null. Tells TS that it is defined using !.
+      // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.AdminNewXpub(xpub, {});
     },
   });
