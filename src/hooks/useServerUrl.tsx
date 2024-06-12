@@ -3,9 +3,9 @@ import { useConfig } from '@4chain-ag/react-configuration';
 
 export const useServerUrl = () => {
   const { config } = useConfig();
-  const { localStorage } = window
+  const { localStorage } = window;
   const storedUrl = localStorage.getItem('login.serverUrl');
-  const [serverUrl, setServerUrl] = useState<string>(storedUrl ?? config.serverUrl);
+  const [serverUrl, setServerUrl] = useState<string>('');
 
   useEffect(() => {
     setServerUrl(config.serverUrl);
@@ -15,6 +15,12 @@ export const useServerUrl = () => {
   useEffect(() => {
     localStorage.setItem('login.serverUrl', serverUrl);
   }, [serverUrl]);
+
+  useEffect(() => {
+    if (storedUrl) {
+      setServerUrl(storedUrl);
+    }
+  }, [storedUrl]);
 
   return {
     serverUrl,

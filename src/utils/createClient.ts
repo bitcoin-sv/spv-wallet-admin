@@ -1,7 +1,7 @@
 import { SpvWalletClientExtended } from '@/contexts/SpvWalletContext.tsx';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import { Role } from '@/contexts/AuthContext.tsx';
-import logger from '@/logger';
+import { errorWrapper } from '@/utils/errorWrapper.ts';
 
 export const createClient = async (role: Role, key: string) => {
   const serverUrl = window.localStorage.getItem('login.serverUrl') ?? '';
@@ -21,24 +21,19 @@ export const createClient = async (role: Role, key: string) => {
   }
 
   try {
-    if (role === 'admin') {
+    if (role === Role.Admin) {
       await client.AdminGetStatus();
       client.role = Role.Admin;
       return client;
-    } else if (role === 'user') {
+    } else if (role === Role.User) {
       await client.GetXPub();
       client.role = Role.User;
       return client;
     } else {
-      return null;
+      return client;
     }
   } catch (error) {
-    if (error instanceof Error) {
-      logger.error({ msg: error.message, stack: error.stack, err: error });
-      return null;
-    } else {
-      logger.error({ err: error });
-      throw new Error('An unknown error occurred');
-    }
+    errorWrapper(error);
+    return client;
   }
 };

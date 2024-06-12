@@ -8,14 +8,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Toaster } from '@/components/ui/sonner.tsx';
 import { toast } from 'sonner';
-import { Role, TRole } from '@/contexts';
+import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 import { useConfig } from '@4chain-ag/react-configuration';
 import { createClient } from '@/utils/createClient.ts';
 import logger from '@/logger';
-import { useSpvWalletClient } from '@/hooks';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
 
 export const Route = createFileRoute('/login')({
@@ -23,16 +22,28 @@ export const Route = createFileRoute('/login')({
 });
 
 export function LoginForm() {
-  const [role, setRole] = useState<TRole>(Role.Admin);
-  const [key, setKey] = useState('');
-  const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
+  const [role, setRole] = useState<Role>(Role.Admin);
+  const [key, setKey] = useState(
+    'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK',
+  );
+  const { setSpvWalletClient, serverUrl, setServerUrl, spvWalletClient } = useSpvWalletClient();
+
+  const { isAdmin } = useAuth();
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
   const navigate = Route.useNavigate();
 
+  useEffect(() => {
+    (async () => {
+      if (isAdmin) {
+        await navigate({ to: '/xpub' });
+      }
+    })();
+  }, [spvWalletClient]);
+
   const handleSelect = (value: string) => {
-    setRole(value as TRole);
+    setRole(value as Role);
   };
 
   const onChangeKey = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +60,8 @@ export function LoginForm() {
     try {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
-      if (client?.role === Role.Admin) {
+
+      if (isAdmin) {
         await navigate({ to: '/xpub' });
       }
     } catch (error) {
@@ -77,9 +89,9 @@ export function LoginForm() {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Admin" />
                   </SelectTrigger>
-                  <SelectContent defaultValue={'admin'}>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
+                  <SelectContent defaultValue={role}>
+                    <SelectItem value={Role.Admin}>Admin</SelectItem>
+                    <SelectItem value={Role.User}>User</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
