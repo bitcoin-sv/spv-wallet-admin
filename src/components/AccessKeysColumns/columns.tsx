@@ -1,29 +1,31 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { XPub } from '@bsv/spv-wallet-js-client';
-import { Badge } from '@/components/ui/badge.tsx';
-import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button.tsx';
+import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
+import { ColumnDef } from '@tanstack/react-table';
 
-export interface XpubsColumns extends XPub {
+import { ArrowUpDown } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge.tsx';
+
+import { Button } from '@/components/ui/button.tsx';
+
+export interface AccessKeysColumns extends AccessKey {
   status: string;
 }
 
-export const columns: ColumnDef<XpubsColumns>[] = [
+export const columns: ColumnDef<AccessKeysColumns>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {
       return (
         <Link
-          from={'/xpub'}
-          search={{
+          from={'/access-keys'}
+          search={(prev) => ({
+            ...prev,
             order_by_field: 'id',
             sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
-          }}
+          })}
         >
-          {/*<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>*/}
-          <Button variant="ghost" onClick={() => column.toggleSorting()}>
-            {/*<Button variant="ghost">*/}
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
@@ -32,18 +34,19 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     },
   },
   {
-    accessorKey: 'current_balance',
+    accessorKey: 'xpub_id',
     header: ({ column }) => {
       return (
         <Link
-          from={'/xpub'}
-          search={{
-            order_by_field: 'current_balance',
+          from={'/access-keys'}
+          search={(prev) => ({
+            ...prev,
+            order_by_field: 'xpub_id',
             sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
-          }}
+          })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Balance
+            Xpub ID
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -63,6 +66,8 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     cell: ({ row }) => {
       return row.getValue('status') === 'deleted' ? (
         <Badge variant="secondary">Deleted</Badge>
+      ) : row.getValue('status') === 'revoked' ? (
+        <Badge variant="secondary">Revoked</Badge>
       ) : (
         <Badge variant="outline">Active</Badge>
       );
@@ -73,11 +78,12 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/xpub'}
-          search={{
+          from={'/access-keys'}
+          search={(prev) => ({
+            ...prev,
             order_by_field: 'created_at',
             sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
-          }}
+          })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date

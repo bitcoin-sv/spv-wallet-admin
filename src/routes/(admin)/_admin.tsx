@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, Link, useLocation, redirect, useRouter } from '@tanstack/react-router';
+import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
 
 import {
   Home,
@@ -7,7 +7,6 @@ import {
   PanelLeft,
   ShoppingCart,
   Users2,
-  UserRound,
   KeyRound,
   KeySquare,
   Route as RouteIcon,
@@ -17,22 +16,16 @@ import {
   UsersRound,
 } from 'lucide-react';
 
+import { useEffect, useState } from 'react';
+
+import { Logo } from '@/components/Logo/Logo.tsx';
+import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
+import { Profile } from '@/components/Profile/Profile.tsx';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useEffect, useState } from 'react';
-import { Logo } from '@/components/Logo/Logo.tsx';
-import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
-import { useAuth, useSpvWalletClient } from '@/contexts';
 
 export const Route = createFileRoute('/(admin)/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -46,18 +39,10 @@ export const Route = createFileRoute('/(admin)/_admin')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/xpub');
   const { pathname } = useLocation();
-  const { loginKey } = useAuth();
-  const { serverUrl, setSpvWalletClient } = useSpvWalletClient();
-  const router = useRouter();
 
   useEffect(() => {
     setRoute(pathname);
   }, [pathname]);
-
-  const handleLogout = async () => {
-    setSpvWalletClient(null);
-    await router.invalidate();
-  };
 
   const highlightRoute = (path: string) => {
     if (path === route) {
@@ -212,23 +197,7 @@ function LayoutComponent() {
             </SheetContent>
           </Sheet>
           <ModeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <UserRound />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>ID: {loginKey}</DropdownMenuItem>
-              <DropdownMenuItem>Server: {serverUrl}</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Link to={'/login'}>
-                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-              </Link>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Profile />
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Outlet />
