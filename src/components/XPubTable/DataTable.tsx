@@ -40,8 +40,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     },
   });
 
-  const renderInfo = (obj: any) =>
-    Object.entries(obj).map((item) => {
+  const renderInfo = (obj: TData) =>
+    Object.entries(obj as {}).map((item) => {
       if (item[0] === 'status') {
         return;
       }
