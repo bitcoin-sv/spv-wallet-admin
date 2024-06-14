@@ -1,11 +1,17 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Column } from '@tanstack/react-table';
 import { XPub } from '@bsv/spv-wallet-js-client';
 import { Badge } from '@/components/ui/badge.tsx';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
+import { Link } from '@tanstack/react-router';
 
 export interface XpubsColumns extends XPub {
   status: string;
+}
+
+function getSortDirection(column: Column<XpubsColumns, unknown>): 'asc' | 'desc' {
+  const isSorted = column.getIsSorted();
+  return isSorted === false ? 'asc' : isSorted;
 }
 
 export const columns: ColumnDef<XpubsColumns>[] = [
@@ -13,10 +19,18 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     accessorKey: 'id',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Id
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <Link
+          from={'/xpub'}
+          search={{
+            order_by_field: 'id',
+            sort_direction: getSortDirection(column),
+          }}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Id
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       );
     },
   },
@@ -24,10 +38,18 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     accessorKey: 'current_balance',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Balance
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <Link
+          from={'/xpub'}
+          search={{
+            order_by_field: 'current_balance',
+            sort_direction: getSortDirection(column),
+          }}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Balance
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       );
     },
   },
@@ -53,10 +75,18 @@ export const columns: ColumnDef<XpubsColumns>[] = [
     accessorKey: 'created_at',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Created Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <Link
+          from={'/xpub'}
+          search={{
+            order_by_field: 'created_at',
+            sort_direction: getSortDirection(column),
+          }}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Created Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       );
     },
     cell: ({ row }) => {

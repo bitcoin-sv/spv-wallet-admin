@@ -39,6 +39,7 @@ export const AddXpubDialog = () => {
   };
 
   useEffect(() => {
+    setXPub('');
     if (!xPriv) return;
 
     try {
@@ -62,7 +63,6 @@ export const AddXpubDialog = () => {
       setXPriv('');
       setXPub('');
     } catch (error) {
-      console.log('error', error);
       toast.error('Unable to add xPub');
       errorWrapper(error);
     }
@@ -70,8 +70,8 @@ export const AddXpubDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-8 gap-1">
-          <CirclePlus className="mr-2" size={16} />
+        <Button size="sm" variant="secondary" className="h-10 gap-1">
+          <CirclePlus className="mr-1" size={16} />
           Add xPub
         </Button>
       </DialogTrigger>
