@@ -36,6 +36,7 @@ export function Xpub() {
   const { order_by_field, sort_direction } = useSearch({ from: '/_admin/xpub' });
 
   const { data } = useSuspenseQuery(
+    // At this point, spvWalletClient is defined; using non-null assertion.
     xPubQueryOptions({ spvWalletClient: spvWalletClient!, filterStr: debouncedFilter, order_by_field, sort_direction }),
   );
 

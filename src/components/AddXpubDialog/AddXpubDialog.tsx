@@ -33,6 +33,7 @@ export const AddXpubDialog = () => {
 
   const mutation = useMutation({
     mutationFn: async (xpub: string) => {
+      // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.AdminNewXpub(xpub, {});
     },
   });
@@ -42,6 +43,7 @@ export const AddXpubDialog = () => {
   };
 
   useEffect(() => {
+    setXPub('');
     if (!xPriv) return;
 
     try {

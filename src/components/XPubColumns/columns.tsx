@@ -1,6 +1,6 @@
+import { ColumnDef, Column } from '@tanstack/react-table';
 import { XPub } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
-import { ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
@@ -10,6 +10,11 @@ import { Button } from '@/components/ui/button.tsx';
 
 export interface XpubsColumns extends XPub {
   status: string;
+}
+
+const getSortDirection = (column: Column<XpubsColumns, unknown>): 'asc' | 'desc' => {
+  const isSorted = column.getIsSorted();
+  return isSorted === false ? 'asc' : isSorted;
 }
 
 export const columns: ColumnDef<XpubsColumns>[] = [
@@ -22,7 +27,7 @@ export const columns: ColumnDef<XpubsColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -42,7 +47,7 @@ export const columns: ColumnDef<XpubsColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'current_balance',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -80,7 +85,7 @@ export const columns: ColumnDef<XpubsColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
