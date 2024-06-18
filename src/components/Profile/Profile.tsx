@@ -4,7 +4,8 @@ import { UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import {
   DropdownMenu,
-  DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -16,7 +17,6 @@ export const Profile = () => {
   const { loginKey } = useAuth();
   const { serverUrl, setSpvWalletClient } = useSpvWalletClient();
   const router = useRouter();
-
 
   const handleLogout = async () => {
     setSpvWalletClient(null);
@@ -41,5 +41,5 @@ export const Profile = () => {
         </Link>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-} 
+  );
+};

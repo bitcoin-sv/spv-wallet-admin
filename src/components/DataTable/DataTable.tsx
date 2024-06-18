@@ -27,8 +27,10 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
+export const initialSorting = { id: 'id', desc: false };
+
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: false }]);
+  const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
   const table = useReactTable({
     data,
@@ -38,7 +40,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     onSortingChange: setSorting,
     manualSorting: true,
     initialState: {
-      sorting: [{ id: 'id', desc: false }],
+      sorting: [initialSorting],
     },
     state: {
       sorting,
@@ -46,18 +48,19 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   });
 
   const renderInfo = (obj: TData) =>
-    Object.entries(obj as {}).map((item) => {
-      if (item[0] === 'status') {
+    Object.entries(obj as NonNullable<unknown>).map((item) => {
+      const [field, value] = item;
+      if (field === 'status') {
         return;
       }
 
-      if (item[0] === 'metadata') {
-        return <div key={item[0]}>metadata: {JSON.stringify(item[1]) as React.ReactNode}</div>;
+      if (field === 'metadata') {
+        return <div key={field}>metadata: {JSON.stringify(value) as React.ReactNode}</div>;
       }
 
       return (
-        <div key={item[0]}>
-          {item[0]}: {item[1] as React.ReactNode}
+        <div key={field}>
+          {field}: {value as React.ReactNode}
         </div>
       );
     });
