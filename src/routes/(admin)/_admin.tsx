@@ -87,7 +87,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/destinations"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/destinations')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <RouteIcon className="h-5 w-5" />

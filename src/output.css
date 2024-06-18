@@ -785,6 +785,14 @@ body {
   margin-top: 1rem;
 }
 
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
 .flex {
   display: flex;
 }
@@ -990,6 +998,14 @@ body {
   width: 100%;
 }
 
+.w-\[20px\] {
+  width: 20px;
+}
+
+.w-\[60px\] {
+  width: 60px;
+}
+
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1016,6 +1032,10 @@ body {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-\[100px\] {
+  max-width: 100px;
 }
 
 .flex-1 {
@@ -1194,6 +1214,10 @@ body {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
 }
 
 .whitespace-nowrap {
