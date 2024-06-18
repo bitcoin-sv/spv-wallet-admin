@@ -1,20 +1,16 @@
-import { ColumnDef, Column } from '@tanstack/react-table';
 import { XPub } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
+import { ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge.tsx';
 
 import { Button } from '@/components/ui/button.tsx';
+import { getSortDirection } from '@/utils';
 
 export interface XpubsColumns extends XPub {
   status: string;
-}
-
-const getSortDirection = (column: Column<XpubsColumns, unknown>): 'asc' | 'desc' => {
-  const isSorted = column.getIsSorted();
-  return isSorted === false ? 'asc' : isSorted;
 }
 
 export const columns: ColumnDef<XpubsColumns>[] = [

@@ -1,12 +1,14 @@
 import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
+// import { Column, ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge.tsx';
 
 import { Button } from '@/components/ui/button.tsx';
+import { getSortDirection } from '@/utils';
 
 export interface AccessKeysColumns extends AccessKey {
   status: string;
@@ -22,7 +24,7 @@ export const columns: ColumnDef<AccessKeysColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -42,7 +44,7 @@ export const columns: ColumnDef<AccessKeysColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'xpub_id',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -82,7 +84,7 @@ export const columns: ColumnDef<AccessKeysColumns>[] = [
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',
-            sort_direction: column.getIsSorted() === false ? 'asc' : (column.getIsSorted() as string),
+            sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
