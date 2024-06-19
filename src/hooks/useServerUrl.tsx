@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useConfig } from '@4chain-ag/react-configuration';
+import { useEffect, useState } from 'react';
 
 export const useServerUrl = () => {
   const { config } = useConfig();

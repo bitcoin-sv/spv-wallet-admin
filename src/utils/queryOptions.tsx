@@ -22,8 +22,8 @@ export const xPubQueryOptions = (opts: {
         {
           page,
           page_size,
-          order_by_field,
-          sort_direction,
+          order_by_field: order_by_field ?? 'id',
+          sort_direction: sort_direction ?? 'desc',
         },
       ),
   });

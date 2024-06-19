@@ -1,4 +1,13 @@
+import { HD } from '@bsv/sdk';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus } from 'lucide-react';
+
+import React, { useEffect, useState } from 'react';
+
+import { toast } from 'sonner';
+
+import { useDebounce } from 'use-debounce';
+
 import { Button } from '@/components/ui/button.tsx';
 import {
   Dialog,
@@ -9,15 +18,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
-import { Label } from '@/components/ui/label.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import React, { useEffect, useState } from 'react';
-import { HD } from '@bsv/sdk';
-import { errorWrapper } from '@/utils';
-import { toast } from 'sonner';
-import { useDebounce } from 'use-debounce';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Label } from '@/components/ui/label.tsx';
 import { useSpvWalletClient } from '@/contexts';
+import { errorWrapper } from '@/utils';
 
 export const AddXpubDialog = () => {
   const [xPriv, setXPriv] = useState<string>('');
@@ -58,7 +62,7 @@ export const AddXpubDialog = () => {
     try {
       HD.fromString(xPub);
       const data = await mutation.mutateAsync(xPub);
-      queryClient.setQueryData(['xpubs'], (oldData: any) => [...oldData, data]);
+      queryClient.setQueryData(['xpubs'], (oldData: never) => [...oldData, data]);
       toast.success('Added xPub');
       setXPriv('');
       setXPub('');

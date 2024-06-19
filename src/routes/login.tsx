@@ -1,21 +1,27 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { useConfig } from '@4chain-ag/react-configuration';
+import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
+import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
+
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
+
+import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
-
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { Input } from '@/components/ui/input';
+
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import React, { useEffect, useState } from 'react';
+
 import { Toaster } from '@/components/ui/sonner.tsx';
-import { toast } from 'sonner';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 import { Role, useAuth, useSpvWalletClient } from '@/contexts';
-import { useConfig } from '@4chain-ag/react-configuration';
-import { createClient } from '@/utils/createClient.ts';
+
 import logger from '@/logger';
-import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
+import { createClient, getShortXprv } from '@/utils';
 
 export const Route = createFileRoute('/login')({
   component: LoginForm,
@@ -24,21 +30,22 @@ export const Route = createFileRoute('/login')({
 export function LoginForm() {
   const [role, setRole] = useState<Role>(Role.Admin);
   const [key, setKey] = useState('');
-  const { setSpvWalletClient, serverUrl, setServerUrl, spvWalletClient } = useSpvWalletClient();
+  const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
-  const { isAdmin } = useAuth();
+  const { isAuthenticated, setLoginKey } = useAuth();
+  const router = useRouter();
+  const search = useSearch({ from: '/login' as const }) as { redirect?: string };
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
-  const navigate = Route.useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      if (isAdmin) {
-        await navigate({ to: '/xpub' });
-      }
-    })();
-  }, [spvWalletClient]);
+  React.useLayoutEffect(() => {
+    if (isAuthenticated && search?.redirect) {
+      router.history.push(search.redirect);
+    } else if (isAuthenticated) {
+      router.history.push('/xpub');
+    }
+  }, [isAuthenticated, search?.redirect]);
 
   const handleSelect = (value: string) => {
     setRole(value as Role);
@@ -59,9 +66,9 @@ export function LoginForm() {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
 
-      if (isAdmin) {
-        await navigate({ to: '/xpub' });
-      }
+      setLoginKey(getShortXprv(key));
+
+      await router.invalidate();
     } catch (error) {
       logger.error(error);
       toast.error('xPriv or Access Key is invalid');

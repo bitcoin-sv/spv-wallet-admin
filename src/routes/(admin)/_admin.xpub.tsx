@@ -1,28 +1,29 @@
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { AddXpubDialog } from '@/components/AddXpubDialog/AddXpubDialog.tsx';
-import { Toaster } from '@/components/ui/sonner.tsx';
-import { DataTable } from '@/components/XPubTable/DataTable.tsx';
-import { columns } from '@/components/XPubTable/columns.tsx';
-import { XpubExtended } from '@/interfaces';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useSpvWalletClient } from '@/contexts';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input.tsx';
+import React, { useState } from 'react';
+
 import { useDebounce } from 'use-debounce';
-import { xPubQueryOptions } from '@/utils/queryOptions.tsx';
+
 import { z } from 'zod';
+
+import { AddXpubDialog } from '@/components/AddXpubDialog/AddXpubDialog.tsx';
+import { DataTable } from '@/components/DataTable/DataTable.tsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
+import { Input } from '@/components/ui/input.tsx';
+import { Toaster } from '@/components/ui/sonner.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { columns } from '@/components/XPubColumns/columns.tsx';
 import { XpubsSkeleton } from '@/components/XpubsSkeleton/XpubsSkeleton.tsx';
+import { useSpvWalletClient } from '@/contexts';
 
-const xPubSearchSchema = z.object({
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('asc'),
-});
+import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
 
-export const Route = createFileRoute('/_admin/xpub')({
-  validateSearch: xPubSearchSchema,
+export const Route = createFileRoute('/(admin)/_admin/xpub')({
+  validateSearch: z.object({
+    order_by_field: z.string().optional().catch('id'),
+    sort_direction: z.string().optional().catch('asc'),
+  }),
   component: Xpub,
   pendingComponent: () => <XpubsSkeleton />,
 });
@@ -35,18 +36,13 @@ export function Xpub() {
   const { order_by_field, sort_direction } = useSearch({ from: '/_admin/xpub' });
 
   const { data } = useSuspenseQuery(
-    // // At this point, spvWalletClient is defined; using non-null assertion.
+    // At this point, spvWalletClient is defined; using non-null assertion.
     xPubQueryOptions({ spvWalletClient: spvWalletClient!, filterStr: debouncedFilter, order_by_field, sort_direction }),
   );
 
-  const mappedData: XpubExtended[] = data.map((xpub) => {
-    return {
-      ...xpub,
-      status: xpub.deleted_at === null ? 'active' : 'deleted',
-    };
-  });
+  const mappedData = addStatusField(data);
 
-  const deletedXpubs = mappedData.filter((xpub) => xpub.status === 'deleted');
+  const deletedXpubs = getDeletedElements(mappedData);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);

@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/skeleton.tsx';
 import { Card } from '@/components/ui/card.tsx';
+import { Skeleton } from '@/components/ui/skeleton.tsx';
 
 export const XpubsSkeleton = () => {
   return (

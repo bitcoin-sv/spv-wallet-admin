@@ -1,14 +1,5 @@
 import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_admin')({
-  beforeLoad: ({ context }) => {
-    if (!context.auth.isAdmin) {
-      throw redirect({ to: '/login', search: { redirect: location.href } });
-    }
-  },
-  component: LayoutComponent,
-});
-
 import {
   Home,
   Package,
@@ -16,7 +7,6 @@ import {
   PanelLeft,
   ShoppingCart,
   Users2,
-  UserRound,
   KeyRound,
   KeySquare,
   Route as RouteIcon,
@@ -26,28 +16,29 @@ import {
   UsersRound,
 } from 'lucide-react';
 
+import { useEffect, useState } from 'react';
+
+import { Logo } from '@/components/Logo/Logo.tsx';
+import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
+import { Profile } from '@/components/Profile/Profile.tsx';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useEffect, useState } from 'react';
-import { Logo } from '@/components/Logo/Logo.tsx';
-import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
-import { useAuth, useSpvWalletClient } from '@/contexts';
+
+export const Route = createFileRoute('/(admin)/_admin')({
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.isAdmin) {
+      throw redirect({ to: '/login', search: { redirect: location.href } });
+    }
+  },
+  component: LayoutComponent,
+});
 
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/xpub');
   const { pathname } = useLocation();
-  const { loginKey, logout } = useAuth();
-  const { serverUrl } = useSpvWalletClient();
 
   useEffect(() => {
     setRoute(pathname);
@@ -84,7 +75,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/access-keys"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/access-keys')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <KeySquare className="h-5 w-5" />
@@ -206,23 +197,7 @@ function LayoutComponent() {
             </SheetContent>
           </Sheet>
           <ModeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <UserRound />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>ID: {loginKey}</DropdownMenuItem>
-              <DropdownMenuItem>Server: {serverUrl}</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Link to={'/login'}>
-                <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
-              </Link>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Profile />
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Outlet />
