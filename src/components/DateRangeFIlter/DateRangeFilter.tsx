@@ -19,13 +19,22 @@ export interface DateRangeFilterProps {
   withRevokedRange?: boolean;
 }
 
-export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
-  const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
+const initialTimeRange = () => {
   const currentDate = new Date();
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  return {
     from: subDays(currentDate, 20),
     to: currentDate,
-  });
+  };
+};
+
+export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
+  const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
+  // const currentDate = new Date();
+  // const [date, setDate] = React.useState<DateRange | undefined>({
+  const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
+  // from: subDays(currentDate, 20),
+  // to: currentDate,
+  // });
 
   const navigate = useNavigate({ from: Route.fullPath });
 

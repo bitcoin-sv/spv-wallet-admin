@@ -789,10 +789,6 @@ body {
   display: block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .flex {
   display: flex;
 }
@@ -998,14 +994,6 @@ body {
   width: 100%;
 }
 
-.w-\[20px\] {
-  width: 20px;
-}
-
-.w-\[60px\] {
-  width: 60px;
-}
-
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1016,6 +1004,10 @@ body {
 
 .max-w-2xl {
   max-width: 42rem;
+}
+
+.max-w-\[100px\] {
+  max-width: 100px;
 }
 
 .max-w-\[124px\] {
@@ -1032,10 +1024,6 @@ body {
 
 .max-w-sm {
   max-width: 24rem;
-}
-
-.max-w-\[100px\] {
-  max-width: 100px;
 }
 
 .flex-1 {
