@@ -714,6 +714,14 @@ body {
   top: 50%;
 }
 
+.right-2 {
+  right: 0.5rem;
+}
+
+.right-2\.5 {
+  right: 0.625rem;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -773,6 +781,10 @@ body {
   margin-right: 0.5rem;
 }
 
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .mr-6 {
   margin-right: 1.5rem;
 }
@@ -787,10 +799,6 @@ body {
 
 .block {
   display: block;
-}
-
-.inline-block {
-  display: inline-block;
 }
 
 .flex {
@@ -998,14 +1006,6 @@ body {
   width: 100%;
 }
 
-.w-\[20px\] {
-  width: 20px;
-}
-
-.w-\[60px\] {
-  width: 60px;
-}
-
 .min-w-\[8rem\] {
   min-width: 8rem;
 }
@@ -1016,6 +1016,14 @@ body {
 
 .max-w-2xl {
   max-width: 42rem;
+}
+
+.max-w-3xl {
+  max-width: 48rem;
+}
+
+.max-w-\[100px\] {
+  max-width: 100px;
 }
 
 .max-w-\[124px\] {
@@ -1032,10 +1040,6 @@ body {
 
 .max-w-sm {
   max-width: 24rem;
-}
-
-.max-w-\[100px\] {
-  max-width: 100px;
 }
 
 .flex-1 {
@@ -1102,6 +1106,10 @@ body {
 
 .cursor-default {
   cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .select-none {
@@ -1224,6 +1232,10 @@ body {
   white-space: nowrap;
 }
 
+.break-all {
+  word-break: break-all;
+}
+
 .rounded-full {
   border-radius: 9999px;
 }
@@ -1327,6 +1339,11 @@ body {
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-0 {

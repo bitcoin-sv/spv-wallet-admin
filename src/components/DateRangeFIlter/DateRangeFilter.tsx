@@ -17,9 +17,10 @@ import { Route } from '@/routes/(admin)/_admin.access-keys.tsx';
 
 export interface DateRangeFilterProps {
   withRevokedRange?: boolean;
+  className?: string;
 }
 
-export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
+export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilterProps) => {
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
   const currentDate = new Date();
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -49,7 +50,7 @@ export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className={className}>
         <Button variant="outline">
           <ListFilter className="w-5 h-5" />
           <span className="ml-2">Filter</span>

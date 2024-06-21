@@ -23,7 +23,11 @@ import { Label } from '@/components/ui/label.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 
-export const AddXpubDialog = () => {
+interface AddXpubDialogProps {
+  className?: string;
+}
+
+export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const [xPriv, setXPriv] = useState<string>('');
   const [xPub, setXPub] = useState<string>('');
   const [debouncedXPriv] = useDebounce(xPriv, 500);
@@ -36,6 +40,7 @@ export const AddXpubDialog = () => {
       // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.AdminNewXpub(xpub, {});
     },
+    onSuccess: () => queryClient.invalidateQueries(),
   });
 
   const handleXPrivChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +66,7 @@ export const AddXpubDialog = () => {
     if (!xPub) return;
     try {
       HD.fromString(xPub);
-      const data = await mutation.mutateAsync(xPub);
-      queryClient.setQueryData(['xpubs'], (oldData: never) => [...oldData, data]);
+      await mutation.mutateAsync(xPub);
       toast.success('Added xPub');
       setXPriv('');
       setXPub('');
@@ -73,7 +77,7 @@ export const AddXpubDialog = () => {
   };
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className={className}>
         <Button size="sm" variant="secondary" className="h-10 gap-1">
           <CirclePlus className="mr-1" size={16} />
           Add xPub

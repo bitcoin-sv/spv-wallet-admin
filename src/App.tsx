@@ -31,19 +31,19 @@ function InnerApp() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <ConfigProvider>
-        <SpvWalletProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <ConfigProvider>
+          <SpvWalletProvider>
+            <AuthProvider>
+              <TooltipProvider>
                 <InnerApp />
-              </QueryClientProvider>
-            </TooltipProvider>
-          </AuthProvider>
-        </SpvWalletProvider>
-      </ConfigProvider>
-    </ThemeProvider>
+              </TooltipProvider>
+            </AuthProvider>
+          </SpvWalletProvider>
+        </ConfigProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

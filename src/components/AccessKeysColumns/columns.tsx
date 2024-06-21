@@ -1,7 +1,6 @@
 import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
-// import { Column, ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
