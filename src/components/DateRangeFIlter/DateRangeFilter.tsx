@@ -29,12 +29,7 @@ const initialTimeRange = () => {
 
 export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
-  // const currentDate = new Date();
-  // const [date, setDate] = React.useState<DateRange | undefined>({
   const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
-  // from: subDays(currentDate, 20),
-  // to: currentDate,
-  // });
 
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -47,7 +42,7 @@ export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
         return {
           ...old,
           [dateRangeOption]: {
-            from: date?.from,
+            from: date!.from,
             to: addDays(date!.to!, 1),
           },
         };
