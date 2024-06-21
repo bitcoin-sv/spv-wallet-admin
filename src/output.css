@@ -686,6 +686,14 @@ body {
   right: 0.25rem;
 }
 
+.right-2 {
+  right: 0.5rem;
+}
+
+.right-2\.5 {
+  right: 0.625rem;
+}
+
 .right-4 {
   right: 1rem;
 }
@@ -712,14 +720,6 @@ body {
 
 .top-\[50\%\] {
   top: 50%;
-}
-
-.right-2 {
-  right: 0.5rem;
-}
-
-.right-2\.5 {
-  right: 0.625rem;
 }
 
 .z-10 {
@@ -1012,10 +1012,6 @@ body {
 
 .min-w-\[var\(--radix-select-trigger-width\)\] {
   min-width: var(--radix-select-trigger-width);
-}
-
-.max-w-2xl {
-  max-width: 42rem;
 }
 
 .max-w-3xl {
