@@ -1022,6 +1022,10 @@ body {
   max-width: 100px;
 }
 
+.max-w-\[100px\] {
+  max-width: 100px;
+}
+
 .max-w-\[124px\] {
   max-width: 124px;
 }
