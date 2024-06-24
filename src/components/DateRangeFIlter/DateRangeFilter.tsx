@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { format, subDays } from 'date-fns';
+import { addDays, format, subDays } from 'date-fns';
 import { Calendar as CalendarIcon, ListFilter } from 'lucide-react';
 
 import React, { useState } from 'react';
@@ -15,12 +15,21 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Route } from '@/routes/(admin)/_admin.access-keys.tsx';
 
-export const DateRangeFilter = () => {
+export interface DateRangeFilterProps {
+  withRevokedRange?: boolean;
+}
+
+const initialTimeRange = () => {
+  const currentDate = new Date();
+  return {
+    from: subDays(currentDate, 20),
+    to: currentDate,
+  };
+};
+
+export const DateRangeFilter = ({ withRevokedRange }: DateRangeFilterProps) => {
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: subDays(new Date(), 20),
-    to: new Date(),
-  });
+  const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
 
   const navigate = useNavigate({ from: Route.fullPath });
 
@@ -33,8 +42,8 @@ export const DateRangeFilter = () => {
         return {
           ...old,
           [dateRangeOption]: {
-            from: date?.from,
-            to: date?.to,
+            from: date!.from,
+            to: addDays(date!.to!, 1),
           },
         };
       },
@@ -67,10 +76,12 @@ export const DateRangeFilter = () => {
               <RadioGroupItem value="updatedRange" id="r2" />
               <Label htmlFor="r2">Updated date</Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="revokedRange" id="r3" />
-              <Label htmlFor="r3">Revoked date</Label>
-            </div>
+            {withRevokedRange && (
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="revokedRange" id="r3" />
+                <Label htmlFor="r3">Revoked date</Label>
+              </div>
+            )}
           </RadioGroup>
         </div>
         <div className={cn('grid gap-2 mt-4')}>

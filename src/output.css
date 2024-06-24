@@ -785,6 +785,10 @@ body {
   margin-top: 1rem;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
@@ -1002,6 +1006,10 @@ body {
   max-width: 42rem;
 }
 
+.max-w-\[100px\] {
+  max-width: 100px;
+}
+
 .max-w-\[124px\] {
   max-width: 124px;
 }
@@ -1194,6 +1202,10 @@ body {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
 }
 
 .whitespace-nowrap {

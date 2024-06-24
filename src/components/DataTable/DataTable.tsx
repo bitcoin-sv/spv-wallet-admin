@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                   <DialogContent className="max-w-2xl">
                     <DialogHeader>
                       <DialogTitle>Details</DialogTitle>
-                      <DialogDescription>Show full xPub information</DialogDescription>
+                      <DialogDescription>Show full information</DialogDescription>
                     </DialogHeader>
                     {renderInfo(row.original)}
                   </DialogContent>
