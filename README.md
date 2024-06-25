@@ -14,7 +14,7 @@
 ## What is SPV-Wallet?
 [Read more about SPV-Wallet](https://github.com/bitcoin-sv/spv-wallet/blob/main/README.md)
 
-For in-depth information and guidance, please refer to the [SPV Wallet Documentation](https://bsvblockchain.gitbook.io/docs).
+For in-depth information and guidance, please refer to the [SPV Wallet Documentation](https://docs.bsvblockchain.org/network-topology/applications/spv-wallet).
 
 <br />
 
