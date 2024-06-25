@@ -686,6 +686,14 @@ body {
   right: 0.25rem;
 }
 
+.right-2 {
+  right: 0.5rem;
+}
+
+.right-2\.5 {
+  right: 0.625rem;
+}
+
 .right-4 {
   right: 1rem;
 }
@@ -773,6 +781,10 @@ body {
   margin-right: 0.5rem;
 }
 
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .mr-6 {
   margin-right: 1.5rem;
 }
@@ -783,6 +795,10 @@ body {
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
 }
 
 .block {
@@ -906,6 +922,10 @@ body {
   max-height: 24rem;
 }
 
+.max-h-\[85vh\] {
+  max-height: 85vh;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1002,8 +1022,8 @@ body {
   min-width: var(--radix-select-trigger-width);
 }
 
-.max-w-2xl {
-  max-width: 42rem;
+.max-w-3xl {
+  max-width: 48rem;
 }
 
 .max-w-\[100px\] {
@@ -1090,6 +1110,10 @@ body {
 
 .cursor-default {
   cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .select-none {
@@ -1212,6 +1236,10 @@ body {
   white-space: nowrap;
 }
 
+.break-all {
+  word-break: break-all;
+}
+
 .rounded-full {
   border-radius: 9999px;
 }
@@ -1315,6 +1343,11 @@ body {
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-0 {
@@ -2122,6 +2155,10 @@ body {
 
   .sm\:h-auto {
     height: auto;
+  }
+
+  .sm\:max-w-3xl {
+    max-width: 48rem;
   }
 
   .sm\:max-w-\[425px\] {
