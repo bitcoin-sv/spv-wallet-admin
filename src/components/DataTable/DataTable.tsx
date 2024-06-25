@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({ columns, data, isDelete, onDelete }: 
                         <DialogTrigger className="w-full">
                           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>
                         </DialogTrigger>
-                        <DialogContent className="max-w-3xl">
+                        <DialogContent className="max-w-3xl max-h-[85vh] overflow-auto">
                           <DialogHeader>
                             <DialogTitle>Details</DialogTitle>
                             <DialogDescription>Show full information</DialogDescription>
