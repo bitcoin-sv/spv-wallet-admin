@@ -99,7 +99,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/paymails"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/paymails')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <Mail className="h-5 w-5" />

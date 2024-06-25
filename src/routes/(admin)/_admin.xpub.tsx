@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { Search } from 'lucide-react';
+import { CircleX, Search } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
@@ -59,17 +59,23 @@ export function Xpub() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <div className="relative flex-1 md:grow-0 mr-6">
+            <AddXpubDialog className="mr-3" />
+            <div className="relative flex-1 md:grow-0">
               <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+              {filter.length > 0 && (
+                <CircleX
+                  onClick={() => setFilter('')}
+                  className="h-4 w-4 right-2.5 top-3 text-muted-foreground absolute cursor-pointer"
+                />
+              )}
               <Input
                 type="search"
-                placeholder="Filter by id or balance..."
+                placeholder="Search by id or balance..."
                 className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 value={filter}
                 onChange={handleFilterChange}
               />
             </div>
-            <AddXpubDialog />
           </div>
         </div>
         <TabsContent value="all">
