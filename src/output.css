@@ -797,6 +797,10 @@ body {
   margin-top: 1rem;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
 .block {
   display: block;
 }
@@ -916,6 +920,10 @@ body {
 
 .max-h-96 {
   max-height: 24rem;
+}
+
+.max-h-\[85vh\] {
+  max-height: 85vh;
 }
 
 .min-h-screen {
@@ -2147,6 +2155,10 @@ body {
 
   .sm\:h-auto {
     height: auto;
+  }
+
+  .sm\:max-w-3xl {
+    max-width: 48rem;
   }
 
   .sm\:max-w-\[425px\] {
