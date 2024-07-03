@@ -43,16 +43,13 @@ export const RecordTxDialog = ({ className }: RecordTxDialogProps) => {
 
         toast.success('Recorded Transaction');
         setHexOrId('');
-        return;
       } else if (hexOrId.length > 64) {
         await spvWalletClient!.AdminRecordTransaction(hexOrId);
         toast.success('Recorded Transaction');
 
         setHexOrId('');
-        return;
       } else {
         toast.error('Unable to record Transaction');
-        return;
       }
     } catch (error) {
       toast.error('Unable to record Transaction');

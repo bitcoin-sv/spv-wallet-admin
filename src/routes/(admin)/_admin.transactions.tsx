@@ -53,14 +53,14 @@ export function Transactions() {
   const { spvWalletClient } = useSpvWalletClient();
   const [tab, setTab] = useState<string>('all');
   const [blockHeight, setBlockHeight] = useState<string>('');
-  const [debouncedFilter] = useDebounce(blockHeight, 200);
+  const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { order_by_field, sort_direction } = useSearch({ from: '/_admin/transactions' });
 
   const { data } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: +debouncedFilter,
+      blockHeight: +debouncedBlockHeight,
       order_by_field,
       sort_direction,
     }),
