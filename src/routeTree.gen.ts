@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as adminAdminImport } from './routes/(admin)/_admin'
 import { Route as adminAdminXpubImport } from './routes/(admin)/_admin.xpub'
+import { Route as adminAdminTransactionsImport } from './routes/(admin)/_admin.transactions'
 import { Route as adminAdminPaymailsImport } from './routes/(admin)/_admin.paymails'
 import { Route as adminAdminDestinationsImport } from './routes/(admin)/_admin.destinations'
 import { Route as adminAdminAccessKeysImport } from './routes/(admin)/_admin.access-keys'
@@ -49,6 +50,11 @@ const adminAdminRoute = adminAdminImport.update({
 
 const adminAdminXpubRoute = adminAdminXpubImport.update({
   path: '/xpub',
+  getParentRoute: () => adminAdminRoute,
+} as any)
+
+const adminAdminTransactionsRoute = adminAdminTransactionsImport.update({
+  path: '/transactions',
   getParentRoute: () => adminAdminRoute,
 } as any)
 
@@ -120,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminAdminPaymailsImport
       parentRoute: typeof adminAdminImport
     }
+    '/(admin)/_admin/transactions': {
+      id: '/_admin/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof adminAdminTransactionsImport
+      parentRoute: typeof adminAdminImport
+    }
     '/(admin)/_admin/xpub': {
       id: '/_admin/xpub'
       path: '/xpub'
@@ -140,6 +153,7 @@ export const routeTree = rootRoute.addChildren({
       adminAdminAccessKeysRoute,
       adminAdminDestinationsRoute,
       adminAdminPaymailsRoute,
+      adminAdminTransactionsRoute,
       adminAdminXpubRoute,
     }),
   }),
