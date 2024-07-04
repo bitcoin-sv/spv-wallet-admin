@@ -12,6 +12,7 @@ export * from './DestinationsColumns/DestinationsColumns.tsx';
 export * from './Logo';
 export * from './ModeToggle';
 export * from './PaymailsColumns/PaymailColumns.tsx';
+export * from './PaymailDeleteDialog';
 export * from './Profile';
 export * from './ui';
 export * from './ViewDialog';
