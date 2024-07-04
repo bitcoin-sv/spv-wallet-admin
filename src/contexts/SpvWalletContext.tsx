@@ -3,7 +3,7 @@ import { TRole } from './AuthContext';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
-import { useServerUrl } from '@/hooks/useServerUrl.tsx';
+import { useServerUrl } from '@/hooks';
 
 export interface SpvWalletClientExtended extends SpvWalletClient {
   role?: TRole;

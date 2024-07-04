@@ -26,7 +26,7 @@ const onClickCopy = async (e: React.MouseEvent<HTMLButtonElement>) => {
   toast.success(`Xpub ID Copied to clipboard`);
 };
 
-export const columns: ColumnDef<PaymailColumns>[] = [
+export const paymailColumns: ColumnDef<PaymailColumns>[] = [
   {
     accessorKey: 'avatar',
     header: () => {

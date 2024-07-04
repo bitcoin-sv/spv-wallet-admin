@@ -8,13 +8,21 @@ import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
-import { columns } from '@/components/AccessKeysColumns/columns.tsx';
-import { DataTable } from '@/components/DataTable';
-import { DateRangeFilter } from '@/components/DateRangeFIlter/DateRangeFilter.tsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Toaster } from '@/components/ui/sonner.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import {
+  accessKeysColumns,
+  DataTable,
+  DateRangeFilter,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Toaster,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components';
 
 import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 
@@ -148,7 +156,13 @@ export function AccessKeys() {
               <CardTitle>Access Keys</CardTitle>
             </CardHeader>
             <CardContent className="mb-2">
-              {accessKeys.length > 0 && <DataTable columns={columns} data={mappedAccessKeys} />}
+              {accessKeys.length > 0 ? (
+                <DataTable columns={accessKeysColumns} data={mappedAccessKeys} />
+              ) : (
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -159,10 +173,10 @@ export function AccessKeys() {
             </CardHeader>
             <CardContent>
               {revokedKeys.length > 0 ? (
-                <DataTable columns={columns} data={revokedKeys} />
+                <DataTable columns={accessKeysColumns} data={revokedKeys} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No xPubs to show.</p>
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
                 </div>
               )}
             </CardContent>
@@ -175,10 +189,10 @@ export function AccessKeys() {
             </CardHeader>
             <CardContent>
               {deletedKeys.length > 0 ? (
-                <DataTable columns={columns} data={deletedKeys} />
+                <DataTable columns={accessKeysColumns} data={deletedKeys} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No records to show.</p>
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
                 </div>
               )}
             </CardContent>

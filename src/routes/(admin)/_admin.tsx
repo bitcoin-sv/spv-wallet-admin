@@ -18,14 +18,18 @@ import {
 
 import { useEffect, useState } from 'react';
 
-import { Logo } from '@/components/Logo/Logo.tsx';
-import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
-import { Profile } from '@/components/Profile/Profile.tsx';
-import { Button } from '@/components/ui/button';
-
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Button,
+  Logo,
+  ModeToggle,
+  Profile,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components';
 
 export const Route = createFileRoute('/(admin)/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -99,7 +103,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/paymails"
+                href="#"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/paymails')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <Mail className="h-5 w-5" />
@@ -135,7 +139,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/contacts"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/contacts')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <UsersRound className="h-5 w-5" />

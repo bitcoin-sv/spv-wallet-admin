@@ -6,18 +6,27 @@ import React, { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { ModeToggle } from '@/components/ModeToggle/ModeToggle.tsx';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { Input } from '@/components/ui/input';
-
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-import { Toaster } from '@/components/ui/sonner.tsx';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-
+import {
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  ModeToggle,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Toaster,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components';
 import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 
 import logger from '@/logger';
@@ -29,7 +38,9 @@ export const Route = createFileRoute('/login')({
 
 export function LoginForm() {
   const [role, setRole] = useState<Role>(Role.Admin);
-  const [key, setKey] = useState('');
+  const [key, setKey] = useState(
+    'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK',
+  );
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
   const { isAuthenticated, setLoginKey } = useAuth();

@@ -16,8 +16,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as adminAdminImport } from './routes/(admin)/_admin'
 import { Route as adminAdminXpubImport } from './routes/(admin)/_admin.xpub'
-import { Route as adminAdminPaymailsImport } from './routes/(admin)/_admin.paymails'
 import { Route as adminAdminDestinationsImport } from './routes/(admin)/_admin.destinations'
+import { Route as adminAdminContactsImport } from './routes/(admin)/_admin.contacts'
 import { Route as adminAdminAccessKeysImport } from './routes/(admin)/_admin.access-keys'
 
 // Create Virtual Routes
@@ -52,13 +52,13 @@ const adminAdminXpubRoute = adminAdminXpubImport.update({
   getParentRoute: () => adminAdminRoute,
 } as any)
 
-const adminAdminPaymailsRoute = adminAdminPaymailsImport.update({
-  path: '/paymails',
+const adminAdminDestinationsRoute = adminAdminDestinationsImport.update({
+  path: '/destinations',
   getParentRoute: () => adminAdminRoute,
 } as any)
 
-const adminAdminDestinationsRoute = adminAdminDestinationsImport.update({
-  path: '/destinations',
+const adminAdminContactsRoute = adminAdminContactsImport.update({
+  path: '/contacts',
   getParentRoute: () => adminAdminRoute,
 } as any)
 
@@ -106,18 +106,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminAdminAccessKeysImport
       parentRoute: typeof adminAdminImport
     }
+    '/(admin)/_admin/contacts': {
+      id: '/_admin/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof adminAdminContactsImport
+      parentRoute: typeof adminAdminImport
+    }
     '/(admin)/_admin/destinations': {
       id: '/_admin/destinations'
       path: '/destinations'
       fullPath: '/destinations'
       preLoaderRoute: typeof adminAdminDestinationsImport
-      parentRoute: typeof adminAdminImport
-    }
-    '/(admin)/_admin/paymails': {
-      id: '/_admin/paymails'
-      path: '/paymails'
-      fullPath: '/paymails'
-      preLoaderRoute: typeof adminAdminPaymailsImport
       parentRoute: typeof adminAdminImport
     }
     '/(admin)/_admin/xpub': {
@@ -138,8 +138,8 @@ export const routeTree = rootRoute.addChildren({
   adminRoute: adminRoute.addChildren({
     adminAdminRoute: adminAdminRoute.addChildren({
       adminAdminAccessKeysRoute,
+      adminAdminContactsRoute,
       adminAdminDestinationsRoute,
-      adminAdminPaymailsRoute,
       adminAdminXpubRoute,
     }),
   }),
