@@ -60,7 +60,7 @@ export function Transactions() {
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: +debouncedBlockHeight,
+      blockHeight: Number(debouncedBlockHeight),
       order_by_field,
       sort_direction,
     }),
