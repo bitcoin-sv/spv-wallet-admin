@@ -115,7 +115,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/transactions"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/transactions')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <ArrowLeftRight className="h-5 w-5" />
