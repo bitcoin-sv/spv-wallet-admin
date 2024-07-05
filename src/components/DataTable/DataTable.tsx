@@ -10,23 +10,26 @@ import { EllipsisVertical } from 'lucide-react';
 
 import React, { useState } from 'react';
 
-import { ContactDeleteDialogProps } from 'src/components/ContactDeleteDialog';
-import { ContactEditDialogProps } from 'src/components/ContactEditDialog';
-
-import { ContactAcceptDialogProps } from '@/components/ContactAcceptDialog/ContactAcceptDialog.tsx';
-import { ContactRejectDialogProps } from '@/components/ContactRejectDialog';
-import { ContactStatus } from '@/components/ContactsColumns/ContactsColumns.tsx';
-import { DataTablePagination } from '@/components/DataTable/DataTablePagination.tsx';
-import { Button } from '@/components/ui/button.tsx';
-
 import {
+  ContactStatus,
+  ContactDeleteDialogProps,
+  ContactEditDialogProps,
+  ContactAcceptDialogProps,
+  DataTablePagination,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table.tsx';
-import { ViewDialog } from '@/components/ViewDialog';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  ViewDialog,
+  ContactRejectDialogProps,
+} from '@/components';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

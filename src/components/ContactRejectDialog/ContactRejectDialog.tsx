@@ -6,16 +6,19 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button.tsx';
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog.tsx';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx';
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
 import { errorWrapper } from '@/utils';

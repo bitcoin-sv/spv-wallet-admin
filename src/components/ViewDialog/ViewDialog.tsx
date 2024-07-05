@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog.tsx';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
+  DropdownMenuItem,
+} from '@/components';
 
 export interface ViewDialogProps {
   row: Row<any>;

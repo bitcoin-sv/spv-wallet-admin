@@ -5,18 +5,23 @@ import React, { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { Textarea } from '@/components/ui/textarea.tsx';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DropdownMenuItem,
+  Input,
+  Label,
+  Textarea,
+} from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 
 export interface ContactEditDialogProps {
   row: Row<any>;
-  onEdit?: (id: string, fullName: string, metadata: Metadata) => void;
 }
 
 export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {

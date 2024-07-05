@@ -4,16 +4,17 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button.tsx';
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog.tsx';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
+  DropdownMenuItem,
+} from '@/components';
+
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 
