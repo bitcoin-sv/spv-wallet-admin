@@ -44,7 +44,7 @@ export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
       setIsRejectDialogOpen(false);
       toast.success('Contact rejected');
     } catch (err) {
-      toast.error('Failed reject contact');
+      toast.error('Failed to reject contact');
       errorWrapper(err);
     }
   };

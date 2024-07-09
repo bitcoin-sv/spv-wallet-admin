@@ -40,7 +40,7 @@ export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
       setIsAcceptDialogOpen(false);
       toast.success('Contact accepted');
     } catch (err) {
-      toast.error('Failed accept contact');
+      toast.error('Failed to accept contact');
       errorWrapper(err);
     }
   };
