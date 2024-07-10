@@ -1245,11 +1245,6 @@ body {
   white-space: nowrap;
 }
 
-.break-normal {
-  overflow-wrap: normal;
-  word-break: normal;
-}
-
 .break-words {
   overflow-wrap: break-word;
 }
