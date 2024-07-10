@@ -13,7 +13,7 @@ export interface XpubsColumns extends XPub {
   status: string;
 }
 
-export const columns: ColumnDef<XpubsColumns>[] = [
+export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {

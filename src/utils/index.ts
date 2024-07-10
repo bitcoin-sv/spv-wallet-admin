@@ -5,3 +5,5 @@ export * from './getShortXprv.ts';
 export * from './xPubQueryOptions.tsx';
 export * from './mapElements.ts';
 export * from './getSortDirection.tsx';
+export * from './contactsQueryOptions.tsx';
+export * from './paymailsQueryOptions.tsx';

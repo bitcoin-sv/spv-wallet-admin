@@ -797,10 +797,6 @@ body {
   margin-top: 1rem;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
-}
-
 .block {
   display: block;
 }
@@ -922,8 +918,8 @@ body {
   max-height: 24rem;
 }
 
-.max-h-\[85vh\] {
-  max-height: 85vh;
+.min-h-\[80px\] {
+  min-height: 80px;
 }
 
 .min-h-screen {
@@ -1010,6 +1006,11 @@ body {
   width: auto;
 }
 
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .w-full {
   width: 100%;
 }
@@ -1044,6 +1045,10 @@ body {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
 }
 
 .flex-1 {
@@ -1524,6 +1529,11 @@ body {
 
 .text-accent-foreground {
   color: hsl(var(--accent-foreground));
+}
+
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .text-card-foreground {

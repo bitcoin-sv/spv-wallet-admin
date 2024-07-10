@@ -5,13 +5,21 @@ import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
-import { DataTable } from '@/components/DataTable';
-import { DateRangeFilter } from '@/components/DateRangeFIlter/DateRangeFilter.tsx';
-import { columns } from '@/components/DestinationsColumns/columns.tsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Toaster } from '@/components/ui/sonner.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DataTable,
+  DateRangeFilter,
+  destinationsColumns,
+  Input,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
 import { addStatusField, getDeletedElements } from '@/utils';
 
 export const Route = createFileRoute('/(admin)/_admin/destinations')({
@@ -138,7 +146,7 @@ export function Destinations() {
             </CardHeader>
             <CardContent className="mb-2">
               {mappedDestinations.length > 0 ? (
-                <DataTable columns={columns} data={mappedDestinations} />
+                <DataTable columns={destinationsColumns} data={mappedDestinations} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <p className="text-sm text-muted-foreground">No Destinations to show.</p>
@@ -154,7 +162,7 @@ export function Destinations() {
             </CardHeader>
             <CardContent>
               {deletedDests.length > 0 ? (
-                <DataTable columns={columns} data={deletedDests} />
+                <DataTable columns={destinationsColumns} data={deletedDests} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <p className="text-sm text-muted-foreground">No Destinations to show.</p>

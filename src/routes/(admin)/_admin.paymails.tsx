@@ -1,26 +1,32 @@
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { CircleX, Search } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react';
 
-import { toast } from 'sonner';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
-import { AddPaymailDialog } from '@/components/AddPaymailDialog';
-import { DataTable } from '@/components/DataTable';
-import { DateRangeFilter } from '@/components/DateRangeFIlter/DateRangeFilter.tsx';
-import { columns } from '@/components/PaymailsColumns/columns.tsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Toaster } from '@/components/ui/sonner.tsx';
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import {
+  AddPaymailDialog,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DataTable,
+  DateRangeFilter,
+  Input,
+  paymailColumns,
+  PaymailDeleteDialog,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, errorWrapper, getDeletedElements } from '@/utils';
-import { paymailsQueryOptions } from '@/utils/paymailsQueryOptions.tsx';
+import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
 
 export const Route = createFileRoute('/(admin)/_admin/paymails')({
   component: Paymails,
@@ -64,7 +70,6 @@ export function Paymails() {
 
   const [debouncedFilter] = useDebounce(filter, 200);
   const navigate = useNavigate({ from: Route.fullPath });
-  const queryClient = useQueryClient();
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -121,18 +126,6 @@ export function Paymails() {
     });
   }, [xpubId]);
 
-  const onDelete = async (alias: string, domain: string) => {
-    try {
-      const address = `${alias}@${domain}`;
-      await spvWalletClient?.AdminDeletePaymail(address);
-      await queryClient.invalidateQueries();
-      toast.success('Paymail successfully deleted');
-    } catch (error) {
-      toast.error('Unable to delete Paymail');
-      errorWrapper(error);
-    }
-  };
-
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab}>
@@ -170,7 +163,7 @@ export function Paymails() {
             </CardHeader>
             <CardContent className="mb-2">
               {mappedPaymails.length > 0 ? (
-                <DataTable columns={columns} data={mappedPaymails} isDelete onDelete={onDelete} />
+                <DataTable columns={paymailColumns} data={mappedPaymails} DeleteDialog={PaymailDeleteDialog} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <p className="text-sm text-muted-foreground">No Paymails to show.</p>
@@ -186,7 +179,7 @@ export function Paymails() {
             </CardHeader>
             <CardContent>
               {deletedPaymails.length > 0 ? (
-                <DataTable columns={columns} data={deletedPaymails} />
+                <DataTable columns={paymailColumns} data={deletedPaymails} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <p className="text-sm text-muted-foreground">No Paymails to show.</p>

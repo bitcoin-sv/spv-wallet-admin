@@ -19,6 +19,7 @@ import { Route as adminAdminXpubImport } from './routes/(admin)/_admin.xpub'
 import { Route as adminAdminTransactionsImport } from './routes/(admin)/_admin.transactions'
 import { Route as adminAdminPaymailsImport } from './routes/(admin)/_admin.paymails'
 import { Route as adminAdminDestinationsImport } from './routes/(admin)/_admin.destinations'
+import { Route as adminAdminContactsImport } from './routes/(admin)/_admin.contacts'
 import { Route as adminAdminAccessKeysImport } from './routes/(admin)/_admin.access-keys'
 
 // Create Virtual Routes
@@ -68,6 +69,11 @@ const adminAdminDestinationsRoute = adminAdminDestinationsImport.update({
   getParentRoute: () => adminAdminRoute,
 } as any)
 
+const adminAdminContactsRoute = adminAdminContactsImport.update({
+  path: '/contacts',
+  getParentRoute: () => adminAdminRoute,
+} as any)
+
 const adminAdminAccessKeysRoute = adminAdminAccessKeysImport.update({
   path: '/access-keys',
   getParentRoute: () => adminAdminRoute,
@@ -112,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminAdminAccessKeysImport
       parentRoute: typeof adminAdminImport
     }
+    '/(admin)/_admin/contacts': {
+      id: '/_admin/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof adminAdminContactsImport
+      parentRoute: typeof adminAdminImport
+    }
     '/(admin)/_admin/destinations': {
       id: '/_admin/destinations'
       path: '/destinations'
@@ -151,6 +164,7 @@ export const routeTree = rootRoute.addChildren({
   adminRoute: adminRoute.addChildren({
     adminAdminRoute: adminAdminRoute.addChildren({
       adminAdminAccessKeysRoute,
+      adminAdminContactsRoute,
       adminAdminDestinationsRoute,
       adminAdminPaymailsRoute,
       adminAdminTransactionsRoute,

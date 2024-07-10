@@ -7,14 +7,22 @@ import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
-import { AddXpubDialog } from '@/components/AddXpubDialog/AddXpubDialog.tsx';
-import { DataTable } from '@/components/DataTable/DataTable.tsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Toaster } from '@/components/ui/sonner.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { columns } from '@/components/XPubColumns/columns.tsx';
-import { XpubsSkeleton } from '@/components/XpubsSkeleton/XpubsSkeleton.tsx';
+import {
+  AddXpubDialog,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DataTable,
+  Input,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+  xPubsColumns,
+  XpubsSkeleton,
+} from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
@@ -85,7 +93,7 @@ export function Xpub() {
             </CardHeader>
             <CardContent className="mb-2">
               {data.length > 0 ? (
-                <DataTable columns={columns} data={mappedData} />
+                <DataTable columns={xPubsColumns} data={mappedData} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h3 className="text-2xl font-bold tracking-tight">You have no xPubs</h3>
@@ -103,7 +111,7 @@ export function Xpub() {
             </CardHeader>
             <CardContent>
               {deletedXpubs.length > 0 ? (
-                <DataTable columns={columns} data={deletedXpubs} />
+                <DataTable columns={xPubsColumns} data={deletedXpubs} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
                   <p className="text-sm text-muted-foreground">No xPubs to show.</p>

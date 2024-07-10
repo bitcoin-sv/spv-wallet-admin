@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge.tsx';
+import { Badge } from '@/components';
 
 import { Button } from '@/components/ui/button.tsx';
 import { getSortDirection } from '@/utils';
@@ -13,7 +13,7 @@ export interface AccessKeysColumns extends AccessKey {
   status: string;
 }
 
-export const columns: ColumnDef<AccessKeysColumns>[] = [
+export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {

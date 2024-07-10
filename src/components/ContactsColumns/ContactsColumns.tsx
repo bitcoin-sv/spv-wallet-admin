@@ -1,27 +1,26 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-
-import { Destination } from '@bsv/spv-wallet-js-client';
+import { Contact } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge.tsx';
-
-import { Button } from '@/components/ui/button.tsx';
+import { Badge, Button } from '@/components';
 import { getSortDirection } from '@/utils';
 
-export interface DestinationColumns extends Destination {
-  status: string;
+export const enum ContactStatus {
+  Confirmed = 'confirmed',
+  Rejected = 'rejected',
+  Unconfirmed = 'unconfirmed',
+  Awaiting = 'awaiting',
 }
 
-export const columns: ColumnDef<DestinationColumns>[] = [
+export const contactsColumns: ColumnDef<Contact>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
+          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -35,77 +34,21 @@ export const columns: ColumnDef<DestinationColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => {
-      return (
-        row.getValue('id') && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="align-middle">
-                <span className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block">
-                  {row.getValue('id')}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{row.getValue('id')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
-      );
-    },
   },
   {
-    accessorKey: 'xpub_id',
+    accessorKey: 'fullName',
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
+          from={'/contacts'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'xpub_id',
+            order_by_field: 'full_name',
             sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Xpub ID
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        row.getValue('xpub_id') && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="align-middle">
-                <span className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block">
-                  {row.getValue('xpub_id')}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{row.getValue('xpub_id')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
-      );
-    },
-  },
-  {
-    accessorKey: 'locking_script',
-    header: ({ column }) => {
-      return (
-        <Link
-          from={'/destinations'}
-          search={(prev) => ({
-            ...prev,
-            order_by_field: 'locking_script',
-            sort_direction: getSortDirection(column),
-          })}
-        >
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Locking Script
+            Full Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -113,19 +56,39 @@ export const columns: ColumnDef<DestinationColumns>[] = [
     },
   },
   {
-    accessorKey: 'address',
+    accessorKey: 'paymail',
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
+          from={'/contacts'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'address',
+            order_by_field: 'paymail',
             sort_direction: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Address
+            Paymail
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: 'pubKey',
+    header: ({ column }) => {
+      return (
+        <Link
+          from={'/contacts'}
+          search={(prev) => ({
+            ...prev,
+            order_by_field: 'pub_key',
+            sort_direction: getSortDirection(column),
+          })}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            PubKey
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -136,20 +99,33 @@ export const columns: ColumnDef<DestinationColumns>[] = [
     accessorKey: 'status',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <Link
+          from={'/contacts'}
+          search={(prev) => ({
+            ...prev,
+            order_by_field: 'status',
+            sort_direction: getSortDirection(column),
+          })}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       );
     },
     cell: ({ row }) => {
-      return row.getValue('status') === 'deleted' ? (
-        <Badge variant="secondary">Deleted</Badge>
-      ) : row.getValue('status') === 'revoked' ? (
-        <Badge variant="secondary">Revoked</Badge>
-      ) : (
-        <Badge variant="outline">Active</Badge>
-      );
+      return row.original.deleted_at ? (
+        <Badge variant="destructive">Deleted</Badge>
+      ) : row.getValue('status') === ContactStatus.Confirmed ? (
+        <Badge variant="outline">Confirmed</Badge>
+      ) : row.getValue('status') === ContactStatus.Rejected ? (
+        <Badge variant="secondary">Rejected</Badge>
+      ) : row.getValue('status') === ContactStatus.Unconfirmed ? (
+        <Badge variant="secondary">Unconfirmed</Badge>
+      ) : row.getValue('status') === ContactStatus.Awaiting ? (
+        <Badge>Awaiting</Badge>
+      ) : null;
     },
   },
   {
@@ -157,7 +133,7 @@ export const columns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
+          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',
