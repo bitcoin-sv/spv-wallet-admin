@@ -1,9 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
-import { CircleX, Search } from 'lucide-react';
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
@@ -21,7 +19,8 @@ import {
   ContactStatus,
   DataTable,
   DateRangeFilter,
-  Input,
+  NoRecordsText,
+  Searchbar,
   Tabs,
   TabsContent,
   TabsList,
@@ -107,10 +106,6 @@ export function Contacts() {
 
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(event.target.value);
-  };
-
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
@@ -168,22 +163,7 @@ export function Contacts() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <div className="relative flex-1 md:grow-0 mr-3">
-              <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-              {filter.length > 0 && (
-                <CircleX
-                  onClick={() => setFilter('')}
-                  className="h-4 w-4 right-2.5 top-3 text-muted-foreground absolute cursor-pointer"
-                />
-              )}
-              <Input
-                type="search"
-                placeholder="Search by id, paymail or pubKey..."
-                className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-                value={filter}
-                onChange={handleFilterChange}
-              />
-            </div>
+            <Searchbar filter={filter} setFilter={setFilter} />
             <DateRangeFilter />
           </div>
         </div>
@@ -203,9 +183,7 @@ export function Contacts() {
                   RejectDialog={ContactRejectDialog}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
@@ -224,9 +202,7 @@ export function Contacts() {
                   DeleteDialog={ContactDeleteDialog}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
@@ -247,9 +223,7 @@ export function Contacts() {
                   data={awaitingContacts}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
@@ -268,9 +242,7 @@ export function Contacts() {
                   DeleteDialog={ContactDeleteDialog}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
@@ -289,9 +261,7 @@ export function Contacts() {
                   DeleteDialog={ContactDeleteDialog}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
@@ -310,9 +280,7 @@ export function Contacts() {
                   DeleteDialog={ContactDeleteDialog}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Contacts to show.</p>
-                </div>
+                <NoRecordsText message="No Contacts to show." />
               )}
             </CardContent>
           </Card>
