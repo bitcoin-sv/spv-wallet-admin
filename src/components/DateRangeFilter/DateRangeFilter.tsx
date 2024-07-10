@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Route } from '@/routes/(admin)/_admin.access-keys.tsx';
+import { Route } from '@/routes/admin/_admin.access-keys.tsx';
 
 export interface DateRangeFilterProps {
   withRevokedRange?: boolean;

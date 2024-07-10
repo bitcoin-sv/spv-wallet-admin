@@ -22,7 +22,7 @@ import {
 } from '@/components';
 import { addStatusField, getDeletedElements } from '@/utils';
 
-export const Route = createFileRoute('/(admin)/_admin/destinations')({
+export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,
   validateSearch: z
     .object({
@@ -57,14 +57,14 @@ export function Destinations() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const search = useSearch({ from: '/_admin/destinations' });
+  const search = useSearch({ from: '/admin/_admin/destinations' });
   const lockingScript = search?.lockingScript;
   const address = search?.address;
 
   const [debouncedFilter] = useDebounce(filter, 200);
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const destinations = useLoaderData({ from: '/_admin/destinations' });
+  const destinations = useLoaderData({ from: '/admin/_admin/destinations' });
 
   const mappedDestinations = addStatusField(destinations);
   const deletedDests = getDeletedElements(mappedDestinations);

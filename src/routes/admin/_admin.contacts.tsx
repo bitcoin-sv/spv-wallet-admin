@@ -32,7 +32,7 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions } from '@/utils';
 
-export const Route = createFileRoute('/(admin)/_admin/contacts')({
+export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
   validateSearch: z
     .object({
@@ -79,7 +79,7 @@ export function Contacts() {
 
   const { id, paymail, pubKey, createdRange, updatedRange, order_by_field, sort_direction } =
     useSearch({
-      from: '/_admin/contacts',
+      from: '/admin/_admin/contacts',
     }) || {};
 
   const {

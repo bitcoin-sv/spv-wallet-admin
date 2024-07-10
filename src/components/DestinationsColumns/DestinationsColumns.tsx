@@ -21,7 +21,6 @@ export const destinationsColumns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -59,7 +58,6 @@ export const destinationsColumns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'xpub_id',
@@ -97,7 +95,6 @@ export const destinationsColumns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'locking_script',
@@ -117,7 +114,6 @@ export const destinationsColumns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'address',
@@ -157,7 +153,6 @@ export const destinationsColumns: ColumnDef<DestinationColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/destinations'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',

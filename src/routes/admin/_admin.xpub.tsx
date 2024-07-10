@@ -27,7 +27,7 @@ import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
 
-export const Route = createFileRoute('/(admin)/_admin/xpub')({
+export const Route = createFileRoute('/admin/_admin/xpub')({
   validateSearch: z.object({
     order_by_field: z.string().optional().catch('id'),
     sort_direction: z.string().optional().catch('asc'),
@@ -41,7 +41,7 @@ export function Xpub() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
   const [debouncedFilter] = useDebounce(filter, 200);
-  const { order_by_field, sort_direction } = useSearch({ from: '/_admin/xpub' });
+  const { order_by_field, sort_direction } = useSearch({ from: '/admin/_admin/xpub' });
 
   const { data } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.

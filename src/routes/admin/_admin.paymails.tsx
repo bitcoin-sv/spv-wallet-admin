@@ -28,7 +28,7 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
 
-export const Route = createFileRoute('/(admin)/_admin/paymails')({
+export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
   validateSearch: z.object({
     order_by_field: z.string().optional().catch('id'),
@@ -65,7 +65,7 @@ export function Paymails() {
 
   const { spvWalletClient } = useSpvWalletClient();
   const { order_by_field, sort_direction, xpubId, createdRange, updatedRange } = useSearch({
-    from: '/_admin/paymails',
+    from: '/admin/_admin/paymails',
   });
 
   const [debouncedFilter] = useDebounce(filter, 200);

@@ -37,11 +37,13 @@ export const Route = createFileRoute('/login')({
 });
 
 export function LoginForm() {
-  const [role, setRole] = useState<Role>(Role.Admin);
-  const [key, setKey] = useState('');
+  const [role, setRole] = useState<Role>(Role.User);
+  const [key, setKey] = useState(
+    'xprv9s21ZrQH143K2pDFBrdSqGY3cM47tWJjSC4jWoGivdcjnboKaXohiD9PR5kyMZZApZBZUn9PV4a2Ye6oXsWenHwDbBQKdiauPujcRxLz4U4',
+  );
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
-  const { isAuthenticated, setLoginKey } = useAuth();
+  const { isAuthenticated, setLoginKey, isAdmin } = useAuth();
   const router = useRouter();
   const search = useSearch({ from: '/login' as const }) as { redirect?: string };
 
@@ -51,8 +53,10 @@ export function LoginForm() {
   React.useLayoutEffect(() => {
     if (isAuthenticated && search?.redirect) {
       router.history.push(search.redirect);
+    } else if (isAdmin) {
+      router.history.push('/admin/xpub');
     } else if (isAuthenticated) {
-      router.history.push('/xpub');
+      router.history.push('/user/access-keys');
     }
   }, [isAuthenticated, search?.redirect]);
 
@@ -101,7 +105,7 @@ export function LoginForm() {
                 <Label htmlFor="role">Role</Label>
                 <Select onValueChange={handleSelect}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Admin" />
+                    <SelectValue placeholder="User" />
                   </SelectTrigger>
                   <SelectContent defaultValue={role}>
                     <SelectItem value={Role.Admin}>Admin</SelectItem>

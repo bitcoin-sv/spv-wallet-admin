@@ -20,7 +20,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -40,7 +39,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'full_name',
@@ -60,7 +58,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'paymail',
@@ -80,7 +77,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'pub_key',
@@ -100,7 +96,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'status',
@@ -133,7 +128,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     header: ({ column }) => {
       return (
         <Link
-          from={'/contacts'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',

@@ -29,6 +29,7 @@ import {
   TableRow,
   ViewDialog,
   ContactRejectDialogProps,
+  RevokeKeyDialogProps,
 } from '@/components';
 
 interface DataTableProps<TData, TValue> {
@@ -38,6 +39,7 @@ interface DataTableProps<TData, TValue> {
   AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
   DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
   RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
+  RevokeKeyDialog?: React.ComponentType<RevokeKeyDialogProps>;
 }
 
 export const initialSorting = { id: 'id', desc: false };
@@ -49,6 +51,7 @@ export function DataTable<TData, TValue>({
   AcceptDialog,
   DeleteDialog,
   RejectDialog,
+  RevokeKeyDialog,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
@@ -110,6 +113,7 @@ export function DataTable<TData, TValue>({
                       <ViewDialog row={row} />
                       {EditDialog ? <EditDialog row={row} /> : null}
                       {DeleteDialog ? <DeleteDialog row={row} /> : null}
+                      {RevokeKeyDialog ? <RevokeKeyDialog row={row} /> : null}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
