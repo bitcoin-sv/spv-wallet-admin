@@ -41,7 +41,7 @@ export function LoginForm() {
   const [key, setKey] = useState('');
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
-  const { isAuthenticated, setLoginKey, isAdmin } = useAuth();
+  const { isAuthenticated, setLoginKey, isAdmin, isUser } = useAuth();
   const router = useRouter();
   const search = useSearch({ from: '/login' as const }) as { redirect?: string };
 
@@ -53,7 +53,7 @@ export function LoginForm() {
       router.history.push(search.redirect);
     } else if (isAdmin) {
       router.history.push('/admin/xpub');
-    } else if (isAuthenticated) {
+    } else if (isUser) {
       router.history.push('/user/access-keys');
     }
   }, [isAuthenticated, search?.redirect]);
