@@ -12,6 +12,7 @@ export type TRole = Role | null | undefined;
 export interface AuthContext {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isUser: boolean;
   loginKey: string;
   setLoginKey: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -25,9 +26,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = !!spvWalletClient;
 
   const isAdmin = isAuthenticated && spvWalletClient?.role === Role.Admin;
+  const isUser = isAuthenticated && spvWalletClient?.role === Role.User;
 
   return (
-    <AuthContext.Provider value={{ isAdmin, isAuthenticated, loginKey, setLoginKey }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ isAdmin, isAuthenticated, loginKey, setLoginKey, isUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

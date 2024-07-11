@@ -1,5 +1,5 @@
 import { Link, useRouter } from '@tanstack/react-router';
-import { UserRound } from 'lucide-react';
+import { UserRound, SquareArrowOutUpRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button.tsx';
 import {
@@ -14,7 +14,7 @@ import {
 import { useAuth, useSpvWalletClient } from '@/contexts';
 
 export const Profile = () => {
-  const { loginKey } = useAuth();
+  const { loginKey, isUser } = useAuth();
   const { serverUrl, setSpvWalletClient } = useSpvWalletClient();
   const router = useRouter();
 
@@ -34,6 +34,13 @@ export const Profile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>ID: {loginKey}</DropdownMenuItem>
+        {isUser && (
+          <Link to="/user/xpub" className="flex w-full">
+            <DropdownMenuItem className="cursor-pointer w-full">
+              xPub <SquareArrowOutUpRight className="ml-2" size={20} />
+            </DropdownMenuItem>
+          </Link>
+        )}
         <DropdownMenuItem>Server: {serverUrl}</DropdownMenuItem>
         <DropdownMenuSeparator />
         <Link to={'/login'}>
