@@ -1,77 +1,101 @@
 import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+
 import { CircleX, Search } from 'lucide-react';
+
 import React, { useEffect, useState } from 'react';
+
 import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
 import {
+  accessKeysColumns,
+  DataTable,
+  DateRangeFilter,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  DataTable,
-  DateRangeFilter,
-  destinationsColumns,
   Input,
+  Toaster,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-  Toaster,
 } from '@/components';
-import { addStatusField, getDeletedElements } from '@/utils';
 
-export const Route = createFileRoute('/(admin)/_admin/destinations')({
-  component: Destinations,
+import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
+
+export const Route = createFileRoute('/admin/_admin/access-keys')({
+  component: AccessKeys,
+  preSearchFilters: [
+    (search) => ({
+      ...search,
+    }),
+  ],
   validateSearch: z
     .object({
-      lockingScript: z.string().optional().catch(''),
-      address: z.string().optional().catch(''),
-      order_by_field: z.string().optional().catch('id'),
-      sort_direction: z.string().optional().catch('desc'),
       createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+      order_by_field: z.string().optional().catch('id'),
+      revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+      sort_direction: z.string().optional().catch('desc'),
       updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+      xpubId: z.string().optional().catch(''),
     })
     .optional(),
-  loaderDeps: ({ search }) => ({
-    lockingScript: search?.lockingScript,
-    address: search?.address,
-    order_by_field: search?.order_by_field,
-    sort_direction: search?.sort_direction,
-    createdRange: search?.createdRange,
-    updatedRange: search?.updatedRange,
-  }),
+
+  loaderDeps: ({ search }) => {
+    return {
+      order_by_field: search?.order_by_field,
+      sort_direction: search?.sort_direction,
+      xpubId: search?.xpubId,
+      createdRange: search?.createdRange,
+      updatedRange: search?.updatedRange,
+      revokedRange: search?.revokedRange,
+    };
+  },
   loader: async ({
     context,
-    deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },
+    deps: { order_by_field, sort_direction, xpubId, createdRange, revokedRange, updatedRange },
   }) =>
-    await context.spvWallet.spvWalletClient!.AdminGetDestinations(
-      { lockingScript, address, createdRange, updatedRange },
+    await context.spvWallet.spvWalletClient!.AdminGetAccessKeys(
+      { xpubId, createdRange, updatedRange, revokedRange },
       {},
       { order_by_field, sort_direction },
     ),
 });
 
-export function Destinations() {
+export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const search = useSearch({ from: '/_admin/destinations' });
-  const lockingScript = search?.lockingScript;
-  const address = search?.address;
+  const search = useSearch({ from: '/admin/_admin/access-keys' });
+  const xpubId = search?.xpubId;
 
-  const [debouncedFilter] = useDebounce(filter, 200);
+  const [debouncedFilter] = useDebounce(filter, 500);
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const destinations = useLoaderData({ from: '/_admin/destinations' });
+  const accessKeys = useLoaderData({ from: '/admin/_admin/access-keys' });
 
-  const mappedDestinations = addStatusField(destinations);
-  const deletedDests = getDeletedElements(mappedDestinations);
+  const mappedAccessKeys = addStatusField(accessKeys);
+  const revokedKeys = getRevokedElements(mappedAccessKeys);
+  const deletedKeys = getDeletedElements(mappedAccessKeys);
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
+
+  useEffect(() => {
+    navigate({
+      search: (old) => {
+        return {
+          ...old,
+          xpubId: filter || undefined,
+        };
+      },
+      replace: true,
+    });
+  }, [debouncedFilter]);
 
   useEffect(() => {
     if (tab !== 'all') {
@@ -85,31 +109,17 @@ export function Destinations() {
   }, [tab]);
 
   useEffect(() => {
+    setFilter(xpubId || '');
     navigate({
       search: (old) => {
         return {
           ...old,
-          lockingScript: filter.startsWith('76') ? filter : undefined,
-          address: filter.length > 0 && filter.length <= 34 ? filter : undefined,
+          xpubId,
         };
       },
       replace: true,
     });
-  }, [debouncedFilter]);
-
-  useEffect(() => {
-    setFilter(lockingScript || address || '');
-    navigate({
-      search: (old) => {
-        return {
-          ...old,
-          lockingScript: lockingScript || filter.startsWith('76') ? filter : undefined,
-          address: address || (filter.length > 0 && filter.length <= 34) ? filter : undefined,
-        };
-      },
-      replace: true,
-    });
-  }, [lockingScript, address]);
+  }, [xpubId]);
 
   return (
     <>
@@ -117,6 +127,7 @@ export function Destinations() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="revoked">Revoked</TabsTrigger>
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
@@ -130,26 +141,42 @@ export function Destinations() {
               )}
               <Input
                 type="search"
-                placeholder="Search by locking script or address..."
+                placeholder="Search by xpub id..."
                 className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 value={filter}
                 onChange={handleFilterChange}
               />
             </div>
-            <DateRangeFilter />
+            <DateRangeFilter withRevokedRange />
           </div>
         </div>
         <TabsContent value="all">
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
-              <CardTitle>Destinations</CardTitle>
+              <CardTitle>Access Keys</CardTitle>
             </CardHeader>
             <CardContent className="mb-2">
-              {mappedDestinations.length > 0 ? (
-                <DataTable columns={destinationsColumns} data={mappedDestinations} />
+              {accessKeys.length > 0 ? (
+                <DataTable columns={accessKeysColumns} data={mappedAccessKeys} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Destinations to show.</p>
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="revoked">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+              <CardTitle>Access Keys</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {revokedKeys.length > 0 ? (
+                <DataTable columns={accessKeysColumns} data={revokedKeys} />
+              ) : (
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
                 </div>
               )}
             </CardContent>
@@ -158,14 +185,14 @@ export function Destinations() {
         <TabsContent value="deleted">
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
-              <CardTitle>Destinations</CardTitle>
+              <CardTitle>Access Keys</CardTitle>
             </CardHeader>
             <CardContent>
-              {deletedDests.length > 0 ? (
-                <DataTable columns={destinationsColumns} data={deletedDests} />
+              {deletedKeys.length > 0 ? (
+                <DataTable columns={accessKeysColumns} data={deletedKeys} />
               ) : (
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Destinations to show.</p>
+                  <p className="text-sm text-muted-foreground">No Access Keys to show.</p>
                 </div>
               )}
             </CardContent>

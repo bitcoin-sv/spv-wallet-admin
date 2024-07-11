@@ -14,23 +14,31 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
-import { Route as adminAdminImport } from './routes/(admin)/_admin'
-import { Route as adminAdminXpubImport } from './routes/(admin)/_admin.xpub'
-import { Route as adminAdminTransactionsImport } from './routes/(admin)/_admin.transactions'
-import { Route as adminAdminPaymailsImport } from './routes/(admin)/_admin.paymails'
-import { Route as adminAdminDestinationsImport } from './routes/(admin)/_admin.destinations'
-import { Route as adminAdminContactsImport } from './routes/(admin)/_admin.contacts'
-import { Route as adminAdminAccessKeysImport } from './routes/(admin)/_admin.access-keys'
+import { Route as UserUserImport } from './routes/user/_user'
+import { Route as AdminAdminImport } from './routes/admin/_admin'
+import { Route as UserUserAccessKeysImport } from './routes/user/_user.access-keys'
+import { Route as AdminAdminXpubImport } from './routes/admin/_admin.xpub'
+import { Route as AdminAdminTransactionsImport } from './routes/admin/_admin.transactions'
+import { Route as AdminAdminPaymailsImport } from './routes/admin/_admin.paymails'
+import { Route as AdminAdminDestinationsImport } from './routes/admin/_admin.destinations'
+import { Route as AdminAdminContactsImport } from './routes/admin/_admin.contacts'
+import { Route as AdminAdminAccessKeysImport } from './routes/admin/_admin.access-keys'
 
 // Create Virtual Routes
 
-const adminImport = createFileRoute('/(admin)')()
+const UserImport = createFileRoute('/user')()
+const AdminImport = createFileRoute('/admin')()
 const AboutLazyImport = createFileRoute('/about')()
 
 // Create/Update Routes
 
-const adminRoute = adminImport.update({
-  path: '/',
+const UserRoute = UserImport.update({
+  path: '/user',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminRoute = AdminImport.update({
+  path: '/admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,39 +52,49 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const adminAdminRoute = adminAdminImport.update({
+const UserUserRoute = UserUserImport.update({
+  id: '/_user',
+  getParentRoute: () => UserRoute,
+} as any)
+
+const AdminAdminRoute = AdminAdminImport.update({
   id: '/_admin',
-  getParentRoute: () => adminRoute,
+  getParentRoute: () => AdminRoute,
 } as any)
 
-const adminAdminXpubRoute = adminAdminXpubImport.update({
-  path: '/xpub',
-  getParentRoute: () => adminAdminRoute,
-} as any)
-
-const adminAdminTransactionsRoute = adminAdminTransactionsImport.update({
-  path: '/transactions',
-  getParentRoute: () => adminAdminRoute,
-} as any)
-
-const adminAdminPaymailsRoute = adminAdminPaymailsImport.update({
-  path: '/paymails',
-  getParentRoute: () => adminAdminRoute,
-} as any)
-
-const adminAdminDestinationsRoute = adminAdminDestinationsImport.update({
-  path: '/destinations',
-  getParentRoute: () => adminAdminRoute,
-} as any)
-
-const adminAdminContactsRoute = adminAdminContactsImport.update({
-  path: '/contacts',
-  getParentRoute: () => adminAdminRoute,
-} as any)
-
-const adminAdminAccessKeysRoute = adminAdminAccessKeysImport.update({
+const UserUserAccessKeysRoute = UserUserAccessKeysImport.update({
   path: '/access-keys',
-  getParentRoute: () => adminAdminRoute,
+  getParentRoute: () => UserUserRoute,
+} as any)
+
+const AdminAdminXpubRoute = AdminAdminXpubImport.update({
+  path: '/xpub',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+
+const AdminAdminTransactionsRoute = AdminAdminTransactionsImport.update({
+  path: '/transactions',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+
+const AdminAdminPaymailsRoute = AdminAdminPaymailsImport.update({
+  path: '/paymails',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+
+const AdminAdminDestinationsRoute = AdminAdminDestinationsImport.update({
+  path: '/destinations',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+
+const AdminAdminContactsRoute = AdminAdminContactsImport.update({
+  path: '/contacts',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+
+const AdminAdminAccessKeysRoute = AdminAdminAccessKeysImport.update({
+  path: '/access-keys',
+  getParentRoute: () => AdminAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -97,61 +115,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/(admin)': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof adminImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
-    '/(admin)/_admin': {
-      id: '/_admin'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof adminAdminImport
-      parentRoute: typeof adminRoute
+    '/admin/_admin': {
+      id: '/admin/_admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminAdminImport
+      parentRoute: typeof AdminRoute
     }
-    '/(admin)/_admin/access-keys': {
-      id: '/_admin/access-keys'
+    '/user': {
+      id: '/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserImport
+      parentRoute: typeof rootRoute
+    }
+    '/user/_user': {
+      id: '/user/_user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserUserImport
+      parentRoute: typeof UserRoute
+    }
+    '/admin/_admin/access-keys': {
+      id: '/admin/_admin/access-keys'
       path: '/access-keys'
-      fullPath: '/access-keys'
-      preLoaderRoute: typeof adminAdminAccessKeysImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/access-keys'
+      preLoaderRoute: typeof AdminAdminAccessKeysImport
+      parentRoute: typeof AdminAdminImport
     }
-    '/(admin)/_admin/contacts': {
-      id: '/_admin/contacts'
+    '/admin/_admin/contacts': {
+      id: '/admin/_admin/contacts'
       path: '/contacts'
-      fullPath: '/contacts'
-      preLoaderRoute: typeof adminAdminContactsImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/contacts'
+      preLoaderRoute: typeof AdminAdminContactsImport
+      parentRoute: typeof AdminAdminImport
     }
-    '/(admin)/_admin/destinations': {
-      id: '/_admin/destinations'
+    '/admin/_admin/destinations': {
+      id: '/admin/_admin/destinations'
       path: '/destinations'
-      fullPath: '/destinations'
-      preLoaderRoute: typeof adminAdminDestinationsImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/destinations'
+      preLoaderRoute: typeof AdminAdminDestinationsImport
+      parentRoute: typeof AdminAdminImport
     }
-    '/(admin)/_admin/paymails': {
-      id: '/_admin/paymails'
+    '/admin/_admin/paymails': {
+      id: '/admin/_admin/paymails'
       path: '/paymails'
-      fullPath: '/paymails'
-      preLoaderRoute: typeof adminAdminPaymailsImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/paymails'
+      preLoaderRoute: typeof AdminAdminPaymailsImport
+      parentRoute: typeof AdminAdminImport
     }
-    '/(admin)/_admin/transactions': {
-      id: '/_admin/transactions'
+    '/admin/_admin/transactions': {
+      id: '/admin/_admin/transactions'
       path: '/transactions'
-      fullPath: '/transactions'
-      preLoaderRoute: typeof adminAdminTransactionsImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/transactions'
+      preLoaderRoute: typeof AdminAdminTransactionsImport
+      parentRoute: typeof AdminAdminImport
     }
-    '/(admin)/_admin/xpub': {
-      id: '/_admin/xpub'
+    '/admin/_admin/xpub': {
+      id: '/admin/_admin/xpub'
       path: '/xpub'
-      fullPath: '/xpub'
-      preLoaderRoute: typeof adminAdminXpubImport
-      parentRoute: typeof adminAdminImport
+      fullPath: '/admin/xpub'
+      preLoaderRoute: typeof AdminAdminXpubImport
+      parentRoute: typeof AdminAdminImport
+    }
+    '/user/_user/access-keys': {
+      id: '/user/_user/access-keys'
+      path: '/access-keys'
+      fullPath: '/user/access-keys'
+      preLoaderRoute: typeof UserUserAccessKeysImport
+      parentRoute: typeof UserUserImport
     }
   }
 }
@@ -161,15 +200,18 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   LoginRoute,
   AboutLazyRoute,
-  adminRoute: adminRoute.addChildren({
-    adminAdminRoute: adminAdminRoute.addChildren({
-      adminAdminAccessKeysRoute,
-      adminAdminContactsRoute,
-      adminAdminDestinationsRoute,
-      adminAdminPaymailsRoute,
-      adminAdminTransactionsRoute,
-      adminAdminXpubRoute,
+  AdminRoute: AdminRoute.addChildren({
+    AdminAdminRoute: AdminAdminRoute.addChildren({
+      AdminAdminAccessKeysRoute,
+      AdminAdminContactsRoute,
+      AdminAdminDestinationsRoute,
+      AdminAdminPaymailsRoute,
+      AdminAdminTransactionsRoute,
+      AdminAdminXpubRoute,
     }),
+  }),
+  UserRoute: UserRoute.addChildren({
+    UserUserRoute: UserUserRoute.addChildren({ UserUserAccessKeysRoute }),
   }),
 })
 

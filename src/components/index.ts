@@ -1,4 +1,5 @@
 export * from './AccessKeysColumns/AccessKeysColumns.tsx';
+export * from './AddAccessKeyDialog';
 export * from './AddPaymailDialog';
 export * from './AddXpubDialog';
 export * from './ContactAcceptDialog';
@@ -15,6 +16,7 @@ export * from './NoRecordsText';
 export * from './PaymailsColumns/PaymailColumns.tsx';
 export * from './PaymailDeleteDialog';
 export * from './Profile';
+export * from './RevokeKeyDialog';
 export * from './Searchbar';
 export * from './ui';
 export * from './ViewDialog';

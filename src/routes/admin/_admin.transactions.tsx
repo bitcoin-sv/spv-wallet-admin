@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.t
 import { useSpvWalletClient } from '@/contexts';
 import { transactionsQueryOptions } from '@/utils/transactionsQueryOptions.tsx';
 
-export const Route = createFileRoute('/(admin)/_admin/transactions')({
+export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
   validateSearch: z.object({
     order_by_field: z.string().optional().catch('id'),
@@ -54,7 +54,7 @@ export function Transactions() {
   const [tab, setTab] = useState<string>('all');
   const [blockHeight, setBlockHeight] = useState<string>('');
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
-  const { order_by_field, sort_direction } = useSearch({ from: '/_admin/transactions' });
+  const { order_by_field, sort_direction } = useSearch({ from: '/admin/_admin/transactions' });
 
   const { data } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
