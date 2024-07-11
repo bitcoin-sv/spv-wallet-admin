@@ -99,8 +99,6 @@ export function AccessKeys() {
     }),
   );
 
-  // const accessKeys = useLoaderData({ from: '/user/_user/access-keys' });
-
   const mappedAccessKeys = addStatusField(accessKeys);
   const revokedKeys = getRevokedElements(mappedAccessKeys);
   const deletedKeys = getDeletedElements(mappedAccessKeys);
