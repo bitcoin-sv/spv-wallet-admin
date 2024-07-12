@@ -26,7 +26,7 @@ export const Searchbar = ({ filter, setFilter }: SearchbarProps) => {
       <Input
         type="search"
         placeholder="Search by id, paymail or pubKey..."
-        className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+        className="w-full h-10 rounded-lg bg-background pl-8 pr-8 md:w-[200px] lg:w-[336px]"
         value={filter}
         onChange={handleFilterChange}
       />
