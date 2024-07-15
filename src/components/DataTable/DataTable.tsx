@@ -94,7 +94,7 @@ export function DataTable<TData, TValue>({
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
                 <TableCell>
-                  {row.getValue('status') === ContactStatus.Awaiting ? (
+                  {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
                     <div className="grid grid-cols-2 items-center w-fit gap-4 ">
                       {AcceptDialog ? <AcceptDialog row={row} /> : null}
                       {RejectDialog ? <RejectDialog row={row} /> : null}
