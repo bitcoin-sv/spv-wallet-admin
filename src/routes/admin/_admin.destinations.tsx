@@ -22,18 +22,18 @@ import {
 } from '@/components';
 import { addStatusField, getDeletedElements } from '@/utils';
 
+export const destinationSearchSchema = z.object({
+  lockingScript: z.string().optional().catch(''),
+  address: z.string().optional().catch(''),
+  order_by_field: z.string().optional().catch('id'),
+  sort_direction: z.string().optional().catch('desc'),
+  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+});
+
 export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,
-  validateSearch: z
-    .object({
-      lockingScript: z.string().optional().catch(''),
-      address: z.string().optional().catch(''),
-      order_by_field: z.string().optional().catch('id'),
-      sort_direction: z.string().optional().catch('desc'),
-      createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-      updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    })
-    .optional(),
+  validateSearch: destinationSearchSchema,
   loaderDeps: ({ search }) => ({
     lockingScript: search?.lockingScript,
     address: search?.address,

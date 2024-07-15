@@ -16,8 +16,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as UserUserImport } from './routes/user/_user'
 import { Route as AdminAdminImport } from './routes/admin/_admin'
-import { Route as UserUserDestinationsImport } from './routes/user/_user.destinations'
 import { Route as UserUserXpubImport } from './routes/user/_user.xpub'
+import { Route as UserUserDestinationsImport } from './routes/user/_user.destinations'
 import { Route as UserUserAccessKeysImport } from './routes/user/_user.access-keys'
 import { Route as AdminAdminXpubImport } from './routes/admin/_admin.xpub'
 import { Route as AdminAdminTransactionsImport } from './routes/admin/_admin.transactions'
@@ -240,7 +240,7 @@ export const routeTree = rootRoute.addChildren({
     UserUserRoute: UserUserRoute.addChildren({
       UserUserAccessKeysRoute,
       UserUserDestinationsRoute,
-      UserUserXpubRoute
+      UserUserXpubRoute,
     }),
   }),
 })

@@ -23,7 +23,7 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { destinationSearchSchema } from '@/routes/admin/_admin.destinations.tsx';
-import { addStatusField, getDeletedElements } from '@/utils';
+import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { destinationsQueryOptions } from '@/utils/destinationsQueryOptions.tsx';
 
 export const Route = createFileRoute('/user/_user/destinations')({
@@ -100,8 +100,8 @@ export function Destinations() {
       search: (old) => {
         return {
           ...old,
-          lockingScript: filter.startsWith('76') ? filter : undefined,
-          address: filter.length > 0 && filter.length <= 34 ? filter : undefined,
+          lockingScript: getLockingScript(filter),
+          address: getAddress(filter),
         };
       },
       replace: true,
@@ -114,8 +114,8 @@ export function Destinations() {
       search: (old) => {
         return {
           ...old,
-          lockingScript: lockingScript || filter.startsWith('76') ? filter : undefined,
-          address: address || (filter.length > 0 && filter.length <= 34) ? filter : undefined,
+          lockingScript: getLockingScript(filter),
+          address: address || getAddress(filter),
         };
       },
       replace: true,

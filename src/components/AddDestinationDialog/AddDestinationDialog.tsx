@@ -61,11 +61,11 @@ export const AddDestinationDialog = ({ className }: AddDestinationDialogProps) =
     setMetadata(event.target.value);
   };
 
-  const handleDialogOpen = () => {
+  const handleDialogToggle = () => {
     setIsAddDialogOpen((prev) => !prev);
   };
   return (
-    <Dialog open={isAddDialogOpen} onOpenChange={handleDialogOpen}>
+    <Dialog open={isAddDialogOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger className={className}>
         <Button size="sm" variant="secondary" className="h-10 gap-1">
           <CirclePlus className="mr-1" size={16} />
@@ -94,7 +94,7 @@ export const AddDestinationDialog = ({ className }: AddDestinationDialogProps) =
         <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
         <div className="grid grid-cols-2 gap-4">
           <Button onClick={handleAdd}>Add</Button>
-          <Button variant="ghost" onClick={handleDialogOpen}>
+          <Button variant="ghost" onClick={handleDialogToggle}>
             Cancel
           </Button>
         </div>
