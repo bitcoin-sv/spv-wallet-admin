@@ -8,4 +8,6 @@ export * from './mapElements.ts';
 export * from './getSortDirection.tsx';
 export * from './contactsQueryOptions.tsx';
 export * from './paymailsQueryOptions.tsx';
+export * from './getLockingScript.ts';
+export * from './getAddress.ts';
 export * from './transactionsQueryOptions.tsx';
