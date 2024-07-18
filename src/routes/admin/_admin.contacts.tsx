@@ -7,19 +7,12 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   ContactAcceptDialog,
   ContactDeleteDialog,
   ContactEditDialog,
   ContactRejectDialog,
-  contactsColumns,
   ContactStatus,
-  DataTable,
   DateRangeFilter,
-  NoRecordsText,
   Searchbar,
   Tabs,
   TabsContent,
@@ -28,34 +21,37 @@ import {
   Toaster,
 } from '@/components';
 
+import { ContactsTabContent } from '@/components/ContactsTabContent';
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions } from '@/utils';
 
+export const contactsSearchSchema = z.object({
+  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  order_by_field: z.string().optional().catch('id'),
+  sort_direction: z.string().optional().catch('desc'),
+  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  id: z.string().optional(),
+  paymail: z.string().optional(),
+  pubKey: z.string().optional(),
+});
+
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
-  validateSearch: z
-    .object({
-      createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-      order_by_field: z.string().optional().catch('id'),
-      sort_direction: z.string().optional().catch('desc'),
-      updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-      id: z.string().optional(),
-      paymail: z.string().optional(),
-      pubKey: z.string().optional(),
-    })
-    .optional(),
-  loaderDeps: ({ search }) => ({
-    order_by_field: search?.order_by_field,
-    sort_direction: search?.sort_direction,
-    createdRange: search?.createdRange,
-    updatedRange: search?.updatedRange,
-    id: search?.id,
-    paymail: search?.paymail,
-    pubKey: search?.pubKey,
+  validateSearch: contactsSearchSchema,
+  loaderDeps: ({ search: { order_by_field, sort_direction, createdRange, updatedRange, id, paymail, pubKey } }) => ({
+    order_by_field,
+    sort_direction,
+    createdRange,
+    updatedRange,
+    id,
+    paymail,
+    pubKey,
   }),
-  loader: async ({ context: { spvWallet, queryClient }, deps }) => {
-    const { createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey } = deps;
-    return await queryClient.ensureQueryData(
+  loader: async ({
+    context: { spvWallet, queryClient },
+    deps: { createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey },
+  }) =>
+    await queryClient.ensureQueryData(
       contactsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         updatedRange,
@@ -66,8 +62,7 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
         paymail,
         pubKey,
       }),
-    );
-  },
+    ),
 });
 
 export function Contacts() {
@@ -168,122 +163,50 @@ export function Contacts() {
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {contacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  data={contacts}
-                  AcceptDialog={ContactAcceptDialog}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                  RejectDialog={ContactRejectDialog}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={contacts}
+            AcceptDialog={ContactAcceptDialog}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+            RejectDialog={ContactRejectDialog}
+          />
         </TabsContent>
         <TabsContent value="unconfirmed">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {unconfirmedContacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  data={unconfirmedContacts}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={unconfirmedContacts}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+          />
         </TabsContent>
         <TabsContent value="awaiting">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {awaitingContacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  AcceptDialog={ContactAcceptDialog}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                  RejectDialog={ContactRejectDialog}
-                  data={awaitingContacts}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={awaitingContacts}
+            AcceptDialog={ContactAcceptDialog}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+            RejectDialog={ContactRejectDialog}
+          />
         </TabsContent>
         <TabsContent value="confirmed">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {confirmedContacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  data={confirmedContacts}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={confirmedContacts}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+          />
         </TabsContent>
         <TabsContent value="rejected">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {rejectedContacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  data={rejectedContacts}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={rejectedContacts}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+          />
         </TabsContent>
         <TabsContent value="deleted">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {deletedContacts.length > 0 ? (
-                <DataTable
-                  columns={contactsColumns}
-                  data={deletedContacts}
-                  EditDialog={ContactEditDialog}
-                  DeleteDialog={ContactDeleteDialog}
-                />
-              ) : (
-                <NoRecordsText message="No Contacts to show." />
-              )}
-            </CardContent>
-          </Card>
+          <ContactsTabContent
+            contacts={deletedContacts}
+            EditDialog={ContactEditDialog}
+            DeleteDialog={ContactDeleteDialog}
+          />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
