@@ -8,8 +8,8 @@ import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
+import { RecordTxDialogAdmin } from '@/components';
 import { DataTable } from '@/components/DataTable';
-import { RecordTxDialog } from '@/components/RecordTxDialog';
 import { columns } from '@/components/TransactionsColumns/columns.tsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
 import { Input } from '@/components/ui/input.tsx';
@@ -18,25 +18,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.t
 import { useSpvWalletClient } from '@/contexts';
 import { transactionsQueryOptions } from '@/utils/transactionsQueryOptions.tsx';
 
+export const transactionsSearchSchema = z.object({
+  order_by_field: z.string().optional().catch('id'),
+  sort_direction: z.string().optional().catch('desc'),
+  blockHeight: z.number().optional().catch(undefined),
+  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+});
+
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
-  validateSearch: z.object({
-    order_by_field: z.string().optional().catch('id'),
-    sort_direction: z.string().optional().catch('desc'),
-    blockHeight: z.number().optional().catch(undefined),
-    createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  validateSearch: transactionsSearchSchema,
+  loaderDeps: ({ search: { order_by_field, sort_direction, blockHeight, createdRange, updatedRange } }) => ({
+    order_by_field,
+    sort_direction,
+    blockHeight,
+    createdRange,
+    updatedRange,
   }),
-  loaderDeps: ({ search }) => ({
-    order_by_field: search?.order_by_field,
-    sort_direction: search?.sort_direction,
-    blockHeight: search?.blockHeight,
-    createdRange: search?.createdRange,
-    updatedRange: search?.updatedRange,
-  }),
-  loader: async ({ context: { queryClient, spvWallet }, deps }) => {
-    const { sort_direction, order_by_field, blockHeight, createdRange, updatedRange } = deps;
-    return await queryClient.ensureQueryData(
+  loader: async ({
+    context: { queryClient, spvWallet },
+    deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },
+  }) =>
+    await queryClient.ensureQueryData(
       transactionsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         sort_direction,
@@ -45,8 +49,7 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
         createdRange,
         updatedRange,
       }),
-    );
-  },
+    ),
 });
 
 export function Transactions() {
@@ -84,7 +87,7 @@ export function Transactions() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <RecordTxDialog />
+            <RecordTxDialogAdmin />
             <div className="relative flex-1 md:grow-0">
               <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
               {blockHeight.length > 0 && (
@@ -115,7 +118,7 @@ export function Transactions() {
                 <div className="flex flex-col items-center gap-1 text-center">
                   <h3 className="text-2xl font-bold tracking-tight">You have no Transactions</h3>
                   <p className="text-sm text-muted-foreground mb-2">You can record Transaction here.</p>
-                  <RecordTxDialog />
+                  <RecordTxDialogAdmin />
                 </div>
               )}
             </CardContent>
