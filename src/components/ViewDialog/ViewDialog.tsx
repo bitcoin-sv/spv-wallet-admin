@@ -38,7 +38,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       <DialogTrigger className="w-full">
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl h-5/6 overflow-auto">
         <DialogHeader>
           <DialogTitle>Details</DialogTitle>
           <DialogDescription>Show full information</DialogDescription>
