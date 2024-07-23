@@ -1,23 +1,26 @@
-import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { z } from 'zod';
-
-import { DateRangeFilter, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
+import {
+  AddDestinationDialog,
+  DateRangeFilter,
+  DestinationEditDialog,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
+import { useSpvWalletClient } from '@/contexts';
+import { destinationSearchSchema } from '@/routes/admin/_admin.destinations.tsx';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
+import { destinationsQueryOptions } from '@/utils/destinationsQueryOptions.tsx';
 
-export const destinationSearchSchema = z.object({
-  lockingScript: z.string().optional().catch(''),
-  address: z.string().optional().catch(''),
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('desc'),
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-});
-
-export const Route = createFileRoute('/admin/_admin/destinations')({
+export const Route = createFileRoute('/user/_user/destinations')({
   component: Destinations,
   validateSearch: destinationSearchSchema,
   loaderDeps: ({ search: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange } }) => ({
@@ -29,15 +32,19 @@ export const Route = createFileRoute('/admin/_admin/destinations')({
     updatedRange,
   }),
   loader: async ({
-    context: {
-      spvWallet: { spvWalletClient },
-    },
+    context: { queryClient, spvWallet },
     deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },
   }) =>
-    await spvWalletClient!.AdminGetDestinations(
-      { lockingScript, address, createdRange, updatedRange },
-      {},
-      { order_by_field, sort_direction },
+    await queryClient.ensureQueryData(
+      destinationsQueryOptions({
+        spvWalletClient: spvWallet.spvWalletClient!,
+        lockingScript,
+        address,
+        order_by_field,
+        sort_direction,
+        createdRange,
+        updatedRange,
+      }),
     ),
 });
 
@@ -45,12 +52,26 @@ export function Destinations() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { lockingScript, address } = useSearch({ from: '/admin/_admin/destinations' });
+  const { lockingScript, address } = useSearch({ from: '/user/_user/destinations' });
+  const { spvWalletClient } = useSpvWalletClient();
+  const { order_by_field, sort_direction, createdRange, updatedRange } = useSearch({
+    from: '/user/_user/destinations',
+  });
 
   const [debouncedFilter] = useDebounce(filter, 200);
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const destinations = useLoaderData({ from: '/admin/_admin/destinations' });
+  const { data: destinations } = useSuspenseQuery(
+    destinationsQueryOptions({
+      spvWalletClient: spvWalletClient!,
+      lockingScript,
+      address,
+      order_by_field,
+      sort_direction,
+      createdRange,
+      updatedRange,
+    }),
+  );
 
   const mappedDestinations = addStatusField(destinations);
   const deletedDests = getDeletedElements(mappedDestinations);
@@ -66,11 +87,13 @@ export function Destinations() {
 
   useEffect(() => {
     navigate({
-      search: (old) => ({
-        ...old,
-        lockingScript: getLockingScript(filter),
-        address: getAddress(filter),
-      }),
+      search: (old) => {
+        return {
+          ...old,
+          lockingScript: getLockingScript(filter),
+          address: getAddress(filter),
+        };
+      },
       replace: true,
     });
   }, [debouncedFilter]);
@@ -78,11 +101,13 @@ export function Destinations() {
   useEffect(() => {
     setFilter(lockingScript || address || '');
     navigate({
-      search: (old) => ({
-        ...old,
-        lockingScript: lockingScript || getLockingScript(filter),
-        address: address || getAddress(filter),
-      }),
+      search: (old) => {
+        return {
+          ...old,
+          lockingScript: getLockingScript(filter),
+          address: address || getAddress(filter),
+        };
+      },
       replace: true,
     });
   }, [lockingScript, address]);
@@ -96,12 +121,13 @@ export function Destinations() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
+            <AddDestinationDialog className="mr-3" />
             <Searchbar filter={filter} setFilter={setFilter} />
             <DateRangeFilter />
           </div>
         </div>
         <TabsContent value="all">
-          <DestinationsTabContent destinations={mappedDestinations} />
+          <DestinationsTabContent destinations={mappedDestinations} EditDialog={DestinationEditDialog} />
         </TabsContent>
         <TabsContent value="deleted">
           <DestinationsTabContent destinations={deletedDests} />

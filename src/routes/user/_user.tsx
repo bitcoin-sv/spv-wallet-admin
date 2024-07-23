@@ -54,7 +54,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/user/destinations"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/destinations')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <RouteIcon className="h-5 w-5" />
@@ -78,7 +78,7 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="/user/transactions"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/utxos')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
                 <Binary className="h-5 w-5" />

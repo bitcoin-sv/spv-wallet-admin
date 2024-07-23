@@ -498,6 +498,7 @@ video {
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  overflow-y: hidden;
 }
 
 *, ::before, ::after {
@@ -894,6 +895,10 @@ body {
   height: 1.2rem;
 }
 
+.h-\[65vh\] {
+  height: 65vh;
+}
+
 .h-\[72px\] {
   height: 72px;
 }
@@ -912,10 +917,6 @@ body {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-5\/6 {
-  height: 83.333333%;
 }
 
 .max-h-96 {
@@ -1504,6 +1505,11 @@ body {
   font-size: 0.8rem;
 }
 
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -1517,11 +1523,6 @@ body {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
 }
 
 .font-bold {
@@ -1778,6 +1779,10 @@ body {
   background-color: hsl(var(--destructive) / 0.9);
 }
 
+.hover\:bg-muted:hover {
+  background-color: hsl(var(--muted));
+}
+
 .hover\:bg-muted\/50:hover {
   background-color: hsl(var(--muted) / 0.5);
 }
@@ -1796,10 +1801,6 @@ body {
 
 .hover\:bg-secondary\/80:hover {
   background-color: hsl(var(--secondary) / 0.8);
-}
-
-.hover\:bg-muted:hover {
-  background-color: hsl(var(--muted));
 }
 
 .hover\:text-accent-foreground:hover {

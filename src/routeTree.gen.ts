@@ -18,6 +18,7 @@ import { Route as UserUserImport } from './routes/user/_user'
 import { Route as AdminAdminImport } from './routes/admin/_admin'
 import { Route as UserUserXpubImport } from './routes/user/_user.xpub'
 import { Route as UserUserTransactionsImport } from './routes/user/_user.transactions'
+import { Route as UserUserDestinationsImport } from './routes/user/_user.destinations'
 import { Route as UserUserAccessKeysImport } from './routes/user/_user.access-keys'
 import { Route as AdminAdminXpubImport } from './routes/admin/_admin.xpub'
 import { Route as AdminAdminTransactionsImport } from './routes/admin/_admin.transactions'
@@ -71,6 +72,11 @@ const UserUserXpubRoute = UserUserXpubImport.update({
 
 const UserUserTransactionsRoute = UserUserTransactionsImport.update({
   path: '/transactions',
+  getParentRoute: () => UserUserRoute,
+} as any)
+
+const UserUserDestinationsRoute = UserUserDestinationsImport.update({
+  path: '/destinations',
   getParentRoute: () => UserUserRoute,
 } as any)
 
@@ -204,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserUserAccessKeysImport
       parentRoute: typeof UserUserImport
     }
+    '/user/_user/destinations': {
+      id: '/user/_user/destinations'
+      path: '/destinations'
+      fullPath: '/user/destinations'
+      preLoaderRoute: typeof UserUserDestinationsImport
+      parentRoute: typeof UserUserImport
+    }
     '/user/_user/transactions': {
       id: '/user/_user/transactions'
       path: '/transactions'
@@ -239,6 +252,7 @@ export const routeTree = rootRoute.addChildren({
   UserRoute: UserRoute.addChildren({
     UserUserRoute: UserUserRoute.addChildren({
       UserUserAccessKeysRoute,
+      UserUserDestinationsRoute,
       UserUserTransactionsRoute,
       UserUserXpubRoute,
     }),

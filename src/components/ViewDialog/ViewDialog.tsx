@@ -24,12 +24,16 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       }
 
       if (field === 'metadata') {
-        return <div key={field}>metadata: {JSON.stringify(value) as React.ReactNode}</div>;
+        return (
+          <div key={field}>
+            <span className="text-gray-400">metadata:</span> {JSON.stringify(value) as React.ReactNode}
+          </div>
+        );
       }
 
       return (
         <div key={field} className="break-all">
-          {field}: {value as React.ReactNode}
+          <span className="text-gray-400">{field}:</span> {value as React.ReactNode}
         </div>
       );
     });
@@ -38,7 +42,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       <DialogTrigger className="w-full">
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl h-5/6 overflow-auto">
+      <DialogContent className="max-w-3xl max-h-5/6 overflow-auto">
         <DialogHeader>
           <DialogTitle>Details</DialogTitle>
           <DialogDescription>Show full information</DialogDescription>

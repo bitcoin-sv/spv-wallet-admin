@@ -30,12 +30,14 @@ import {
   ViewDialog,
   ContactRejectDialogProps,
   RevokeKeyDialogProps,
+  TransactionEditDialogProps,
+  DestinationEditDialogProps,
 } from '@/components';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  EditDialog?: React.ComponentType<ContactEditDialogProps>;
+  EditDialog?: React.ComponentType<ContactEditDialogProps | TransactionEditDialogProps | DestinationEditDialogProps>;
   AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
   DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
   RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
@@ -73,7 +75,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -94,7 +96,7 @@ export function DataTable<TData, TValue>({
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
                 <TableCell>
-                  {row.getValue('status') === ContactStatus.Awaiting ? (
+                  {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
                     <div className="grid grid-cols-2 items-center w-fit gap-4 ">
                       {AcceptDialog ? <AcceptDialog row={row} /> : null}
                       {RejectDialog ? <RejectDialog row={row} /> : null}

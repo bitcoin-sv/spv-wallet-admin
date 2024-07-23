@@ -1,24 +1,17 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
-import { CircleX, Search } from 'lucide-react';
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import {
   AddPaymailDialog,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  DataTable,
   DateRangeFilter,
-  Input,
-  paymailColumns,
   PaymailDeleteDialog,
+  PaymailsTabContent,
+  Searchbar,
   Tabs,
   TabsContent,
   TabsList,
@@ -28,25 +21,29 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
 
+export const paymailsSearchSchema = z.object({
+  order_by_field: z.string().optional().catch('id'),
+  sort_direction: z.string().optional().catch('desc'),
+  xpubId: z.string().optional().catch(''),
+  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+});
+
 export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
-  validateSearch: z.object({
-    order_by_field: z.string().optional().catch('id'),
-    sort_direction: z.string().optional().catch('desc'),
-    xpubId: z.string().optional().catch(''),
-    createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  validateSearch: paymailsSearchSchema,
+  loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange } }) => ({
+    order_by_field,
+    sort_direction,
+    xpubId,
+    createdRange,
+    updatedRange,
   }),
-  loaderDeps: ({ search }) => ({
-    order_by_field: search?.order_by_field,
-    sort_direction: search?.sort_direction,
-    xpubId: search?.xpubId,
-    createdRange: search?.createdRange,
-    updatedRange: search?.updatedRange,
-  }),
-  loader: async ({ context: { queryClient, spvWallet }, deps }) => {
-    const { sort_direction, order_by_field, xpubId, createdRange, updatedRange } = deps;
-    return await queryClient.ensureQueryData(
+  loader: async ({
+    context: { queryClient, spvWallet },
+    deps: { sort_direction, order_by_field, xpubId, createdRange, updatedRange },
+  }) =>
+    await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         xpubId,
@@ -55,8 +52,7 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
         createdRange,
         updatedRange,
       }),
-    );
-  },
+    ),
 });
 
 export function Paymails() {
@@ -70,10 +66,6 @@ export function Paymails() {
 
   const [debouncedFilter] = useDebounce(filter, 200);
   const navigate = useNavigate({ from: Route.fullPath });
-
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(event.target.value);
-  };
 
   const { data: paymails } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
@@ -93,9 +85,7 @@ export function Paymails() {
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
-        search: () => {
-          return {};
-        },
+        search: () => ({}),
         replace: false,
       });
     }
@@ -103,12 +93,10 @@ export function Paymails() {
 
   useEffect(() => {
     navigate({
-      search: (old) => {
-        return {
-          ...old,
-          xpubId: filter || undefined,
-        };
-      },
+      search: (old) => ({
+        ...old,
+        xpubId: filter || undefined,
+      }),
       replace: true,
     });
   }, [debouncedFilter]);
@@ -116,12 +104,10 @@ export function Paymails() {
   useEffect(() => {
     setFilter(xpubId || '');
     navigate({
-      search: (old) => {
-        return {
-          ...old,
-          xpubId,
-        };
-      },
+      search: (old) => ({
+        ...old,
+        xpubId,
+      }),
       replace: true,
     });
   }, [xpubId]);
@@ -136,57 +122,15 @@ export function Paymails() {
           </TabsList>
           <div className="flex">
             <AddPaymailDialog className="mr-3" />
-            <div className="relative flex-1 md:grow-0 mr-3">
-              <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-              {filter.length > 0 && (
-                <CircleX
-                  onClick={() => setFilter('')}
-                  className="h-4 w-4 right-2.5 top-3 text-muted-foreground absolute cursor-pointer"
-                />
-              )}
-
-              <Input
-                type="search"
-                placeholder="Search by xpub id..."
-                className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-                value={filter}
-                onChange={handleFilterChange}
-              />
-            </div>
+            <Searchbar filter={filter} setFilter={setFilter} />
             <DateRangeFilter />
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Paymails</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {mappedPaymails.length > 0 ? (
-                <DataTable columns={paymailColumns} data={mappedPaymails} DeleteDialog={PaymailDeleteDialog} />
-              ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Paymails to show.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <PaymailsTabContent paymails={mappedPaymails} DeleteDialog={PaymailDeleteDialog} />
         </TabsContent>
         <TabsContent value="deleted">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Paymails</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {deletedPaymails.length > 0 ? (
-                <DataTable columns={paymailColumns} data={deletedPaymails} />
-              ) : (
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <p className="text-sm text-muted-foreground">No Paymails to show.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <PaymailsTabContent paymails={deletedPaymails} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
