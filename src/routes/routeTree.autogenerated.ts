@@ -12,20 +12,20 @@ import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LoginImport } from './routes/login'
-import { Route as IndexImport } from './routes/index'
-import { Route as UserUserImport } from './routes/user/_user'
-import { Route as AdminAdminImport } from './routes/admin/_admin'
-import { Route as UserUserXpubImport } from './routes/user/_user.xpub'
-import { Route as UserUserDestinationsImport } from './routes/user/_user.destinations'
-import { Route as UserUserAccessKeysImport } from './routes/user/_user.access-keys'
-import { Route as AdminAdminXpubImport } from './routes/admin/_admin.xpub'
-import { Route as AdminAdminTransactionsImport } from './routes/admin/_admin.transactions'
-import { Route as AdminAdminPaymailsImport } from './routes/admin/_admin.paymails'
-import { Route as AdminAdminDestinationsImport } from './routes/admin/_admin.destinations'
-import { Route as AdminAdminContactsImport } from './routes/admin/_admin.contacts'
-import { Route as AdminAdminAccessKeysImport } from './routes/admin/_admin.access-keys'
+import { Route as rootRoute } from './__root'
+import { Route as LoginImport } from './login'
+import { Route as IndexImport } from './index'
+import { Route as UserUserImport } from './user/_user'
+import { Route as AdminAdminImport } from './admin/_admin'
+import { Route as UserUserXpubImport } from './user/_user.xpub'
+import { Route as UserUserDestinationsImport } from './user/_user.destinations'
+import { Route as UserUserAccessKeysImport } from './user/_user.access-keys'
+import { Route as AdminAdminXpubImport } from './admin/_admin.xpub'
+import { Route as AdminAdminTransactionsImport } from './admin/_admin.transactions'
+import { Route as AdminAdminPaymailsImport } from './admin/_admin.paymails'
+import { Route as AdminAdminDestinationsImport } from './admin/_admin.destinations'
+import { Route as AdminAdminContactsImport } from './admin/_admin.contacts'
+import { Route as AdminAdminAccessKeysImport } from './admin/_admin.access-keys'
 
 // Create Virtual Routes
 
@@ -48,7 +48,7 @@ const AdminRoute = AdminImport.update({
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./about.lazy').then((d) => d.Route))
 
 const LoginRoute = LoginImport.update({
   path: '/login',
