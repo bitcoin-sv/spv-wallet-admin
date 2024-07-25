@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as IndexImport } from './routes/index'
 import { Route as UserUserImport } from './routes/user/_user'
 import { Route as AdminAdminImport } from './routes/admin/_admin'
 import { Route as UserUserXpubImport } from './routes/user/_user.xpub'
@@ -52,6 +53,11 @@ const AboutLazyRoute = AboutLazyImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -119,6 +125,13 @@ const AdminAdminAccessKeysRoute = AdminAdminAccessKeysImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -237,6 +250,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
+  IndexRoute,
   LoginRoute,
   AboutLazyRoute,
   AdminRoute: AdminRoute.addChildren({
