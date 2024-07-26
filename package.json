@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npx tailwindcss -i ./src/index.css -o ./src/output.css --watch\" \"yarn vite\" ",
+    "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -30,7 +30,6 @@
     "@tanstack/react-table": "^8.17.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "concurrently": "^8.2.2",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.378.0",
     "next-themes": "^0.3.0",
