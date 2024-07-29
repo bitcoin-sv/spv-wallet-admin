@@ -13,10 +13,6 @@ export const useServerUrl = () => {
   }, [config.serverUrl]);
 
   useEffect(() => {
-    localStorage.setItem('login.serverUrl', serverUrl);
-  }, [serverUrl]);
-
-  useEffect(() => {
     if (storedUrl) {
       setServerUrl(storedUrl);
     }
