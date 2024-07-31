@@ -2,32 +2,29 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 
 import { useState } from 'react';
+
 import { useDebounce } from 'use-debounce';
 
-import { z } from 'zod';
-
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  PrepareTxDialogUser,
   Searchbar,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
   Toaster,
+  TransactionEditDialog,
   TransactionsTabContent,
-  RecordTxDialogAdmin,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionsQueryOptions } from '@/utils';
+import { transactionSearchSchema } from '@/routes/admin/_admin.transactions.tsx';
+import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 
-export const transactionSearchSchema = z.object({
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('desc'),
-  blockHeight: z.number().optional().catch(undefined),
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-});
-
-export const Route = createFileRoute('/admin/_admin/transactions')({
+export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
   validateSearch: transactionSearchSchema,
   loaderDeps: ({ search: { order_by_field, sort_direction, blockHeight, createdRange, updatedRange } }) => ({
@@ -41,8 +38,9 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },
   }) =>
+    //TODO: add getDraftTransactions request
     await queryClient.ensureQueryData(
-      transactionsQueryOptions({
+      transactionsUserQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         sort_direction,
         order_by_field,
@@ -53,16 +51,18 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     ),
 });
 
-export function Transactions() {
-  const { spvWalletClient } = useSpvWalletClient();
+function Transactions() {
   const [tab, setTab] = useState<string>('all');
   const [blockHeight, setBlockHeight] = useState<string>('');
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
-  const { order_by_field, sort_direction } = useSearch({ from: '/admin/_admin/transactions' });
+
+  const { spvWalletClient } = useSpvWalletClient();
+  const { order_by_field, sort_direction } = useSearch({ from: '/user/_user/transactions' });
+  // TODO: WIP
 
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
-    transactionsQueryOptions({
+    transactionsUserQueryOptions({
       spvWalletClient: spvWalletClient!,
       blockHeight: Number(debouncedBlockHeight),
       order_by_field,
@@ -70,22 +70,39 @@ export function Transactions() {
     }),
   );
 
-  // TODO: Add server pagination for xpubs when search and count will be merged
-
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab}>
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="recorded">Recorded</TabsTrigger>
+            <TabsTrigger value="prepared">Prepared</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <RecordTxDialogAdmin />
+            <PrepareTxDialogUser />
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
           </div>
         </div>
         <TabsContent value="all">
-          <TransactionsTabContent transactions={transactions} TxDialog={RecordTxDialogAdmin} />
+          <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
+        </TabsContent>
+        <TabsContent value="recorded">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader>
+              <CardTitle>Transactions</CardTitle>
+            </CardHeader>
+            <CardContent className="mb-2">
+              <TransactionsTabContent
+                transactions={transactions}
+                TxDialog={PrepareTxDialogUser}
+                EditDialog={TransactionEditDialog}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="prepared">
+          <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />

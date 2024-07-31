@@ -25,7 +25,7 @@ interface RecordTxDialogProps {
   className?: string;
 }
 
-export const RecordTxDialog = ({ className }: RecordTxDialogProps) => {
+export const RecordTxDialogAdmin = ({ className }: RecordTxDialogProps) => {
   const [hexOrId, setHexOrId] = useState<string>('');
   const { spvWalletClient } = useSpvWalletClient();
 

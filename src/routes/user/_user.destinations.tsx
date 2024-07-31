@@ -5,15 +5,8 @@ import { useDebounce } from 'use-debounce';
 
 import {
   AddDestinationDialog,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  DataTable,
   DateRangeFilter,
   DestinationEditDialog,
-  destinationsColumns,
-  NoRecordsText,
   Searchbar,
   Tabs,
   TabsContent,
@@ -21,6 +14,7 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
+import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { useSpvWalletClient } from '@/contexts';
 import { destinationSearchSchema } from '@/routes/admin/_admin.destinations.tsx';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
@@ -58,9 +52,7 @@ export function Destinations() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const search = useSearch({ from: '/user/_user/destinations' });
-  const lockingScript = search?.lockingScript;
-  const address = search?.address;
+  const { lockingScript, address } = useSearch({ from: '/user/_user/destinations' });
   const { spvWalletClient } = useSpvWalletClient();
   const { order_by_field, sort_direction, createdRange, updatedRange } = useSearch({
     from: '/user/_user/destinations',
@@ -87,9 +79,7 @@ export function Destinations() {
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
-        search: () => {
-          return {};
-        },
+        search: () => ({}),
         replace: false,
       });
     }
@@ -137,32 +127,10 @@ export function Destinations() {
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Destinations</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              {mappedDestinations.length > 0 ? (
-                <DataTable columns={destinationsColumns} data={mappedDestinations} EditDialog={DestinationEditDialog} />
-              ) : (
-                <NoRecordsText message="No Destinations to show." />
-              )}
-            </CardContent>
-          </Card>
+          <DestinationsTabContent destinations={mappedDestinations} EditDialog={DestinationEditDialog} />
         </TabsContent>
         <TabsContent value="deleted">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Destinations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {deletedDests.length > 0 ? (
-                <DataTable columns={destinationsColumns} data={deletedDests} />
-              ) : (
-                <NoRecordsText message="No Destinations to show." />
-              )}
-            </CardContent>
-          </Card>
+          <DestinationsTabContent destinations={deletedDests} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />

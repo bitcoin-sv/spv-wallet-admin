@@ -12,12 +12,13 @@ import {
   contactsColumns,
   DataTable,
   NoRecordsText,
+  TransactionEditDialogProps,
 } from '@/components';
 import { ContactExtended } from '@/interfaces/contacts.ts';
 
 export interface ContactsTabContentProps {
   contacts: ContactExtended[];
-  EditDialog?: React.ComponentType<ContactEditDialogProps>;
+  EditDialog?: React.ComponentType<ContactEditDialogProps | TransactionEditDialogProps>;
   AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
   DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
   RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
