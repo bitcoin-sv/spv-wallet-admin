@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 
 import { useSpvWalletClient } from '@/contexts';
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export const enum Role {
   Admin = 'admin',
   User = 'user',
@@ -35,6 +37,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

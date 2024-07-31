@@ -19,6 +19,8 @@ import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 
 export interface ContactAcceptDialogProps {
+  // TODO [explicit-any]: consider add type if it's possible
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   row: Row<any>;
 }
 
