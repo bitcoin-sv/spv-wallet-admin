@@ -1,1 +1,1 @@
-export const getLockingScript = (str: string) => (str.startsWith('76') ? str : undefined);
+export const getLockingScript = (filter: string) => (filter.startsWith('76') ? filter : undefined);

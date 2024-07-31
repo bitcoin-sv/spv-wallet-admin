@@ -19,11 +19,11 @@ import {
   TabsList,
   TabsTrigger,
   Toaster,
+  ContactsTabContent,
 } from '@/components';
 
-import { ContactsTabContent } from '@/components/ContactsTabContent';
 import { useSpvWalletClient } from '@/contexts';
-import { contactsQueryOptions } from '@/utils';
+import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
 
 export const contactsSearchSchema = z.object({
   createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
@@ -71,10 +71,9 @@ export function Contacts() {
 
   const { spvWalletClient } = useSpvWalletClient();
 
-  const { id, paymail, pubKey, createdRange, updatedRange, order_by_field, sort_direction } =
-    useSearch({
-      from: '/admin/_admin/contacts',
-    }) || {};
+  const { id, paymail, pubKey, createdRange, updatedRange, order_by_field, sort_direction } = useSearch({
+    from: '/admin/_admin/contacts',
+  });
 
   const {
     data: { content: contacts },
@@ -104,9 +103,7 @@ export function Contacts() {
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
-        search: () => {
-          return {};
-        },
+        search: () => ({}),
         replace: false,
       });
     }
@@ -115,8 +112,8 @@ export function Contacts() {
   useEffect(() => {
     navigate({
       search: (old) => {
-        const id = filter.length === 32 ? filter : undefined;
-        const paymail = filter.includes('@') ? filter : undefined;
+        const id = getContactId(filter);
+        const paymail = getContactPaymail(filter);
         return {
           ...old,
           id,
@@ -132,8 +129,8 @@ export function Contacts() {
     setFilter(id || paymail || pubKey || '');
     navigate({
       search: (old) => {
-        const id = filter.length === 32 ? filter : undefined;
-        const paymail = filter.includes('@') ? filter : undefined;
+        const id = getContactId(filter);
+        const paymail = getContactPaymail(filter);
         return {
           ...old,
           id,

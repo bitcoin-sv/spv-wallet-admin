@@ -16,6 +16,7 @@ export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
   DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
 }
+
 export const PaymailsTabContent = ({ paymails, DeleteDialog }: PaymailsTabContentProps) => {
   return (
     <Card>

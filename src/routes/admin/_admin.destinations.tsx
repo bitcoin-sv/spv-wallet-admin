@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { DateRangeFilter, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
-import { addStatusField, getDeletedElements } from '@/utils';
+import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 
 export const destinationSearchSchema = z.object({
   lockingScript: z.string().optional().catch(''),
@@ -29,10 +29,12 @@ export const Route = createFileRoute('/admin/_admin/destinations')({
     updatedRange,
   }),
   loader: async ({
-    context,
+    context: {
+      spvWallet: { spvWalletClient },
+    },
     deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },
   }) =>
-    await context.spvWallet.spvWalletClient!.AdminGetDestinations(
+    await spvWalletClient!.AdminGetDestinations(
       { lockingScript, address, createdRange, updatedRange },
       {},
       { order_by_field, sort_direction },
@@ -66,8 +68,8 @@ export function Destinations() {
     navigate({
       search: (old) => ({
         ...old,
-        lockingScript: filter.startsWith('76') ? filter : undefined,
-        address: filter.length > 0 && filter.length <= 34 ? filter : undefined,
+        lockingScript: getLockingScript(filter),
+        address: getAddress(filter),
       }),
       replace: true,
     });
@@ -78,8 +80,8 @@ export function Destinations() {
     navigate({
       search: (old) => ({
         ...old,
-        lockingScript: lockingScript || filter.startsWith('76') ? filter : undefined,
-        address: address || (filter.length > 0 && filter.length <= 34) ? filter : undefined,
+        lockingScript: lockingScript || getLockingScript(filter),
+        address: address || getAddress(filter),
       }),
       replace: true,
     });
