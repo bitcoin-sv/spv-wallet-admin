@@ -8,6 +8,8 @@ import { DateRangeFilter, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, T
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export const destinationSearchSchema = z.object({
   lockingScript: z.string().optional().catch(''),
   address: z.string().optional().catch(''),

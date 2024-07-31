@@ -17,6 +17,8 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 export interface RevokeKeyDialogProps {
+  // TODO [explicit-any]: consider add type if it's possible
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   row: Row<any>;
 }
 

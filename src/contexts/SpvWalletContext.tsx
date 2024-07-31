@@ -35,6 +35,8 @@ export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) =
   return <SpvWalletContext.Provider value={contextValue}>{children}</SpvWalletContext.Provider>;
 };
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export const useSpvWalletClient = () => {
   const spvWalletClient = useContext(SpvWalletContext);
 

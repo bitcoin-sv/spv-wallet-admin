@@ -1,13 +1,10 @@
+import animatePlugin from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+export default {
   darkMode: ['class'],
-  content: [
-    // './pages/**/*.{ts,tsx}',
-    // './components/**/*.{ts,tsx}',
-    // './app/**/*.{ts,tsx}',
-    './index.html',
-    './src/**/*.{ts,tsx, jsx, js}',
-  ],
+  content: ['./index.html', './src/**/*.{ts,tsx,jsx,js}'],
   prefix: '',
   theme: {
     container: {
@@ -74,5 +71,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animatePlugin],
 };

@@ -25,6 +25,8 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export const contactsSearchSchema = z.object({
   createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   order_by_field: z.string().optional().catch('id'),

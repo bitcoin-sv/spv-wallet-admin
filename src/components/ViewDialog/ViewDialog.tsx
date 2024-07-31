@@ -12,10 +12,14 @@ import {
 } from '@/components';
 
 export interface ViewDialogProps {
+  // TODO [explicit-any]: consider add type if it's possible
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   row: Row<any>;
 }
 
 export const ViewDialog = ({ row }: ViewDialogProps) => {
+  // TODO [explicit-any]: consider add type if it's possible
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const renderInfo = (obj: any) =>
     Object.entries(obj as NonNullable<unknown>).map((item) => {
       const [field, value] = item;
