@@ -1,0 +1,100 @@
+name: On push changes
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+      - adminV2
+
+env:
+  NODE_VERSION_FILE: 'package.json'
+  PACKAGE_MANGER: 'yarn'
+  PACKAGE_MANGER_LOCK_FILE: 'yarn.lock'
+
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: ${{ env.PACKAGE_MANGER }}
+          cache-dependency-path: ${{ env.PACKAGE_MANGER_LOCK_FILE }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Code style
+        run: |
+          yarn prettier:check
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: ${{ env.PACKAGE_MANGER }}
+          cache-dependency-path: ${{ env.PACKAGE_MANGER_LOCK_FILE }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Lint
+        run: |
+          yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+    # TODO: Enable job when we add tests to the project
+    if: false
+    steps:
+      - name: Checkout ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: ${{ env.PACKAGE_MANGER }}
+          cache-dependency-path: ${{ env.PACKAGE_MANGER_LOCK_FILE }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Unit test
+        run: |
+          yarn test
+
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: ${{ env.PACKAGE_MANGER }}
+          cache-dependency-path: ${{ env.PACKAGE_MANGER_LOCK_FILE }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Code style
+        run: |
+          yarn build
