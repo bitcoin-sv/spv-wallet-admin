@@ -37,6 +37,8 @@ export const RecordTxDialogAdmin = ({ className }: RecordTxDialogProps) => {
     if (!hexOrId) return;
     try {
       if (hexOrId.length === 64) {
+        // TODO [explicit-any]: consider add type if it's possible
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         const response: any = await fetch(`https://api.whatsonchain.com/v1/bsv/main/tx/${hexOrId}/hex`);
         const hex = await response.text();
         await spvWalletClient!.AdminRecordTransaction(hex);

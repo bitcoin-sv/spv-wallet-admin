@@ -33,4 +33,6 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
+// TODO [react-refresh]: only 1 export is allowed
+// eslint-disable-next-line  react-refresh/only-export-components
 export { Badge, badgeVariants }
