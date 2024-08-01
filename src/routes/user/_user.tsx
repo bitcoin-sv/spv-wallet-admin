@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
 
-import { KeySquare, Route as RouteIcon, ArrowLeftRight, Binary, UsersRound } from 'lucide-react';
+import { KeySquare, Route as RouteIcon, ArrowLeftRight, UsersRound } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -74,18 +74,6 @@ function LayoutComponent() {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Transactions</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/user/transactions"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/utxos')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                <Binary className="h-5 w-5" />
-                <span className="sr-only">Utxos</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Utxos</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
