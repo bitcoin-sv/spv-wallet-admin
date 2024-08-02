@@ -19,7 +19,7 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
+import { addStatusField, xPubQueryOptions } from '@/utils';
 
 // TODO [react-refresh]: only 1 export is allowed
 // eslint-disable-next-line  react-refresh/only-export-components
@@ -48,8 +48,6 @@ export function Xpub() {
 
   const mappedXpubs = addStatusField(xpubs);
 
-  const deletedXpubs = getDeletedElements(mappedXpubs);
-
   // TODO: Add server pagination for xpubs when search and count will be merged
 
   return (
@@ -58,7 +56,6 @@ export function Xpub() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
@@ -67,9 +64,6 @@ export function Xpub() {
         </div>
         <TabsContent value="all">
           <XpubsTabContent xpubs={mappedXpubs} />
-        </TabsContent>
-        <TabsContent value="deleted">
-          <XpubsTabContent xpubs={deletedXpubs} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
