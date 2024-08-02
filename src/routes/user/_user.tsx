@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
 
-import { KeySquare, Route as RouteIcon, ArrowLeftRight, UsersRound } from 'lucide-react';
+import { KeySquare, Route as RouteIcon, ArrowLeftRight } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -74,18 +74,6 @@ function LayoutComponent() {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Transactions</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/contacts')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                <UsersRound className="h-5 w-5" />
-                <span className="sr-only">Contacts</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Contacts</TooltipContent>
           </Tooltip>
         </nav>
       </aside>
