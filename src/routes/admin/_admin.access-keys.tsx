@@ -1,4 +1,4 @@
-import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+import { createFileRoute, ErrorComponent, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
@@ -15,9 +15,11 @@ import {
   TabsTrigger,
   Searchbar,
   AccessKeysTabContent,
+  CustomErrorComponent,
 } from '@/components';
 
 import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
+import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 // TODO [react-refresh]: only 1 export is allowed
 // eslint-disable-next-line  react-refresh/only-export-components
@@ -33,7 +35,12 @@ export const accessKeySearchSchema = z.object({
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
   validateSearch: accessKeySearchSchema,
-
+  errorComponent: ({ error }) => {
+    if (error instanceof ErrorResponse) {
+      return <CustomErrorComponent error={error} />;
+    }
+    return <ErrorComponent error={error} />;
+  },
   loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange, revokedRange } }) => ({
     order_by_field,
     sort_direction,

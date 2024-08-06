@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { createFileRoute, ErrorComponent, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
@@ -20,10 +20,12 @@ import {
   TabsTrigger,
   Toaster,
   ContactsTabContent,
+  CustomErrorComponent,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
+import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 // TODO [react-refresh]: only 1 export is allowed
 // eslint-disable-next-line  react-refresh/only-export-components
@@ -39,6 +41,12 @@ export const contactsSearchSchema = z.object({
 
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
+  errorComponent: ({ error }) => {
+    if (error instanceof ErrorResponse) {
+      return <CustomErrorComponent error={error} />;
+    }
+    return <ErrorComponent error={error} />;
+  },
   validateSearch: contactsSearchSchema,
   loaderDeps: ({ search: { order_by_field, sort_direction, createdRange, updatedRange, id, paymail, pubKey } }) => ({
     order_by_field,

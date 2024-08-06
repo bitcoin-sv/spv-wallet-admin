@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { createFileRoute, ErrorComponent, useSearch } from '@tanstack/react-router';
 
 import { useState } from 'react';
 
@@ -10,6 +10,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CustomErrorComponent,
   PrepareTxDialogUser,
   Searchbar,
   Tabs,
@@ -23,6 +24,7 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 import { transactionSearchSchema } from '@/routes/admin/_admin.transactions.tsx';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
+import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -34,6 +36,12 @@ export const Route = createFileRoute('/user/_user/transactions')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => {
+    if (error instanceof ErrorResponse) {
+      return <CustomErrorComponent error={error} />;
+    }
+    return <ErrorComponent error={error} />;
+  },
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },
