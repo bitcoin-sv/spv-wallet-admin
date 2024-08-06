@@ -1,12 +1,22 @@
-import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+import { createFileRoute, ErrorComponent, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
-import { DateRangeFilter, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
+import {
+  CustomErrorComponent,
+  DateRangeFilter,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
+import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 // TODO [react-refresh]: only 1 export is allowed
 // eslint-disable-next-line  react-refresh/only-export-components
@@ -21,6 +31,12 @@ export const destinationSearchSchema = z.object({
 
 export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,
+  errorComponent: ({ error }) => {
+    if (error instanceof ErrorResponse) {
+      return <CustomErrorComponent error={error} />;
+    }
+    return <ErrorComponent error={error} />;
+  },
   validateSearch: destinationSearchSchema,
   loaderDeps: ({ search: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange } }) => ({
     lockingScript,

@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { createFileRoute, ErrorComponent, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
@@ -14,10 +14,12 @@ import {
   TabsTrigger,
   AddAccessKeyDialog,
   AccessKeysTabContent,
+  CustomErrorComponent,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, getRevokedElements, accessKeysQueryOptions } from '@/utils';
+import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 // TODO [react-refresh]: only 1 export is allowed
 // eslint-disable-next-line  react-refresh/only-export-components
@@ -64,6 +66,12 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         page_size,
       }),
     ),
+  errorComponent: ({ error }) => {
+    if (error instanceof ErrorResponse) {
+      return <CustomErrorComponent error={error} />;
+    }
+    return <ErrorComponent error={error} />;
+  },
 });
 
 export function AccessKeys() {
@@ -131,3 +139,27 @@ export function AccessKeys() {
     </>
   );
 }
+
+// function ErrorTestComp() {
+//   const router = useRouter();
+//   const queryErrorResetBoundary = useQueryErrorResetBoundary();
+//
+//   useEffect(() => {
+//     // Reset the query error boundary
+//     queryErrorResetBoundary.reset();
+//   }, [queryErrorResetBoundary]);
+//
+//   return (
+//     <div>
+//       {error.message}
+//       <button
+//         onClick={() => {
+//           // Invalidate the route to reload the loader, and reset any router error boundaries
+//           router.invalidate();
+//         }}
+//       >
+//         retry
+//       </button>
+//     </div>
+//   );
+// }
