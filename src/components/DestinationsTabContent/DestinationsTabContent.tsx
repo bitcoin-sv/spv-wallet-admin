@@ -14,9 +14,9 @@ import { DestinationExtended } from '@/interfaces/destination.ts';
 
 export interface DestinationsTabContentProps {
   destinations: DestinationExtended[];
-  EditDialog?: React.ComponentType<DestinationEditDialogProps>;
+  DestinationEditDialog?: React.ComponentType<DestinationEditDialogProps>;
 }
-export const DestinationsTabContent = ({ destinations, EditDialog }: DestinationsTabContentProps) => {
+export const DestinationsTabContent = ({ destinations, DestinationEditDialog }: DestinationsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -24,7 +24,7 @@ export const DestinationsTabContent = ({ destinations, EditDialog }: Destination
       </CardHeader>
       <CardContent className="mb-2">
         {destinations.length > 0 ? (
-          <DataTable columns={destinationsColumns} data={destinations} EditDialog={EditDialog} />
+          <DataTable columns={destinationsColumns} data={destinations} DestinationEditDialog={DestinationEditDialog} />
         ) : (
           <NoRecordsText message="No Destinations to show." />
         )}

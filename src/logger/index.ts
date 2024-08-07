@@ -13,15 +13,10 @@ const levels: { [key: number]: string } = {
 // Type for log objects
 type LogObject = {
   level?: number | string;
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
-// Add types to the getDefaultObject function
-// TODO [explicit-any]: consider add type if it's possible
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const getDefaultObject = (o: any): any => ({
+const getDefaultObject = (o: { [key: string]: unknown }): unknown => ({
   ...o,
   level: levels[o.level as number] || 'info', // Ensure level is a string from levels
   name: 'spv-wallet-admin',

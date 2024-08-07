@@ -15,11 +15,10 @@ import {
   DropdownMenuItem,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
+import { AccessKey } from '@bsv/spv-wallet-js-client';
 
 export interface RevokeKeyDialogProps {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  row: Row<any>;
+  row: Row<AccessKey>;
 }
 
 export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {

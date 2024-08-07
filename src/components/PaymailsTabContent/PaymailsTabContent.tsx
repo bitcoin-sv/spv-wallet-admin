@@ -5,19 +5,19 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  ContactDeleteDialogProps,
   DataTable,
   NoRecordsText,
   paymailColumns,
+  PaymailDeleteDialogProps,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
 
 export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
-  DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
+  PaymailDeleteDialog?: React.ComponentType<PaymailDeleteDialogProps>;
 }
 
-export const PaymailsTabContent = ({ paymails, DeleteDialog }: PaymailsTabContentProps) => {
+export const PaymailsTabContent = ({ paymails, PaymailDeleteDialog }: PaymailsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -25,7 +25,7 @@ export const PaymailsTabContent = ({ paymails, DeleteDialog }: PaymailsTabConten
       </CardHeader>
       <CardContent className="mb-2">
         {paymails.length > 0 ? (
-          <DataTable columns={paymailColumns} data={paymails} DeleteDialog={DeleteDialog} />
+          <DataTable columns={paymailColumns} data={paymails} PaymailDeleteDialog={PaymailDeleteDialog} />
         ) : (
           <NoRecordsText message="No Paymails to show." />
         )}

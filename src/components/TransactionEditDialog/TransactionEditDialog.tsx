@@ -1,4 +1,4 @@
-import { Metadata } from '@bsv/spv-wallet-js-client';
+import { Metadata, Tx } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
 import React, { useState } from 'react';
@@ -21,9 +21,7 @@ import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 
 export interface TransactionEditDialogProps {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  row: Row<any>;
+  row: Row<Tx>;
 }
 
 export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {

@@ -9,18 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
   DropdownMenuItem,
+  RowType,
 } from '@/components';
 
 export interface ViewDialogProps {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  row: Row<any>;
+  row: Row<RowType>;
 }
 
 export const ViewDialog = ({ row }: ViewDialogProps) => {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  const renderInfo = (obj: any) =>
+  const renderInfo = (obj: RowType) =>
     Object.entries(obj as NonNullable<unknown>).map((item) => {
       const [field, value] = item;
       if (field === 'status') {
@@ -46,7 +43,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       <DialogTrigger className="w-full">
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-5/6 overflow-auto">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Details</DialogTitle>
           <DialogDescription>Show full information</DialogDescription>
