@@ -58,13 +58,12 @@ function Transactions() {
 
   const { spvWalletClient } = useSpvWalletClient();
   const { order_by_field, sort_direction } = useSearch({ from: '/user/_user/transactions' });
-  // TODO: WIP
 
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsUserQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: Number(debouncedBlockHeight),
+      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       order_by_field,
       sort_direction,
     }),
