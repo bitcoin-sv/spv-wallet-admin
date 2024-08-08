@@ -129,7 +129,7 @@ export function Paymails() {
           </div>
         </div>
         <TabsContent value="all">
-          <PaymailsTabContent paymails={mappedPaymails} DeleteDialog={PaymailDeleteDialog} />
+          <PaymailsTabContent paymails={mappedPaymails} PaymailDeleteDialog={PaymailDeleteDialog} />
         </TabsContent>
         <TabsContent value="deleted">
           <PaymailsTabContent paymails={deletedPaymails} />

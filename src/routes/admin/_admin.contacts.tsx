@@ -165,7 +165,7 @@ export function Contacts() {
           <ContactsTabContent
             contacts={contacts}
             AcceptDialog={ContactAcceptDialog}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
             RejectDialog={ContactRejectDialog}
           />
@@ -173,7 +173,7 @@ export function Contacts() {
         <TabsContent value="unconfirmed">
           <ContactsTabContent
             contacts={unconfirmedContacts}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
           />
         </TabsContent>
@@ -181,7 +181,7 @@ export function Contacts() {
           <ContactsTabContent
             contacts={awaitingContacts}
             AcceptDialog={ContactAcceptDialog}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
             RejectDialog={ContactRejectDialog}
           />
@@ -189,21 +189,21 @@ export function Contacts() {
         <TabsContent value="confirmed">
           <ContactsTabContent
             contacts={confirmedContacts}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
           />
         </TabsContent>
         <TabsContent value="rejected">
           <ContactsTabContent
             contacts={rejectedContacts}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
           />
         </TabsContent>
         <TabsContent value="deleted">
           <ContactsTabContent
             contacts={deletedContacts}
-            EditDialog={ContactEditDialog}
+            ContactEditDialog={ContactEditDialog}
             DeleteDialog={ContactDeleteDialog}
           />
         </TabsContent>

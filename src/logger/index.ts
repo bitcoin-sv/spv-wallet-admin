@@ -43,6 +43,7 @@ const pinoLogger: Logger = pino({
         console.warn(getDefaultObject(o));
       },
       error: (o: LogObject = {}) => {
+        console.log('o');
         console.error(getDefaultObject(o));
       },
       fatal: (o: LogObject = {}) => {

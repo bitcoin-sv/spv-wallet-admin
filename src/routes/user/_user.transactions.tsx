@@ -96,7 +96,7 @@ function Transactions() {
               <TransactionsTabContent
                 transactions={transactions}
                 TxDialog={PrepareTxDialogUser}
-                EditDialog={TransactionEditDialog}
+                TransactionEditDialog={TransactionEditDialog}
               />
             </CardContent>
           </Card>

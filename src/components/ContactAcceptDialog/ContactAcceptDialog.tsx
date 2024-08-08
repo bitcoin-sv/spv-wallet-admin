@@ -23,7 +23,7 @@ export interface ContactAcceptDialogProps {
   row: Row<Contact>;
 }
 
-export function ContactAcceptDialog({ row }: ContactAcceptDialogProps) {
+export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
   const [isAcceptDialogOpen, setIsAcceptDialogOpen] = useState(false);
 
   const { spvWalletClient } = useSpvWalletClient();
@@ -76,4 +76,4 @@ export function ContactAcceptDialog({ row }: ContactAcceptDialogProps) {
       </DialogContent>
     </Dialog>
   );
-}
+};
