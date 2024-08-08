@@ -7,6 +7,7 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import {
+  RecordTxDialogAdmin,
   Searchbar,
   Tabs,
   TabsContent,
@@ -14,7 +15,6 @@ import {
   TabsTrigger,
   Toaster,
   TransactionsTabContent,
-  RecordTxDialogAdmin,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { transactionsQueryOptions } from '@/utils';
@@ -66,7 +66,7 @@ export function Transactions() {
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: Number(debouncedBlockHeight),
+      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       order_by_field,
       sort_direction,
     }),
