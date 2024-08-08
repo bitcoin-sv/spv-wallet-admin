@@ -127,7 +127,7 @@ export function Destinations() {
           </div>
         </div>
         <TabsContent value="all">
-          <DestinationsTabContent destinations={mappedDestinations} EditDialog={DestinationEditDialog} />
+          <DestinationsTabContent destinations={mappedDestinations} DestinationEditDialog={DestinationEditDialog} />
         </TabsContent>
         <TabsContent value="deleted">
           <DestinationsTabContent destinations={deletedDests} />

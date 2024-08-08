@@ -5,6 +5,7 @@ import {
   useReactTable,
   getPaginationRowModel,
   SortingState,
+  Row,
 } from '@tanstack/react-table';
 import { EllipsisVertical } from 'lucide-react';
 
@@ -32,16 +33,23 @@ import {
   RevokeKeyDialogProps,
   TransactionEditDialogProps,
   DestinationEditDialogProps,
+  PaymailDeleteDialogProps,
 } from '@/components';
+import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
+
+export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress | Tx;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  EditDialog?: React.ComponentType<ContactEditDialogProps | TransactionEditDialogProps | DestinationEditDialogProps>;
+  ContactEditDialog?: React.ComponentType<ContactEditDialogProps>;
+  TransactionEditDialog?: React.ComponentType<TransactionEditDialogProps>;
+  DestinationEditDialog?: React.ComponentType<DestinationEditDialogProps>;
   AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
   DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
   RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
   RevokeKeyDialog?: React.ComponentType<RevokeKeyDialogProps>;
+  PaymailDeleteDialog?: React.ComponentType<PaymailDeleteDialogProps>;
 }
 
 // TODO [react-refresh]: only 1 export is allowed
@@ -51,11 +59,14 @@ export const initialSorting = { id: 'id', desc: false };
 export function DataTable<TData, TValue>({
   columns,
   data,
-  EditDialog,
+  ContactEditDialog,
+  TransactionEditDialog,
+  DestinationEditDialog,
   AcceptDialog,
   DeleteDialog,
   RejectDialog,
   RevokeKeyDialog,
+  PaymailDeleteDialog,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
@@ -100,8 +111,8 @@ export function DataTable<TData, TValue>({
                 <TableCell>
                   {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
                     <div className="grid grid-cols-2 items-center w-fit gap-4 ">
-                      {AcceptDialog ? <AcceptDialog row={row} /> : null}
-                      {RejectDialog ? <RejectDialog row={row} /> : null}
+                      {AcceptDialog ? <AcceptDialog row={row as Row<Contact>} /> : null}
+                      {RejectDialog ? <RejectDialog row={row as Row<Contact>} /> : null}
                     </div>
                   ) : null}
                 </TableCell>
@@ -114,10 +125,13 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <ViewDialog row={row} />
-                      {EditDialog ? <EditDialog row={row} /> : null}
-                      {DeleteDialog ? <DeleteDialog row={row} /> : null}
-                      {RevokeKeyDialog ? <RevokeKeyDialog row={row} /> : null}
+                      <ViewDialog row={row as Row<RowType>} />
+                      {ContactEditDialog ? <ContactEditDialog row={row as Row<Contact>} /> : null}
+                      {TransactionEditDialog ? <TransactionEditDialog row={row as Row<Tx>} /> : null}
+                      {DestinationEditDialog ? <DestinationEditDialog row={row as Row<Destination>} /> : null}
+                      {DeleteDialog ? <DeleteDialog row={row as Row<Contact>} /> : null}
+                      {PaymailDeleteDialog ? <PaymailDeleteDialog row={row as Row<PaymailAddress>} /> : null}
+                      {RevokeKeyDialog ? <RevokeKeyDialog row={row as Row<AccessKey>} /> : null}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

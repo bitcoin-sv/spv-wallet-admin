@@ -14,6 +14,7 @@ import {
   TabsTrigger,
   AddAccessKeyDialog,
   AccessKeysTabContent,
+  RevokeKeyDialog,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
@@ -118,7 +119,7 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
+          <AccessKeysTabContent accessKeys={mappedAccessKeys} RevokeKeyDialog={RevokeKeyDialog} />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

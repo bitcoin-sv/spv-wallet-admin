@@ -37,7 +37,7 @@ export const Route = createFileRoute('/login')({
 });
 
 export function LoginForm() {
-  const [role, setRole] = useState<Role>(Role.User);
+  const [role, setRole] = useState<Role>(Role.Admin);
   const [key, setKey] = useState('');
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 

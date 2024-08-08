@@ -22,11 +22,10 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
+import { Contact } from '@bsv/spv-wallet-js-client';
 
 export interface ContactRejectDialogProps {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  row: Row<any>;
+  row: Row<Contact>;
 }
 
 export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
