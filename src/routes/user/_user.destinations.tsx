@@ -16,9 +16,9 @@ import {
 } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { useSpvWalletClient } from '@/contexts';
-import { destinationSearchSchema } from '@/routes/admin/_admin.destinations.tsx';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { destinationsQueryOptions } from '@/utils/destinationsQueryOptions.tsx';
+import { destinationSearchSchema } from '@/searchSchemas';
 
 export const Route = createFileRoute('/user/_user/destinations')({
   component: Destinations,

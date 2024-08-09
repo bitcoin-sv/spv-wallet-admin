@@ -6,7 +6,7 @@ import { ArrowUpDown } from 'lucide-react';
 
 import { Badge } from '@/components';
 
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 
 export interface AccessKeysColumns extends AccessKey {

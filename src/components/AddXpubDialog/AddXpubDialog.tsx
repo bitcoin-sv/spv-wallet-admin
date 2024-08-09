@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 import { useDebounce } from 'use-debounce';
 
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui';
 import {
   Dialog,
   DialogContent,
