@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 
 import { DateRange } from 'react-day-picker';
 
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui';
 import { Calendar } from '@/components/ui/calendar.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx';

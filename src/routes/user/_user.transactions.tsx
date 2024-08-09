@@ -21,8 +21,8 @@ import {
   TransactionsTabContent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionSearchSchema } from '@/routes/admin/_admin.transactions.tsx';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
+import { transactionSearchSchema } from '@/searchSchemas';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -58,7 +58,6 @@ function Transactions() {
 
   const { spvWalletClient } = useSpvWalletClient();
   const { order_by_field, sort_direction } = useSearch({ from: '/user/_user/transactions' });
-  // TODO: WIP
 
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
