@@ -2,11 +2,9 @@ import { HD } from '@bsv/sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus } from 'lucide-react';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { toast } from 'sonner';
-
-import { useDebounce } from 'use-debounce';
 
 import { Button } from '@/components/ui/button.tsx';
 import {
@@ -28,9 +26,9 @@ interface AddXpubDialogProps {
 }
 
 export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [xPriv, setXPriv] = useState<string>('');
   const [xPub, setXPub] = useState<string>('');
-  const [debouncedXPriv] = useDebounce(xPriv, 500);
   const queryClient = useQueryClient();
 
   const { spvWalletClient } = useSpvWalletClient();
@@ -47,20 +45,15 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     setXPriv(event.target.value);
   };
 
-  useEffect(() => {
-    setXPub('');
-    if (!xPriv) return;
+  const handleXPubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setXPub(event.target.value);
+  };
 
-    try {
-      const xPrivHD = HD.fromString(debouncedXPriv);
-      const xPubString = xPrivHD.toPublic().toString();
-      setXPub(xPubString);
-      toast.success('Converted xPriv to xPub');
-    } catch (error) {
-      toast.error('Unable to convert xPriv to xPub');
-      setXPub('');
-    }
-  }, [debouncedXPriv]);
+  const handeDialogToggle = () => {
+    setIsOpen((prev) => !prev);
+    setXPriv('');
+    setXPub('');
+  };
 
   const onSubmit = async () => {
     if (!xPub) return;
@@ -75,8 +68,22 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
       errorWrapper(error);
     }
   };
+
+  const onGet = () => {
+    if (!xPriv) return;
+
+    try {
+      const xPrivHD = HD.fromString(xPriv);
+      const xPubString = xPrivHD.toPublic().toString();
+      setXPub(xPubString);
+      toast.success('Converted xPriv to xPub');
+    } catch (error) {
+      toast.error('Unable to convert xPriv to xPub');
+      setXPub('');
+    }
+  };
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handeDialogToggle}>
       <DialogTrigger asChild className={className}>
         <Button size="sm" variant="secondary" className="h-10 gap-1">
           <CirclePlus className="mr-1" size={16} />
@@ -86,20 +93,25 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add xPub</DialogTitle>
-          <DialogDescription>Register a new xPub here.</DialogDescription>
+          <DialogDescription>Get xpub from xpriv</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-[1fr_8fr_2fr] items-center gap-4">
             <Label htmlFor="xPriv" className="text-right">
               xPriv
             </Label>
-            <Input id="xPriv" placeholder="xprv..." value={xPriv} onChange={handleXPrivChange} className="col-span-3" />
+            <Input id="xPriv" placeholder="xprv..." value={xPriv} onChange={handleXPrivChange} className="" />
+            <Button variant="secondary" onClick={onGet}>
+              Get
+            </Button>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="flex justify-center text-gray-400 text-xs">Or put xpub directly</div>
+
+          <div className="grid grid-cols-[1fr_10fr] items-center gap-4">
             <Label htmlFor="xPub" className="text-right">
               xPub
             </Label>
-            <Input id="xPub" readOnly value={xPub} className="col-span-3" />
+            <Input id="xPub" value={xPub} onChange={handleXPubChange} className="" />
           </div>
         </div>
         <DialogFooter>
