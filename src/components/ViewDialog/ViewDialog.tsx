@@ -27,7 +27,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
         return;
       }
 
-      if (field === 'metadata') {
+      if (field === 'metadata' || field === 'outputs') {
         return (
           <div key={field}>
             <span className="text-gray-400">metadata:</span> {JSON.stringify(value) as React.ReactNode}
