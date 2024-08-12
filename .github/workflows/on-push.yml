@@ -59,8 +59,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    # TODO: Enable job when we add tests to the project
-    if: false
     steps:
       - name: Checkout ${{ github.ref }}
         uses: actions/checkout@v4
