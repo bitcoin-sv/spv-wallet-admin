@@ -20,6 +20,13 @@ export interface TransactionsTabContentProps {
 }
 
 export const TransactionsTabContent = ({ transactions, TxDialog, EditDialog }: TransactionsTabContentProps) => {
+  /**
+   * Hiding record transaction button and dialog,
+   * until spv-wallet functionality for recording transactions would fulfil users needs and expectations
+   * @var {boolean} showRecordTransaction
+   */
+  const showRecordTransaction = false;
+
   return (
     <Card>
       <CardHeader>
@@ -31,8 +38,12 @@ export const TransactionsTabContent = ({ transactions, TxDialog, EditDialog }: T
         ) : (
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="text-2xl font-bold tracking-tight">You have no Transactions</h3>
-            <p className="text-sm text-muted-foreground mb-2">You can record Transaction here.</p>
-            <TxDialog />
+            {showRecordTransaction && (
+              <>
+                <p className="text-sm text-muted-foreground mb-2">You can record Transaction here.</p>
+                <TxDialog />
+              </>
+            )}
           </div>
         )}
       </CardContent>

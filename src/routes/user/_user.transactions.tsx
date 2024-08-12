@@ -6,19 +6,10 @@ import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   CustomErrorComponent,
   PrepareTxDialogUser,
   Searchbar,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Toaster,
-  TransactionEditDialog,
   TransactionsTabContent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
@@ -60,19 +51,17 @@ export const Route = createFileRoute('/user/_user/transactions')({
 });
 
 function Transactions() {
-  const [tab, setTab] = useState<string>('all');
   const [blockHeight, setBlockHeight] = useState<string>('');
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
 
   const { spvWalletClient } = useSpvWalletClient();
   const { order_by_field, sort_direction } = useSearch({ from: '/user/_user/transactions' });
-  // TODO: WIP
 
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsUserQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: Number(debouncedBlockHeight),
+      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       order_by_field,
       sort_direction,
     }),
@@ -80,40 +69,16 @@ function Transactions() {
 
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab}>
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="recorded">Recorded</TabsTrigger>
-            <TabsTrigger value="prepared">Prepared</TabsTrigger>
-          </TabsList>
+      <div>
+        <div className="flex items-center justify-end mb-2">
           <div className="flex">
             <PrepareTxDialogUser />
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
           </div>
         </div>
-        <TabsContent value="all">
-          <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
-        </TabsContent>
-        <TabsContent value="recorded">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Transactions</CardTitle>
-            </CardHeader>
-            <CardContent className="mb-2">
-              <TransactionsTabContent
-                transactions={transactions}
-                TxDialog={PrepareTxDialogUser}
-                EditDialog={TransactionEditDialog}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="prepared">
-          <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
-        </TabsContent>
-      </Tabs>
-      <Toaster position="bottom-center" />
+        <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
+        <Toaster position="bottom-center" />
+      </div>
     </>
   );
 }

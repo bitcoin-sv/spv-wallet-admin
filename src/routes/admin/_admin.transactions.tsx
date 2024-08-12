@@ -70,11 +70,18 @@ export function Transactions() {
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { order_by_field, sort_direction } = useSearch({ from: '/admin/_admin/transactions' });
 
+  /**
+   * Hiding record transaction button and dialog,
+   * until spv-wallet functionality for recording transactions would fulfil users needs and expectations
+   * @var {boolean} showRecordTransaction
+   */
+  const showRecordTransaction = false;
+
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
       spvWalletClient: spvWalletClient!,
-      blockHeight: Number(debouncedBlockHeight),
+      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       order_by_field,
       sort_direction,
     }),
@@ -90,7 +97,7 @@ export function Transactions() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <RecordTxDialogAdmin />
+            {showRecordTransaction && <RecordTxDialogAdmin />}
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
           </div>
         </div>
