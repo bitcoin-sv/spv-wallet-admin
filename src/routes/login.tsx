@@ -1,8 +1,8 @@
 import { useConfig } from '@4chain-ag/react-configuration';
-import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
+import { QuestionMarkCircleIcon as Question, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { toast } from 'sonner';
 
@@ -39,6 +39,7 @@ export const Route = createFileRoute('/login')({
 export function LoginForm() {
   const [role, setRole] = useState<Role>(Role.User);
   const [key, setKey] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
   const { isAuthenticated, setLoginKey, isAdmin, isUser } = useAuth();
@@ -47,6 +48,8 @@ export function LoginForm() {
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   React.useLayoutEffect(() => {
     if (isAuthenticated && search?.redirect) {
@@ -86,6 +89,11 @@ export function LoginForm() {
     }
   };
 
+  const handleTogglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+    inputRef.current?.focus();
+  };
+
   return (
     <div className="relative">
       <div className="absolute top-8 right-8">
@@ -112,20 +120,40 @@ export function LoginForm() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="key" className="flex items-center">
-                  xPriv or Access Key
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Question className="size-4 ml-1" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Sign in with Access Key available only for Role 'User'</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </Label>
-                <Input id="key" value={key} type="text" placeholder="" onChange={onChangeKey} />
+                <div className="relative">
+                  <Label htmlFor="key" className="flex items-center mb-2">
+                    xPriv or Access Key
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Question className="size-4 ml-1" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Sign in with Access Key available only for Role 'User'</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </Label>
+                  <Input
+                    ref={inputRef}
+                    id="key"
+                    value={key}
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    placeholder="xprv..."
+                    onChange={onChangeKey}
+                  />
+                  {isPasswordVisible ? (
+                    <EyeSlashIcon
+                      className="size-5 absolute top-[2.2rem] right-3.5 cursor-pointer"
+                      onClick={handleTogglePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeIcon
+                      className="size-5 absolute top-[2.2rem] right-3.5 cursor-pointer"
+                      onClick={handleTogglePasswordVisibility}
+                    />
+                  )}
+                </div>
                 {configureServerUrl && (
                   <>
                     <Label htmlFor="server-url" className="flex items-center">
