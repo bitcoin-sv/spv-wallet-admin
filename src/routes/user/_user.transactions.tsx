@@ -5,13 +5,7 @@ import { useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
 
-import {
-  CustomErrorComponent,
-  PrepareTxDialogUser,
-  Searchbar,
-  Toaster,
-  TransactionsTabContent,
-} from '@/components';
+import { CustomErrorComponent, PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { transactionSearchSchema } from '@/searchSchemas';

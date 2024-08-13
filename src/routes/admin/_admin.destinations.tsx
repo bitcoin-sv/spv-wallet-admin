@@ -2,12 +2,20 @@ import { createFileRoute, ErrorComponent, useLoaderData, useNavigate, useSearch 
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { DateRangeFilter, CustomErrorComponent, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
+import {
+  DateRangeFilter,
+  CustomErrorComponent,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { destinationSearchSchema } from '@/searchSchemas/destinationSearchSchema.tsx';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
-
 
 export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,
