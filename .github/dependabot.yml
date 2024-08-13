@@ -11,7 +11,7 @@ updates:
     labels:
       - "dependencies"
     groups:
-      go_modules:
+      dependencies:
         update-types:
           - "minor"
           - "patch"
@@ -37,7 +37,6 @@ updates:
   - package-ecosystem: "docker"
     target-branch: "main"
     directories:
-      - "/"
       - "/release"
     schedule:
       interval: "weekly"
