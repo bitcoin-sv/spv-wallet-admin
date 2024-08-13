@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
 
-import { PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
+import { PrepareTxDialogUser, Searchbar, Toaster, TransactionEditDialog, TransactionsTabContent } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { transactionSearchSchema } from '@/searchSchemas';
@@ -66,7 +66,8 @@ function Transactions() {
         <TransactionsTabContent
           transactions={transactions}
           TransactionEditDialog={TransactionEditDialog}
-          TxDialog={PrepareTxDialogUser} />
+          TxDialog={PrepareTxDialogUser}
+        />
         <Toaster position="bottom-center" />
       </div>
     </>
