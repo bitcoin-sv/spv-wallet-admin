@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest",
+    "test": "vitest run",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "prettier:check": "prettier --check 'src/**/*.{ts,tsx,js,jsx,json,css}'",
