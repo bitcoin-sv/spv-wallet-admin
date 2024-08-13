@@ -1,5 +1,4 @@
 import { useConfig } from '@4chain-ag/react-configuration';
-import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 
 import React, { useState } from 'react';
@@ -16,16 +15,14 @@ import {
   Input,
   Label,
   ModeToggle,
+  RadioGroup,
+  RadioGroupItem,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
   Toaster,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from '@/components';
 import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 
@@ -39,6 +36,7 @@ export const Route = createFileRoute('/login')({
 export function LoginForm() {
   const [role, setRole] = useState<Role>(Role.User);
   const [key, setKey] = useState('');
+  const [userOption, setUserOption] = useState<string>('xPriv');
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
   const { isAuthenticated, setLoginKey, isAdmin, isUser } = useAuth();
@@ -112,20 +110,37 @@ export function LoginForm() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="key" className="flex items-center">
-                  xPriv or Access Key
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Question className="size-4 ml-1" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Sign in with Access Key available only for Role 'User'</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </Label>
-                <Input id="key" value={key} type="text" placeholder="" onChange={onChangeKey} />
+                {Role.Admin === role ? (
+                  <>
+                    <Label htmlFor="key" className="flex items-center">
+                      Admin Key (xpriv)
+                    </Label>
+                    <Input id="key" value={key} type="text" placeholder="Admin Key" onChange={onChangeKey} />
+                  </>
+                ) : (
+                  Role.User === role && (
+                    <>
+                      <Label className="flex items-center">Key</Label>
+                      <RadioGroup defaultValue={userOption} onValueChange={setUserOption}>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem defaultChecked value="xPriv" content="xPriv" id="xPrivUser" />
+                          <Label htmlFor="xPrivUser">xPriv</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="Access Key" content="Access Key" id="accessKeyUser" />
+                          <Label htmlFor="accessKeyUser">Access Key</Label>
+                        </div>
+                      </RadioGroup>
+                      <Input
+                        value={key}
+                        type="text"
+                        placeholder={userOption === 'xPriv' ? 'xPriv' : 'Access Key'}
+                        onChange={onChangeKey}
+                      />
+                    </>
+                  )
+                )}
+
                 {configureServerUrl && (
                   <>
                     <Label htmlFor="server-url" className="flex items-center">
