@@ -6,9 +6,8 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { ArrowUpDown } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge.tsx';
+import { Badge, Button } from '@/components/ui';
 
-import { Button } from '@/components/ui/button.tsx';
 import { getSortDirection } from '@/utils';
 
 export interface DestinationColumns extends Destination {
