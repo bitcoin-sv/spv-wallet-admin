@@ -10,9 +10,8 @@ import React from 'react';
 import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
-import { Badge } from '@/components/ui/badge.tsx';
 
-import { Button } from '@/components/ui/button.tsx';
+import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 
 export interface PaymailColumns extends PaymailAddress {
