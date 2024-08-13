@@ -2,32 +2,12 @@ import { createFileRoute, ErrorComponent, useLoaderData, useNavigate, useSearch 
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { z } from 'zod';
-
-import {
-  CustomErrorComponent,
-  DateRangeFilter,
-  Searchbar,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Toaster,
-} from '@/components';
+import { DateRangeFilter, CustomErrorComponent, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
+import { destinationSearchSchema } from '@/searchSchemas/destinationSearchSchema.tsx';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const destinationSearchSchema = z.object({
-  lockingScript: z.string().optional().catch(''),
-  address: z.string().optional().catch(''),
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('desc'),
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-});
 
 export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,

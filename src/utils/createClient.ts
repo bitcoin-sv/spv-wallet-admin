@@ -1,6 +1,5 @@
-import { SpvWalletClientExtended } from '@/contexts/SpvWalletContext.tsx';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
-import { Role } from '@/contexts/AuthContext.tsx';
+import { Role, SpvWalletClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils/errorWrapper.ts';
 
 export const createClient = async (role: Role, key: string) => {

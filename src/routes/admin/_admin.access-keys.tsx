@@ -21,20 +21,16 @@ import {
 import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const accessKeySearchSchema = z.object({
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  order_by_field: z.string().optional().catch('id'),
-  revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  sort_direction: z.string().optional().catch('desc'),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  xpubId: z.string().optional().catch(''),
-});
-
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
-  validateSearch: accessKeySearchSchema,
+  validateSearch: z.object({
+    createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    order_by_field: z.string().optional().catch('id'),
+    revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    sort_direction: z.string().optional().catch('desc'),
+    updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    xpubId: z.string().optional().catch(''),
+  }),
   errorComponent: ({ error }) => {
     if (error instanceof ErrorResponse) {
       return <CustomErrorComponent error={error} />;

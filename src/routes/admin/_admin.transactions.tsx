@@ -4,8 +4,6 @@ import { createFileRoute, ErrorComponent, useSearch } from '@tanstack/react-rout
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { z } from 'zod';
-
 import {
   Searchbar,
   Tabs,
@@ -21,15 +19,7 @@ import { useSpvWalletClient } from '@/contexts';
 import { transactionsQueryOptions } from '@/utils';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const transactionSearchSchema = z.object({
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('desc'),
-  blockHeight: z.number().optional().catch(undefined),
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-});
+import { transactionSearchSchema } from '@/searchSchemas';
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,

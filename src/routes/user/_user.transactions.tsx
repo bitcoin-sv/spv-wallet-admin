@@ -13,8 +13,8 @@ import {
   TransactionsTabContent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionSearchSchema } from '@/routes/admin/_admin.transactions.tsx';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
+import { transactionSearchSchema } from '@/searchSchemas';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 export const Route = createFileRoute('/user/_user/transactions')({

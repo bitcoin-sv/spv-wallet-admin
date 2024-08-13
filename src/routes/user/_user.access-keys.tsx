@@ -21,22 +21,17 @@ import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, getRevokedElements, accessKeysQueryOptions } from '@/utils';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const accessKeySearchSchemaUser = z.object({
-  createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  order_by_field: z.string().optional().catch('id'),
-  revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  sort_direction: z.string().optional().catch('desc'),
-  updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-  page: z.number().optional().catch(1),
-  page_size: z.number().optional().catch(10),
-});
-
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
-  validateSearch: accessKeySearchSchemaUser,
-
+  validateSearch: z.object({
+    createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    order_by_field: z.string().optional().catch('id'),
+    revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    sort_direction: z.string().optional().catch('desc'),
+    updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    page: z.number().optional().catch(1),
+    page_size: z.number().optional().catch(10),
+  }),
   loaderDeps: ({
     search: { order_by_field, sort_direction, createdRange, revokedRange, updatedRange, page, page_size },
   }) => {

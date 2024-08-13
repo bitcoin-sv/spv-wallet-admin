@@ -23,15 +23,11 @@ import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
 import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const xpubSearchSchema = z.object({
-  order_by_field: z.string().optional().catch('id'),
-  sort_direction: z.string().optional().catch('asc'),
-});
-
 export const Route = createFileRoute('/admin/_admin/xpub')({
-  validateSearch: xpubSearchSchema,
+  validateSearch: z.object({
+    order_by_field: z.string().optional().catch('id'),
+    sort_direction: z.string().optional().catch('asc'),
+  }),
   component: Xpub,
   errorComponent: ({ error }) => {
     if (error instanceof ErrorResponse) {
