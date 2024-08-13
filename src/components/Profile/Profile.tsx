@@ -1,7 +1,7 @@
 import { Link, useRouter } from '@tanstack/react-router';
 import { UserRound, SquareArrowOutUpRight } from 'lucide-react';
 
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,

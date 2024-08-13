@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Badge, Textarea } from '@/components';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui';
 import {
   Dialog,
   DialogContent,

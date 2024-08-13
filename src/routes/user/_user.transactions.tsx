@@ -7,8 +7,8 @@ import { useDebounce } from 'use-debounce';
 
 import { PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionSearchSchema } from '@/routes/admin/_admin.transactions.tsx';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
+import { transactionSearchSchema } from '@/searchSchemas';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,

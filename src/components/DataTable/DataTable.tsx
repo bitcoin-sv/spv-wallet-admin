@@ -52,9 +52,7 @@ interface DataTableProps<TData, TValue> {
   PaymailDeleteDialog?: React.ComponentType<PaymailDeleteDialogProps>;
 }
 
-// TODO [react-refresh]: only 1 export is allowed
-// eslint-disable-next-line  react-refresh/only-export-components
-export const initialSorting = { id: 'id', desc: false };
+const initialSorting = { id: 'id', desc: false };
 
 export function DataTable<TData, TValue>({
   columns,
