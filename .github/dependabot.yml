@@ -1,16 +1,21 @@
-# Basic dependabot.yml to update GitHub Actions
 version: 2
 updates:
-  # Maintain dependencies for npm
-  - package-ecosystem: 'npm'
-    target-branch: 'main'
-    directory: '/'
+  # Maintain dependencies for the codebase
+  - package-ecosystem: "npm"
+    target-branch: "main"
+    directories:
+      - "/"
     schedule:
       interval: "weekly"
       day: "monday"
-    # Labels must be created first
     labels:
-      - 'chore'
+      - "dependencies"
+    groups:
+      dependencies:
+        update-types:
+          - "minor"
+          - "patch"
+          - "major"
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -20,16 +25,27 @@ updates:
       interval: "weekly"
       day: "monday"
     labels:
-      - "chore"
-    open-pull-requests-limit: 10
+      - "dependencies"
+    groups:
+      gh_actions:
+        update-types:
+          - "minor"
+          - "patch"
+          - "major"
 
   # Maintain dependencies for Docker
   - package-ecosystem: "docker"
     target-branch: "main"
-    directory: "/release"
+    directories:
+      - "/release"
     schedule:
       interval: "weekly"
       day: "monday"
     labels:
-      - "chore"
-    open-pull-requests-limit: 10
+      - "dependencies"
+    groups:
+      docker:
+        update-types:
+          - "minor"
+          - "patch"
+          - "major"
