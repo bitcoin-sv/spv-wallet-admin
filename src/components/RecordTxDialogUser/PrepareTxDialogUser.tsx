@@ -73,9 +73,12 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
       }
 
       await spvWalletClient?.DraftToRecipients(recipients, parsedMetadata);
+
+      setIsPrepareDialogOpen(false);
+      toast.success('Transaction has been added');
     } catch (err) {
-      errorWrapper(err);
       toast.error('Failed to prepare transaction');
+      errorWrapper(err);
     }
   };
 
