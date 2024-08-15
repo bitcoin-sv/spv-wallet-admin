@@ -71,7 +71,7 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
 
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={handleDialogOpen}>
-      <DialogTrigger className={className}>
+      <DialogTrigger asChild className={className}>
         <Button size="sm" variant="secondary" className="h-10 gap-1">
           <CirclePlus className="mr-1" size={16} />
           Add Access Key
