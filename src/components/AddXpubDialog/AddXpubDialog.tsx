@@ -1,11 +1,3 @@
-import { HD } from '@bsv/sdk';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CirclePlus } from 'lucide-react';
-
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -20,6 +12,13 @@ import { Input } from '@/components/ui/input.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { HD } from '@bsv/sdk';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CirclePlus } from 'lucide-react';
+
+import React, { useEffect, useState } from 'react';
+
+import { toast } from 'sonner';
 
 interface AddXpubDialogProps {
   className?: string;
@@ -49,6 +48,24 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     setXPub(event.target.value);
   };
 
+  useEffect(() => {
+    if (!xPriv) return;
+
+    try {
+      const xPrivHD = HD.fromString(xPriv);
+      const xPubString = xPrivHD.toPublic().toString();
+      setXPub(xPubString);
+      toast.success('Converted xPriv to xPub');
+    } catch (error) {
+      toast.error('Unable to convert xPriv to xPub');
+      setXPub('');
+    }
+  }, [xPriv]);
+
+  useEffect(() => {
+    setXPriv('');
+  }, [xPub]);
+
   const handeDialogToggle = () => {
     setIsOpen((prev) => !prev);
     setXPriv('');
@@ -69,19 +86,6 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     }
   };
 
-  const onGet = () => {
-    if (!xPriv) return;
-
-    try {
-      const xPrivHD = HD.fromString(xPriv);
-      const xPubString = xPrivHD.toPublic().toString();
-      setXPub(xPubString);
-      toast.success('Converted xPriv to xPub');
-    } catch (error) {
-      toast.error('Unable to convert xPriv to xPub');
-      setXPub('');
-    }
-  };
   return (
     <Dialog open={isOpen} onOpenChange={handeDialogToggle}>
       <DialogTrigger asChild className={className}>
@@ -96,14 +100,11 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
           <DialogDescription>Get xpub from xpriv</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-[1fr_8fr_2fr] items-center gap-4">
+          <div className="grid grid-cols-[1fr_10fr] items-center gap-4">
             <Label htmlFor="xPriv" className="text-right">
               xPriv
             </Label>
-            <Input id="xPriv" placeholder="xprv..." value={xPriv} onChange={handleXPrivChange} className="" />
-            <Button variant="secondary" onClick={onGet}>
-              Get
-            </Button>
+            <Input id="xPriv" placeholder="xprv..." value={xPriv} onChange={handleXPrivChange} />
           </div>
           <div className="flex justify-center text-gray-400 text-xs">Or put xpub directly</div>
 
@@ -111,7 +112,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
             <Label htmlFor="xPub" className="text-right">
               xPub
             </Label>
-            <Input id="xPub" value={xPub} onChange={handleXPubChange} className="" />
+            <Input id="xPub" value={xPub} onChange={handleXPubChange} placeholder="xpub..." />
           </div>
         </div>
         <DialogFooter>
