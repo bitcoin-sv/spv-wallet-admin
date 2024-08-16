@@ -130,6 +130,7 @@ export function LoginForm() {
                       type={isPasswordVisible ? 'text' : 'password'}
                       placeholder="Admin Key"
                       onChange={onChangeKey}
+                      className="pr-12"
                     />
                     {isPasswordVisible ? (
                       <EyeSlashIcon
@@ -164,6 +165,7 @@ export function LoginForm() {
                           type={isPasswordVisible ? 'text' : 'password'}
                           placeholder={userOption === 'xPriv' ? 'xPriv' : 'Access Key'}
                           onChange={onChangeKey}
+                          className="pr-12"
                         />
                         {isPasswordVisible ? (
                           <EyeSlashIcon
