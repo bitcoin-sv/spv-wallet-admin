@@ -1,11 +1,3 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, ErrorComponent, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-import { z } from 'zod';
-
 import {
   AddPaymailDialog,
   CustomErrorComponent,
@@ -21,7 +13,13 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
-import { ErrorResponse } from '@bsv/spv-wallet-js-client';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { useEffect, useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
@@ -39,12 +37,7 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
     createdRange,
     updatedRange,
   }),
-  errorComponent: ({ error }) => {
-    if (error instanceof ErrorResponse) {
-      return <CustomErrorComponent error={error} />;
-    }
-    return <ErrorComponent error={error} />;
-  },
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, xpubId, createdRange, updatedRange },

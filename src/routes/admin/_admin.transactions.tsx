@@ -1,10 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, ErrorComponent, useSearch } from '@tanstack/react-router';
-
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
-
 import {
+  CustomErrorComponent,
+  RecordTxDialogAdmin,
   Searchbar,
   Tabs,
   TabsContent,
@@ -12,14 +8,16 @@ import {
   TabsTrigger,
   Toaster,
   TransactionsTabContent,
-  RecordTxDialogAdmin,
-  CustomErrorComponent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionsQueryOptions } from '@/utils';
-import { ErrorResponse } from '@bsv/spv-wallet-js-client';
 
 import { transactionSearchSchema } from '@/searchSchemas';
+import { transactionsQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
@@ -31,12 +29,7 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     createdRange,
     updatedRange,
   }),
-  errorComponent: ({ error }) => {
-    if (error instanceof ErrorResponse) {
-      return <CustomErrorComponent error={error} />;
-    }
-    return <ErrorComponent error={error} />;
-  },
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },

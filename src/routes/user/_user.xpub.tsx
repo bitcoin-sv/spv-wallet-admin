@@ -1,16 +1,9 @@
-import { createFileRoute, ErrorComponent, useLoaderData } from '@tanstack/react-router';
-
 import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent } from '@/components';
-import { ErrorResponse } from '@bsv/spv-wallet-js-client';
+import { createFileRoute, useLoaderData } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/user/_user/xpub')({
   component: XPub,
-  errorComponent: ({ error }) => {
-    if (error instanceof ErrorResponse) {
-      return <CustomErrorComponent error={error} />;
-    }
-    return <ErrorComponent error={error} />;
-  },
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({ context: { spvWallet } }) => await spvWallet.spvWalletClient!.GetXPub(),
 });
 

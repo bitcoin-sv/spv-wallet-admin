@@ -1,25 +1,23 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, ErrorComponent, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
-import { z } from 'zod';
-
 import {
+  AccessKeysTabContent,
+  AddAccessKeyDialog,
+  CustomErrorComponent,
   DateRangeFilter,
-  Toaster,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-  AddAccessKeyDialog,
-  AccessKeysTabContent,
-  CustomErrorComponent,
+  Toaster,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, getDeletedElements, getRevokedElements, accessKeysQueryOptions } from '@/utils';
-import { ErrorResponse } from '@bsv/spv-wallet-js-client';
+import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { useEffect, useState } from 'react';
+
+import { z } from 'zod';
 
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
@@ -61,12 +59,7 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         page_size,
       }),
     ),
-  errorComponent: ({ error }) => {
-    if (error instanceof ErrorResponse) {
-      return <CustomErrorComponent error={error} />;
-    }
-    return <ErrorComponent error={error} />;
-  },
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
 });
 
 export function AccessKeys() {
@@ -134,27 +127,3 @@ export function AccessKeys() {
     </>
   );
 }
-
-// function ErrorTestComp() {
-//   const router = useRouter();
-//   const queryErrorResetBoundary = useQueryErrorResetBoundary();
-//
-//   useEffect(() => {
-//     // Reset the query error boundary
-//     queryErrorResetBoundary.reset();
-//   }, [queryErrorResetBoundary]);
-//
-//   return (
-//     <div>
-//       {error.message}
-//       <button
-//         onClick={() => {
-//           // Invalidate the route to reload the loader, and reset any router error boundaries
-//           router.invalidate();
-//         }}
-//       >
-//         retry
-//       </button>
-//     </div>
-//   );
-// }
