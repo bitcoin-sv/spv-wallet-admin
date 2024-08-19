@@ -47,6 +47,8 @@ export function LoginForm() {
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
 
+  const ShowPasswordIcon = isPasswordVisible ? EyeSlashIcon : EyeIcon;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   React.useLayoutEffect(() => {
@@ -132,17 +134,10 @@ export function LoginForm() {
                       onChange={onChangeKey}
                       className="pr-12"
                     />
-                    {isPasswordVisible ? (
-                      <EyeSlashIcon
-                        className="size-5 absolute top-8 right-3.5 cursor-pointer"
-                        onClick={handleTogglePasswordVisibility}
-                      />
-                    ) : (
-                      <EyeIcon
-                        className="size-5 absolute top-8 right-3.5 cursor-pointer"
-                        onClick={handleTogglePasswordVisibility}
-                      />
-                    )}
+                    <ShowPasswordIcon
+                      className="size-5 absolute top-8 right-3.5 cursor-pointer"
+                      onClick={handleTogglePasswordVisibility}
+                    />
                   </div>
                 ) : (
                   Role.User === role && (
@@ -167,17 +162,10 @@ export function LoginForm() {
                           onChange={onChangeKey}
                           className="pr-12"
                         />
-                        {isPasswordVisible ? (
-                          <EyeSlashIcon
-                            className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
-                            onClick={handleTogglePasswordVisibility}
-                          />
-                        ) : (
-                          <EyeIcon
-                            className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
-                            onClick={handleTogglePasswordVisibility}
-                          />
-                        )}
+                        <ShowPasswordIcon
+                          className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
+                          onClick={handleTogglePasswordVisibility}
+                        />
                       </div>
                     </>
                   )
