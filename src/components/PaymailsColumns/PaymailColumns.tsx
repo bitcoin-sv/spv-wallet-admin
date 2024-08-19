@@ -20,7 +20,11 @@ export interface PaymailColumns extends PaymailAddress {
 
 const onClickCopy = async (e: React.MouseEvent<HTMLButtonElement>) => {
   const text = e.currentTarget.textContent;
-  if (!text) return;
+
+  if (!text) {
+    return;
+  }
+
   await navigator.clipboard.writeText(text);
   toast.success(`Xpub ID Copied to clipboard`);
 };
