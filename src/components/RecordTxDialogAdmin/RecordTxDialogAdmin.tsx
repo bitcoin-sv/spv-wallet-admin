@@ -34,7 +34,10 @@ export const RecordTxDialogAdmin = ({ className }: RecordTxDialogProps) => {
   };
 
   const onSubmit = async () => {
-    if (!hexOrId) return;
+    if (!hexOrId) {
+      return;
+    }
+
     try {
       if (hexOrId.length === 64) {
         const response = await fetch(`https://api.whatsonchain.com/v1/bsv/main/tx/${hexOrId}/hex`);
