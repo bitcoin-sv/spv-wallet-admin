@@ -1,12 +1,10 @@
 import { Metadata, Recipient } from '@bsv/spv-wallet-js-client';
-import { ArchiveRestore, CirclePlus } from 'lucide-react';
-
-import { CircleX } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { ArchiveRestore } from 'lucide-react';
+import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Badge, Textarea } from '@/components';
+import { Textarea } from '@/components';
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -18,93 +16,83 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import { Input } from '@/components/ui/input.tsx';
-import { Label } from '@/components/ui/label.tsx';
 
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface RecordTxDialogProps {
+export interface RecordTxDialogProps {
   className?: string;
 }
 
 export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
-  const [recipient, setRecipient] = useState<string>('');
   const [isPrepareDialogOpen, setIsPrepareDialogOpen] = useState(false);
-  const [recipientsBadges, setRecipientsBadges] = useState<string[]>([]);
-  const [amount, setAmount] = useState<string>('');
-  const [metadata, setMetadata] = useState(JSON.stringify({}));
 
   const { spvWalletClient } = useSpvWalletClient();
 
+  const queryClient = useQueryClient();
+
   const handleDialogToggle = () => {
     setIsPrepareDialogOpen((prev) => !prev);
+    form.reset();
   };
 
-  const handleMetadataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMetadata(e.target.value);
-  };
+  const mutation = useMutation({
+    mutationFn: async ({ newRecipient, metadata }: { newRecipient: Recipient; metadata: Metadata }) =>
+      await spvWalletClient?.SendToRecipients([newRecipient], metadata),
+    onSuccess: () => queryClient.invalidateQueries(),
+  });
 
-  const handleRecipientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecipient(e.target.value);
-  };
+  const formSchema = z.object({
+    recipient: z.string().min(3).email('Invalid paymail'),
+    amount: z.coerce.number().int().gte(1),
+    metadata: z
+      .string()
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      .transform((str, ctx): z.infer<ReturnType<any>> => {
+        try {
+          if (!str) {
+            return null;
+          }
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          return JSON.parse(str);
+        } catch (e) {
+          ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+          return z.NEVER;
+        }
+      })
+      .nullable(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      recipient: '',
+      amount: 0,
+      metadata: '',
+    },
+  });
+
+  const onSubmit = async ({ recipient, amount, metadata }: z.infer<typeof formSchema>) => {
     try {
-      const convertedNumber = Number(e.target.value);
-      if (convertedNumber) {
-        setAmount(convertedNumber.toString());
-      }
+      const newRecipient: Recipient = { to: recipient, satoshis: amount };
+
+      await mutation.mutateAsync({ newRecipient, metadata });
+
+      setIsPrepareDialogOpen(false);
+
+      toast.success('Transaction has been added');
+
+      form.reset();
     } catch (err) {
-      console.error(err);
-      toast.warning('Amount should be a number');
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const parsedMetadata = JSON.parse(metadata) as Metadata;
-      const recipients: Recipient[] = [];
-
-      for (const rec of recipientsBadges) {
-        const newRecipient: Recipient = { to: '', satoshis: 0 };
-        newRecipient.to = rec;
-        newRecipient.satoshis = Number(amount);
-        recipients.push(newRecipient);
-      }
-
-      await spvWalletClient?.DraftToRecipients(recipients, parsedMetadata);
-    } catch (err) {
-      errorWrapper(err);
       toast.error('Failed to prepare transaction');
+      errorWrapper(err);
     }
   };
-
-  const handleAddRecipient = () => {
-    setRecipientsBadges((prev) => [...prev, recipient]);
-    setRecipient('');
-  };
-
-  const handleRemoveRecipient = (e: React.MouseEvent) => {
-    const target = e.target as HTMLSpanElement;
-    const selectedRecipient = target.parentElement?.innerText;
-    const foundRecID = recipientsBadges.indexOf(selectedRecipient!);
-    const updatedRecipients = recipientsBadges.toSpliced(foundRecID, 1);
-
-    setRecipientsBadges(updatedRecipients);
-  };
-
-  const handleEnterPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleAddRecipient();
-    }
-  };
-
-  useEffect(() => {
-    setRecipient('');
-    setRecipientsBadges([]);
-    setAmount('');
-    setMetadata(JSON.stringify({}));
-  }, [isPrepareDialogOpen]);
 
   return (
     <Dialog open={isPrepareDialogOpen} onOpenChange={handleDialogToggle}>
@@ -114,47 +102,61 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
           Prepare Transaction
         </Button>
       </DialogTrigger>
-      <DialogContent onKeyDown={handleEnterPress} className="sm:max-w-3xl">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Create a prepared Transaction</DialogTitle>
           <DialogDescription>Create a prepared transaction using recipients and metadata</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid items-centerite gap-4">
-            <div className="flex flex-wrap items-center">
-              <span className="mr-3">Recipients:</span>
-              {recipientsBadges.map((recipient) => (
-                <Badge key={recipient} className="mr-2 my-1 text-base cursor-pointer hover:bg-muted" variant="outline">
-                  {recipient} <CircleX onClick={handleRemoveRecipient} className="ml-2" size={16} />
-                </Badge>
-              ))}
-            </div>
-            <div className="grid grid-cols-[5fr_1fr] w-full gap-4">
-              <Input
-                id="hex"
-                placeholder="example@paymail.com"
-                value={recipient}
-                onChange={handleRecipientChange}
-                className=""
-              />
-              <Button variant="secondary" onClick={handleAddRecipient}>
-                <CirclePlus className="mr-3" />
-                Add Recipient
-              </Button>
-            </div>
-          </div>
-          <div className="grid items-centerite gap-4">
-            <Label htmlFor="amount">Amount</Label>
-            <Input value={amount} id="amount" placeholder="Satoshis" onChange={handleAmountChange} />
-          </div>
-          <div className="grid items-centerite gap-4">
-            <Label htmlFor="metadata">Metadata</Label>
-            <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleSubmit}>Create Transaction</Button>
-        </DialogFooter>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="recipient"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Recipient</FormLabel>
+                  <FormControl>
+                    <Input placeholder="paymail@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>This is amount to transfer in satoshis</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="metadata"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Metadata</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} placeholder='{ "exampleKey" : "example value" }' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="submit">Create Transaction</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
