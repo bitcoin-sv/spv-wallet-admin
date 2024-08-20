@@ -1,10 +1,5 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
-
 import {
+  CustomErrorComponent,
   RecordTxDialogAdmin,
   Searchbar,
   Tabs,
@@ -15,8 +10,14 @@ import {
   TransactionsTabContent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { transactionsQueryOptions } from '@/utils';
+
 import { transactionSearchSchema } from '@/searchSchemas';
+import { transactionsQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
@@ -28,6 +29,7 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },

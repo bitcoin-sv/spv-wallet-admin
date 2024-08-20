@@ -32,3 +32,4 @@ export * from './ViewDialog';
 export * from './XPubColumns/XPubsColumns.tsx';
 export * from './XpubsSkeleton';
 export * from './XpubsTabContent';
+export * from './CustomErrorComponent';

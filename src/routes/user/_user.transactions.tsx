@@ -1,14 +1,13 @@
+import { CustomErrorComponent, PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
+import { transactionSearchSchema } from '@/searchSchemas';
+import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 
 import { useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
-
-import { PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
-import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
-import { transactionSearchSchema } from '@/searchSchemas';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -20,6 +19,7 @@ export const Route = createFileRoute('/user/_user/transactions')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },
