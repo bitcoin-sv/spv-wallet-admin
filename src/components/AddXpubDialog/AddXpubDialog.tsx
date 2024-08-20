@@ -49,7 +49,9 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
 
   useEffect(() => {
     setXPub('');
-    if (!xPriv) return;
+    if (!xPriv) {
+      return;
+    }
 
     try {
       const xPrivHD = HD.fromString(debouncedXPriv);
@@ -63,7 +65,10 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   }, [debouncedXPriv]);
 
   const onSubmit = async () => {
-    if (!xPub) return;
+    if (!xPub) {
+      return;
+    }
+
     try {
       HD.fromString(xPub);
       await mutation.mutateAsync(xPub);
