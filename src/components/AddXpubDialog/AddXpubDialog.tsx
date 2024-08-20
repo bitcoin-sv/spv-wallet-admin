@@ -49,7 +49,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   };
 
   useEffect(() => {
-    if (!xPriv){
+    if (!xPriv) {
       return;
     }
 
