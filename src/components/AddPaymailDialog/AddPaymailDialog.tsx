@@ -70,7 +70,10 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   };
 
   const onSubmit = async () => {
-    if (!xPub || !address || !publicName || !avatar) return;
+    if (!xPub || !address || !publicName || !avatar) {
+      return;
+    }
+
     try {
       HD.fromString(xPub);
       await mutation.mutateAsync({
