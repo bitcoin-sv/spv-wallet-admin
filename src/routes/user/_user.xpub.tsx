@@ -11,7 +11,10 @@ function XPub() {
   const xPub = useLoaderData({ from: '/user/_user/xpub' });
 
   const renderXpub = () => {
-    if (!xPub) return null;
+    if (!xPub) {
+      return null;
+    }
+
     return Object.entries(xPub).map(([key, value]) => (
       <div key={key} className="flex justify-between">
         <span className="text-gray-400">{key}:</span> <span>{value}</span>
