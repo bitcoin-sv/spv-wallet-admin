@@ -1,17 +1,11 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-import { z } from 'zod';
-
 import {
   ContactAcceptDialog,
   ContactDeleteDialog,
   ContactEditDialog,
   ContactRejectDialog,
+  ContactsTabContent,
   ContactStatus,
+  CustomErrorComponent,
   DateRangeFilter,
   Searchbar,
   Tabs,
@@ -19,11 +13,17 @@ import {
   TabsList,
   TabsTrigger,
   Toaster,
-  ContactsTabContent,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { useEffect, useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
@@ -36,6 +36,7 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     paymail: z.string().optional(),
     pubKey: z.string().optional(),
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loaderDeps: ({ search: { order_by_field, sort_direction, createdRange, updatedRange, id, paymail, pubKey } }) => ({
     order_by_field,
     sort_direction,

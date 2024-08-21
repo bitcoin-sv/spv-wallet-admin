@@ -1,14 +1,23 @@
+import {
+  CustomErrorComponent,
+  DateRangeFilter,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
+import { DestinationsTabContent } from '@/components/DestinationsTabContent';
+import { destinationSearchSchema } from '@/searchSchemas/destinationSearchSchema.tsx';
+import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { DateRangeFilter, Searchbar, Tabs, TabsContent, TabsList, TabsTrigger, Toaster } from '@/components';
-import { DestinationsTabContent } from '@/components/DestinationsTabContent';
-import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
-import { destinationSearchSchema } from '@/searchSchemas/destinationSearchSchema.tsx';
-
 export const Route = createFileRoute('/admin/_admin/destinations')({
   component: Destinations,
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   validateSearch: destinationSearchSchema,
   loaderDeps: ({ search: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange } }) => ({
     lockingScript,

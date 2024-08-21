@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import {
   AddXpubDialog,
+  CustomErrorComponent,
   Searchbar,
   Tabs,
   TabsContent,
@@ -27,6 +28,7 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     sort_direction: z.string().optional().catch('asc'),
   }),
   component: Xpub,
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   pendingComponent: () => <XpubsSkeleton />,
 });
 

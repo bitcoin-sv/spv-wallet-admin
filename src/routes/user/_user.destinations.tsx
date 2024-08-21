@@ -1,10 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import { useDebounce } from 'use-debounce';
-
 import {
   AddDestinationDialog,
+  CustomErrorComponent,
   DateRangeFilter,
   DestinationEditDialog,
   Searchbar,
@@ -16,9 +12,13 @@ import {
 } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { useSpvWalletClient } from '@/contexts';
+import { destinationSearchSchema } from '@/searchSchemas';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { destinationsQueryOptions } from '@/utils/destinationsQueryOptions.tsx';
-import { destinationSearchSchema } from '@/searchSchemas';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 export const Route = createFileRoute('/user/_user/destinations')({
   component: Destinations,
@@ -31,6 +31,7 @@ export const Route = createFileRoute('/user/_user/destinations')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },
