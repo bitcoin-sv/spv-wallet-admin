@@ -1,3 +1,16 @@
+import {
+  AccessKeysTabContent,
+  CustomErrorComponent,
+  DateRangeFilter,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
+
+import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
@@ -5,19 +18,6 @@ import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
-
-import {
-  DateRangeFilter,
-  Toaster,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Searchbar,
-  AccessKeysTabContent,
-} from '@/components';
-
-import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
@@ -29,7 +29,7 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     xpubId: z.string().optional().catch(''),
   }),
-
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange, revokedRange } }) => ({
     order_by_field,
     sort_direction,

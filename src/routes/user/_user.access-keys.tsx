@@ -1,23 +1,23 @@
+import {
+  AccessKeysTabContent,
+  AddAccessKeyDialog,
+  CustomErrorComponent,
+  DateRangeFilter,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
+
+import { useSpvWalletClient } from '@/contexts';
+import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
 import { z } from 'zod';
-
-import {
-  DateRangeFilter,
-  Toaster,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  AddAccessKeyDialog,
-  AccessKeysTabContent,
-} from '@/components';
-
-import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, getDeletedElements, getRevokedElements, accessKeysQueryOptions } from '@/utils';
 
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
@@ -59,6 +59,7 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         page_size,
       }),
     ),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
 });
 
 export function AccessKeys() {
