@@ -5,8 +5,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   Input,
-  Label,
   ModeToggle,
   RadioGroup,
   RadioGroupItem,
@@ -23,21 +27,32 @@ import logger from '@/logger';
 import { createClient, getShortXprv } from '@/utils';
 import { useConfig } from '@4chain-ag/react-configuration';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 
-import React, { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/login')({
   component: LoginForm,
 });
 
+const formSchema = z.object({
+  role: z.enum([Role.User, Role.Admin]),
+  type: z.enum(['xPriv', 'Access Key']).optional(),
+  key: z.string({
+    required_error: 'This field is required',
+  }),
+  serverUrl: z.string({
+    required_error: 'Server URL is required',
+  }),
+});
+
 export function LoginForm() {
-  const [role, setRole] = useState<Role>(Role.User);
-  const [key, setKey] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [userOption, setUserOption] = useState<string>('xPriv');
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
   const { isAuthenticated, setLoginKey, isAdmin, isUser } = useAuth();
@@ -47,11 +62,31 @@ export function LoginForm() {
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
 
-  const ShowPasswordIcon = isPasswordVisible ? EyeSlashIcon : EyeIcon;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      role: Role.Admin,
+      type: 'xPriv',
+      key: '',
+      serverUrl: serverUrl,
+    },
+  });
 
+  const ShowPasswordIcon = isPasswordVisible ? EyeSlashIcon : EyeIcon;
   const inputRef = useRef<HTMLInputElement>(null);
 
-  React.useLayoutEffect(() => {
+  const currentRole = form.getValues('role');
+  const currentType = form.getValues('type');
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [currentRole, currentType]);
+
+  useLayoutEffect(() => {
     if (isAuthenticated && search?.redirect) {
       router.history.push(search.redirect);
     } else if (isAdmin) {
@@ -61,21 +96,13 @@ export function LoginForm() {
     }
   }, [isAuthenticated, search?.redirect]);
 
-  const handleSelect = (value: string) => {
-    setRole(value as Role);
+  const handleTogglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+    inputRef.current?.focus();
   };
 
-  const onChangeKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKey(e.target.value);
-  };
-
-  const onChangeServerUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setServerUrl(e.target.value);
-  };
-
-  const handleSignIn = async () => {
+  const onSubmit = async ({ role, key }: z.infer<typeof formSchema>) => {
     setServerUrl(serverUrl);
-
     try {
       const client = await createClient(role, key);
       setSpvWalletClient(client);
@@ -89,11 +116,6 @@ export function LoginForm() {
     }
   };
 
-  const handleTogglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
-    inputRef.current?.focus();
-  };
-
   return (
     <div className="relative">
       <div className="absolute top-8 right-8">
@@ -103,90 +125,113 @@ export function LoginForm() {
         <div className="flex flex-col items-center justify-center border-r">
           <h1 className="text-2xl font-bold mb-16">SPV Wallet Admin</h1>
           <Card className="w-full max-w-sm">
-            <CardHeader>
-              <CardTitle className="text-2xl">Login</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="role">Role</Label>
-                <Select onValueChange={handleSelect}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="User" />
-                  </SelectTrigger>
-                  <SelectContent defaultValue={role}>
-                    <SelectItem value={Role.Admin}>Admin</SelectItem>
-                    <SelectItem value={Role.User}>User</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                {Role.Admin === role ? (
-                  <div className="relative">
-                    <Label htmlFor="key" className="flex items-center mb-2">
-                      Admin Key (xpriv)
-                    </Label>
-                    <Input
-                      id="key"
-                      ref={inputRef}
-                      value={key}
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      placeholder="Admin Key"
-                      onChange={onChangeKey}
-                      className="pr-12"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Login</CardTitle>
+                </CardHeader>
+                <CardContent className="grid">
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Role</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a role" defaultValue={field.value} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent defaultValue={field.value}>
+                            <SelectItem value={Role.Admin}>Admin</SelectItem>
+                            <SelectItem value={Role.User}>User</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  {currentRole === Role.User && (
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Key</FormLabel>
+                          <FormControl>
+                            <RadioGroup defaultValue={field.value} className="mb-2" onValueChange={field.onChange}>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="xPriv" />
+                                </FormControl>
+                                <FormLabel className="ml-2">xPriv</FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="Access Key" />
+                                </FormControl>
+                                <FormLabel className="ml-2">Access Key</FormLabel>
+                              </FormItem>
+                            </RadioGroup>
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
-                    <ShowPasswordIcon
-                      className="size-5 absolute top-8 right-3.5 cursor-pointer"
-                      onClick={handleTogglePasswordVisibility}
+                  )}
+                  <FormField
+                    control={form.control}
+                    name="key"
+                    render={({ field }) => (
+                      <FormItem className="mt-2">
+                        {currentRole === Role.Admin && <FormLabel>Admin Key (xpriv)</FormLabel>}
+                        <div className="relative">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              ref={inputRef}
+                              type={isPasswordVisible ? 'text' : 'password'}
+                              placeholder={
+                                currentRole === Role.Admin
+                                  ? 'Admin Key'
+                                  : currentType === 'xPriv'
+                                    ? 'xPriv'
+                                    : 'Access Key'
+                              }
+                            />
+                          </FormControl>
+                          <ShowPasswordIcon
+                            className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
+                            onClick={handleTogglePasswordVisibility}
+                          />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  {configureServerUrl && (
+                    <FormField
+                      control={form.control}
+                      name="serverUrl"
+                      render={({ field }) => (
+                        <FormItem className="mt-2">
+                          <FormLabel>Server Url</FormLabel>
+                          <div className="relative">
+                            <FormControl>
+                              <Input {...field} placeholder="Server Url" />
+                            </FormControl>
+                          </div>
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                ) : (
-                  Role.User === role && (
-                    <>
-                      <Label className="flex items-center mb-2">Key</Label>
-                      <RadioGroup defaultValue={userOption} className="mb-2" onValueChange={setUserOption}>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem defaultChecked value="xPriv" content="xPriv" id="xPrivUser" />
-                          <Label htmlFor="xPrivUser">xPriv</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Access Key" content="Access Key" id="accessKeyUser" />
-                          <Label htmlFor="accessKeyUser">Access Key</Label>
-                        </div>
-                      </RadioGroup>
-                      <div className="relative">
-                        <Input
-                          value={key}
-                          ref={inputRef}
-                          type={isPasswordVisible ? 'text' : 'password'}
-                          placeholder={userOption === 'xPriv' ? 'xPriv' : 'Access Key'}
-                          onChange={onChangeKey}
-                          className="pr-12"
-                        />
-                        <ShowPasswordIcon
-                          className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
-                          onClick={handleTogglePasswordVisibility}
-                        />
-                      </div>
-                    </>
-                  )
-                )}
-
-                {configureServerUrl && (
-                  <>
-                    <Label htmlFor="server-url" className="flex items-center">
-                      Server Url
-                    </Label>
-                    <Input id="server-url" value={serverUrl} onChange={onChangeServerUrl} type="text" placeholder="" />
-                  </>
-                )}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleSignIn} className="w-full">
-                Sign in
-              </Button>
-            </CardFooter>
-            <Toaster position="bottom-center" />
+                  )}
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" className="w-full">
+                    Sign in
+                  </Button>
+                </CardFooter>
+                <Toaster position="bottom-center" />
+              </form>
+            </Form>
           </Card>
         </div>
         <div className="flex justify-center">

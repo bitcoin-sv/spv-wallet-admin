@@ -6,6 +6,7 @@ export * from './calendar.tsx';
 export * from './card.tsx';
 export * from './dialog.tsx';
 export * from './dropdown-menu.tsx';
+export * from './form';
 export * from './input.tsx';
 export * from './label.tsx';
 export * from './popover.tsx';
