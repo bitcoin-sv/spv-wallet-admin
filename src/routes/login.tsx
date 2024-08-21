@@ -189,6 +189,7 @@ export function LoginForm() {
                             <Input
                               {...field}
                               ref={inputRef}
+                              className="pr-12"
                               type={isPasswordVisible ? 'text' : 'password'}
                               placeholder={
                                 currentRole === Role.Admin
