@@ -1,10 +1,5 @@
 import {
   Button,
-  ContactAcceptDialog,
-  ContactDeleteDialog,
-  ContactEditDialog,
-  ContactRejectDialog,
-  ContactStatus,
   DataTablePagination,
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +13,6 @@ import {
   TableRow,
   ViewDialog,
 } from '@/components';
-import { isContact } from '@/utils';
 import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
 import {
   ColumnDef,
@@ -39,11 +33,17 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   renderItem?: (row: Row<TData>) => React.ReactNode;
+  renderInlineItem?: (row: Row<TData>) => React.ReactNode;
 }
 
 const initialSorting = { id: 'id', desc: false };
 
-export function DataTable<TData, TValue>({ columns, data, renderItem }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  renderItem,
+  renderInlineItem,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
   const table = useReactTable({
@@ -85,16 +85,17 @@ export function DataTable<TData, TValue>({ columns, data, renderItem }: DataTabl
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
                 <TableCell>
-                  {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
-                    <div className="grid grid-cols-2 items-center w-fit gap-4 ">
-                      {isContact(row.original) && row.original.status === ContactStatus.Awaiting && (
-                        <>
-                          <ContactAcceptDialog row={row as Row<Contact>} />
-                          <ContactRejectDialog row={row as Row<Contact>} />
-                        </>
-                      )}
-                    </div>
-                  ) : null}
+                  {/*{table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (*/}
+                  {/*  <div className="grid grid-cols-2 items-center w-fit gap-4 ">*/}
+                  {/*    {isContact(row.original) && row.original.status === ContactStatus.Awaiting && (*/}
+                  {/*      <>*/}
+                  {/*        <ContactAcceptDialog row={row as Row<Contact>} />*/}
+                  {/*        <ContactRejectDialog row={row as Row<Contact>} />*/}
+                  {/*      </>*/}
+                  {/*    )}*/}
+                  {/*  </div>*/}
+                  {/*) : null}*/}
+                  {renderInlineItem ? renderInlineItem(row) : null}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
@@ -106,10 +107,7 @@ export function DataTable<TData, TValue>({ columns, data, renderItem }: DataTabl
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <ViewDialog row={row as Row<RowType>} />
-                      {/*{renderItem ? renderItem(row as Row<RowType>) : null}*/}
                       {renderItem ? renderItem(row) : null}
-                      {isContact(row.original) && <ContactEditDialog row={row as Row<Contact>} />}
-                      {isContact(row.original) && <ContactDeleteDialog row={row as Row<Contact>} />}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

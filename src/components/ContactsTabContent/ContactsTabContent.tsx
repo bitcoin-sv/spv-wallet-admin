@@ -1,4 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle, contactsColumns, DataTable, NoRecordsText } from '@/components';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  ContactAcceptDialog,
+  ContactDeleteDialog,
+  ContactEditDialog,
+  ContactRejectDialog,
+  contactsColumns,
+  ContactStatus,
+  DataTable,
+  NoRecordsText,
+} from '@/components';
 import { ContactExtended } from '@/interfaces/contacts.ts';
 
 export interface ContactsTabContentProps {
@@ -13,7 +26,24 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
       </CardHeader>
       <CardContent className="mb-2">
         {contacts.length > 0 ? (
-          <DataTable columns={contactsColumns} data={contacts} />
+          <DataTable
+            columns={contactsColumns}
+            data={contacts}
+            renderInlineItem={(row) =>
+              row.getValue('status') === ContactStatus.Awaiting ? (
+                <div className="grid grid-cols-2 items-center w-fit gap-4 ">
+                  <ContactAcceptDialog row={row} />
+                  <ContactRejectDialog row={row} />
+                </div>
+              ) : null
+            }
+            renderItem={(row) => (
+              <>
+                <ContactEditDialog row={row} />
+                <ContactDeleteDialog row={row} />
+              </>
+            )}
+          />
         ) : (
           <NoRecordsText message="No Contacts to show." />
         )}
