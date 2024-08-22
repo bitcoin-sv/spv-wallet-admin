@@ -1,16 +1,5 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-import { z } from 'zod';
-
 import {
-  ContactAcceptDialog,
-  ContactDeleteDialog,
-  ContactEditDialog,
-  ContactRejectDialog,
+  ContactsTabContent,
   ContactStatus,
   DateRangeFilter,
   Searchbar,
@@ -19,11 +8,17 @@ import {
   TabsList,
   TabsTrigger,
   Toaster,
-  ContactsTabContent,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { useEffect, useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
@@ -158,50 +153,22 @@ export function Contacts() {
           </div>
         </div>
         <TabsContent value="all">
-          <ContactsTabContent
-            contacts={contacts}
-            AcceptDialog={ContactAcceptDialog}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-            RejectDialog={ContactRejectDialog}
-          />
+          <ContactsTabContent contacts={contacts} />
         </TabsContent>
         <TabsContent value="unconfirmed">
-          <ContactsTabContent
-            contacts={unconfirmedContacts}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={unconfirmedContacts} />
         </TabsContent>
         <TabsContent value="awaiting">
-          <ContactsTabContent
-            contacts={awaitingContacts}
-            AcceptDialog={ContactAcceptDialog}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-            RejectDialog={ContactRejectDialog}
-          />
+          <ContactsTabContent contacts={awaitingContacts} />
         </TabsContent>
         <TabsContent value="confirmed">
-          <ContactsTabContent
-            contacts={confirmedContacts}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={confirmedContacts} />
         </TabsContent>
         <TabsContent value="rejected">
-          <ContactsTabContent
-            contacts={rejectedContacts}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={rejectedContacts} />
         </TabsContent>
         <TabsContent value="deleted">
-          <ContactsTabContent
-            contacts={deletedContacts}
-            ContactEditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={deletedContacts} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />

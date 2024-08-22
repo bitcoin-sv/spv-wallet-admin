@@ -1,24 +1,22 @@
+import {
+  AccessKeysTabContent,
+  AddAccessKeyDialog,
+  DateRangeFilter,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
+
+import { useSpvWalletClient } from '@/contexts';
+import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
 import { z } from 'zod';
-
-import {
-  DateRangeFilter,
-  Toaster,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  AddAccessKeyDialog,
-  AccessKeysTabContent,
-  RevokeKeyDialog,
-} from '@/components';
-
-import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, getDeletedElements, getRevokedElements, accessKeysQueryOptions } from '@/utils';
 
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
@@ -114,7 +112,7 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} RevokeKeyDialog={RevokeKeyDialog} />
+          <AccessKeysTabContent accessKeys={mappedAccessKeys} hasRevokeKeyDialog />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

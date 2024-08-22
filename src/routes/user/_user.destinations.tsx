@@ -1,12 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import { useDebounce } from 'use-debounce';
-
 import {
   AddDestinationDialog,
   DateRangeFilter,
-  DestinationEditDialog,
   Searchbar,
   Tabs,
   TabsContent,
@@ -16,9 +10,13 @@ import {
 } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
 import { useSpvWalletClient } from '@/contexts';
+import { destinationSearchSchema } from '@/searchSchemas';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
 import { destinationsQueryOptions } from '@/utils/destinationsQueryOptions.tsx';
-import { destinationSearchSchema } from '@/searchSchemas';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 export const Route = createFileRoute('/user/_user/destinations')({
   component: Destinations,
@@ -127,7 +125,7 @@ export function Destinations() {
           </div>
         </div>
         <TabsContent value="all">
-          <DestinationsTabContent destinations={mappedDestinations} DestinationEditDialog={DestinationEditDialog} />
+          <DestinationsTabContent destinations={mappedDestinations} hasDestinationEditDialog />
         </TabsContent>
         <TabsContent value="deleted">
           <DestinationsTabContent destinations={deletedDests} />

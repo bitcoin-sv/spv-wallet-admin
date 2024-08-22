@@ -1,15 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-import { z } from 'zod';
-
 import {
   AddPaymailDialog,
   DateRangeFilter,
-  PaymailDeleteDialog,
   PaymailsTabContent,
   Searchbar,
   Tabs,
@@ -20,6 +11,13 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { useEffect, useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
@@ -125,7 +123,7 @@ export function Paymails() {
           </div>
         </div>
         <TabsContent value="all">
-          <PaymailsTabContent paymails={mappedPaymails} PaymailDeleteDialog={PaymailDeleteDialog} />
+          <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
         </TabsContent>
         <TabsContent value="deleted">
           <PaymailsTabContent paymails={deletedPaymails} />

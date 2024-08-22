@@ -1,3 +1,15 @@
+import {
+  AccessKeysTabContent,
+  DateRangeFilter,
+  Searchbar,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Toaster,
+} from '@/components';
+
+import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
@@ -5,19 +17,6 @@ import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
-
-import {
-  DateRangeFilter,
-  Toaster,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Searchbar,
-  AccessKeysTabContent,
-} from '@/components';
-
-import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
@@ -111,7 +110,7 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
+          <AccessKeysTabContent accessKeys={mappedAccessKeys} hasRevokeKeyDialog />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

@@ -1,9 +1,3 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -16,6 +10,11 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { AccessKey } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface RevokeKeyDialogProps {
   row: Row<AccessKey>;

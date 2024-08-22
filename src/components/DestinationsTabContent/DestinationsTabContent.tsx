@@ -1,22 +1,23 @@
-import React from 'react';
-
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   DataTable,
-  DestinationEditDialogProps,
+  DestinationEditDialog,
   destinationsColumns,
   NoRecordsText,
 } from '@/components';
 import { DestinationExtended } from '@/interfaces/destination.ts';
+import { Destination } from '@bsv/spv-wallet-js-client';
+import { Row } from '@tanstack/react-table';
 
 export interface DestinationsTabContentProps {
   destinations: DestinationExtended[];
-  DestinationEditDialog?: React.ComponentType<DestinationEditDialogProps>;
+  hasDestinationEditDialog?: boolean;
 }
-export const DestinationsTabContent = ({ destinations, DestinationEditDialog }: DestinationsTabContentProps) => {
+
+export const DestinationsTabContent = ({ destinations, hasDestinationEditDialog }: DestinationsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -24,7 +25,11 @@ export const DestinationsTabContent = ({ destinations, DestinationEditDialog }: 
       </CardHeader>
       <CardContent className="mb-2">
         {destinations.length > 0 ? (
-          <DataTable columns={destinationsColumns} data={destinations} DestinationEditDialog={DestinationEditDialog} />
+          <DataTable
+            columns={destinationsColumns}
+            data={destinations}
+            renderItem={(row) => hasDestinationEditDialog && <DestinationEditDialog row={row as Row<Destination>} />}
+          />
         ) : (
           <NoRecordsText message="No Destinations to show." />
         )}

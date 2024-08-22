@@ -1,23 +1,11 @@
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  Row,
-} from '@tanstack/react-table';
-import { EllipsisVertical } from 'lucide-react';
-
-import React, { useState } from 'react';
-
-import {
-  ContactStatus,
-  ContactDeleteDialogProps,
-  ContactEditDialogProps,
-  ContactAcceptDialogProps,
-  DataTablePagination,
   Button,
+  ContactAcceptDialog,
+  ContactDeleteDialog,
+  ContactEditDialog,
+  ContactRejectDialog,
+  ContactStatus,
+  DataTablePagination,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
@@ -29,43 +17,33 @@ import {
   TableHeader,
   TableRow,
   ViewDialog,
-  ContactRejectDialogProps,
-  RevokeKeyDialogProps,
-  TransactionEditDialogProps,
-  DestinationEditDialogProps,
-  PaymailDeleteDialogProps,
 } from '@/components';
+import { isContact } from '@/utils';
 import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  Row,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { EllipsisVertical } from 'lucide-react';
+
+import React, { useState } from 'react';
 
 export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress | Tx;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  ContactEditDialog?: React.ComponentType<ContactEditDialogProps>;
-  TransactionEditDialog?: React.ComponentType<TransactionEditDialogProps>;
-  DestinationEditDialog?: React.ComponentType<DestinationEditDialogProps>;
-  AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
-  DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
-  RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
-  RevokeKeyDialog?: React.ComponentType<RevokeKeyDialogProps>;
-  PaymailDeleteDialog?: React.ComponentType<PaymailDeleteDialogProps>;
+  renderItem?: (row: Row<RowType>) => React.ReactNode;
 }
 
 const initialSorting = { id: 'id', desc: false };
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  ContactEditDialog,
-  TransactionEditDialog,
-  DestinationEditDialog,
-  AcceptDialog,
-  DeleteDialog,
-  RejectDialog,
-  RevokeKeyDialog,
-  PaymailDeleteDialog,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, renderItem }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
   const table = useReactTable({
@@ -109,8 +87,12 @@ export function DataTable<TData, TValue>({
                 <TableCell>
                   {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
                     <div className="grid grid-cols-2 items-center w-fit gap-4 ">
-                      {AcceptDialog ? <AcceptDialog row={row as Row<Contact>} /> : null}
-                      {RejectDialog ? <RejectDialog row={row as Row<Contact>} /> : null}
+                      {isContact(row.original) && row.original.status === ContactStatus.Awaiting && (
+                        <>
+                          <ContactAcceptDialog row={row as Row<Contact>} />
+                          <ContactRejectDialog row={row as Row<Contact>} />
+                        </>
+                      )}
                     </div>
                   ) : null}
                 </TableCell>
@@ -124,12 +106,9 @@ export function DataTable<TData, TValue>({
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <ViewDialog row={row as Row<RowType>} />
-                      {ContactEditDialog ? <ContactEditDialog row={row as Row<Contact>} /> : null}
-                      {TransactionEditDialog ? <TransactionEditDialog row={row as Row<Tx>} /> : null}
-                      {DestinationEditDialog ? <DestinationEditDialog row={row as Row<Destination>} /> : null}
-                      {DeleteDialog ? <DeleteDialog row={row as Row<Contact>} /> : null}
-                      {PaymailDeleteDialog ? <PaymailDeleteDialog row={row as Row<PaymailAddress>} /> : null}
-                      {RevokeKeyDialog ? <RevokeKeyDialog row={row as Row<AccessKey>} /> : null}
+                      {renderItem ? renderItem(row as Row<RowType>) : null}
+                      {isContact(row.original) && <ContactEditDialog row={row as Row<Contact>} />}
+                      {isContact(row.original) && <ContactDeleteDialog row={row as Row<Contact>} />}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

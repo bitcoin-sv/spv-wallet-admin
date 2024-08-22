@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Card,
   CardContent,
@@ -8,16 +6,18 @@ import {
   DataTable,
   NoRecordsText,
   paymailColumns,
-  PaymailDeleteDialogProps,
+  PaymailDeleteDialog,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
+import { PaymailAddress } from '@bsv/spv-wallet-js-client';
+import { Row } from '@tanstack/react-table';
 
 export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
-  PaymailDeleteDialog?: React.ComponentType<PaymailDeleteDialogProps>;
+  hasPaymailDeleteDialog?: boolean;
 }
 
-export const PaymailsTabContent = ({ paymails, PaymailDeleteDialog }: PaymailsTabContentProps) => {
+export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: PaymailsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -25,7 +25,16 @@ export const PaymailsTabContent = ({ paymails, PaymailDeleteDialog }: PaymailsTa
       </CardHeader>
       <CardContent className="mb-2">
         {paymails.length > 0 ? (
-          <DataTable columns={paymailColumns} data={paymails} PaymailDeleteDialog={PaymailDeleteDialog} />
+          <DataTable
+            columns={paymailColumns}
+            data={paymails}
+            renderItem={(row) =>
+              hasPaymailDeleteDialog &&
+              (row.original as PaymailExtended).status !== 'deleted' && (
+                <PaymailDeleteDialog row={row as Row<PaymailAddress>} />
+              )
+            }
+          />
         ) : (
           <NoRecordsText message="No Paymails to show." />
         )}
