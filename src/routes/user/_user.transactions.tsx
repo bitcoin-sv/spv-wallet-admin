@@ -1,4 +1,4 @@
-import { PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
+import { CustomErrorComponent, PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { transactionSearchSchema } from '@/searchSchemas';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
@@ -19,6 +19,7 @@ export const Route = createFileRoute('/user/_user/transactions')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },

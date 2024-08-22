@@ -1,5 +1,6 @@
 import {
   AddDestinationDialog,
+  CustomErrorComponent,
   DateRangeFilter,
   Searchbar,
   Tabs,
@@ -29,6 +30,7 @@ export const Route = createFileRoute('/user/_user/destinations')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },

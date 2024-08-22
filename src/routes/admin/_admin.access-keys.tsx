@@ -1,5 +1,6 @@
 import {
   AccessKeysTabContent,
+  CustomErrorComponent,
   DateRangeFilter,
   Searchbar,
   Tabs,
@@ -28,7 +29,7 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     xpubId: z.string().optional().catch(''),
   }),
-
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange, revokedRange } }) => ({
     order_by_field,
     sort_direction,

@@ -1,6 +1,7 @@
 import {
   AccessKeysTabContent,
   AddAccessKeyDialog,
+  CustomErrorComponent,
   DateRangeFilter,
   Tabs,
   TabsContent,
@@ -58,6 +59,7 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         page_size,
       }),
     ),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
 });
 
 export function AccessKeys() {

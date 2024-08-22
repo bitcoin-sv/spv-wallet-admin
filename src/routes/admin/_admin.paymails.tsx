@@ -1,5 +1,6 @@
 import {
   AddPaymailDialog,
+  CustomErrorComponent,
   DateRangeFilter,
   PaymailsTabContent,
   Searchbar,
@@ -35,6 +36,7 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, xpubId, createdRange, updatedRange },

@@ -1,4 +1,5 @@
 import {
+  CustomErrorComponent,
   RecordTxDialogAdmin,
   Searchbar,
   Tabs,
@@ -9,6 +10,7 @@ import {
   TransactionsTabContent,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
+
 import { transactionSearchSchema } from '@/searchSchemas';
 import { transactionsQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -27,6 +29,7 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     createdRange,
     updatedRange,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient, spvWallet },
     deps: { sort_direction, order_by_field, blockHeight, createdRange, updatedRange },

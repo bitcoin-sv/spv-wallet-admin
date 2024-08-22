@@ -1,6 +1,7 @@
 import {
   ContactsTabContent,
   ContactStatus,
+  CustomErrorComponent,
   DateRangeFilter,
   Searchbar,
   Tabs,
@@ -31,6 +32,7 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     paymail: z.string().optional(),
     pubKey: z.string().optional(),
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loaderDeps: ({ search: { order_by_field, sort_direction, createdRange, updatedRange, id, paymail, pubKey } }) => ({
     order_by_field,
     sort_direction,

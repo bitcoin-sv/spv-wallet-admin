@@ -1,13 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-
-import { z } from 'zod';
-
 import {
   AddXpubDialog,
+  CustomErrorComponent,
   Searchbar,
   Tabs,
   TabsContent,
@@ -20,6 +13,13 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
   validateSearch: z.object({
@@ -27,6 +27,7 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     sort_direction: z.string().optional().catch('asc'),
   }),
   component: Xpub,
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   pendingComponent: () => <XpubsSkeleton />,
 });
 
