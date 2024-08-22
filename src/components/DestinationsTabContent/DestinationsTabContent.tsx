@@ -9,8 +9,6 @@ import {
   NoRecordsText,
 } from '@/components';
 import { DestinationExtended } from '@/interfaces/destination.ts';
-import { Destination } from '@bsv/spv-wallet-js-client';
-import { Row } from '@tanstack/react-table';
 
 export interface DestinationsTabContentProps {
   destinations: DestinationExtended[];
@@ -28,7 +26,7 @@ export const DestinationsTabContent = ({ destinations, hasDestinationEditDialog 
           <DataTable
             columns={destinationsColumns}
             data={destinations}
-            renderItem={(row) => hasDestinationEditDialog && <DestinationEditDialog row={row as Row<Destination>} />}
+            renderItem={(row) => hasDestinationEditDialog && <DestinationEditDialog row={row} />}
           />
         ) : (
           <NoRecordsText message="No Destinations to show." />

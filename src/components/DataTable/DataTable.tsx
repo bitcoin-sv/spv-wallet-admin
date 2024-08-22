@@ -38,7 +38,7 @@ export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  renderItem?: (row: Row<RowType>) => React.ReactNode;
+  renderItem?: (row: Row<TData>) => React.ReactNode;
 }
 
 const initialSorting = { id: 'id', desc: false };
@@ -106,7 +106,8 @@ export function DataTable<TData, TValue>({ columns, data, renderItem }: DataTabl
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <ViewDialog row={row as Row<RowType>} />
-                      {renderItem ? renderItem(row as Row<RowType>) : null}
+                      {/*{renderItem ? renderItem(row as Row<RowType>) : null}*/}
+                      {renderItem ? renderItem(row) : null}
                       {isContact(row.original) && <ContactEditDialog row={row as Row<Contact>} />}
                       {isContact(row.original) && <ContactDeleteDialog row={row as Row<Contact>} />}
                     </DropdownMenuContent>

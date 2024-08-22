@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, DataTable, TransactionEditDialog } from '@/components';
 import { columns } from '@/components/TransactionsColumns/columns.tsx';
 import { Tx } from '@bsv/spv-wallet-js-client';
-import { Row } from '@tanstack/react-table';
 import React from 'react';
 
 export interface TransactionsTabContentProps {
@@ -27,7 +26,7 @@ export const TransactionsTabContent = ({
           <DataTable
             columns={columns}
             data={transactions}
-            renderItem={(row) => hasTransactionEditDialog && <TransactionEditDialog row={row as Row<Tx>} />}
+            renderItem={(row) => hasTransactionEditDialog && <TransactionEditDialog row={row} />}
           />
         ) : (
           <div className="flex flex-col items-center gap-1 text-center">

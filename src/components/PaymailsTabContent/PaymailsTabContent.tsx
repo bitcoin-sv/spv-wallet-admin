@@ -9,8 +9,6 @@ import {
   PaymailDeleteDialog,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
-import { PaymailAddress } from '@bsv/spv-wallet-js-client';
-import { Row } from '@tanstack/react-table';
 
 export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
@@ -29,10 +27,7 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: Paymail
             columns={paymailColumns}
             data={paymails}
             renderItem={(row) =>
-              hasPaymailDeleteDialog &&
-              (row.original as PaymailExtended).status !== 'deleted' && (
-                <PaymailDeleteDialog row={row as Row<PaymailAddress>} />
-              )
+              hasPaymailDeleteDialog && row.original.status !== 'deleted' && <PaymailDeleteDialog row={row} />
             }
           />
         ) : (

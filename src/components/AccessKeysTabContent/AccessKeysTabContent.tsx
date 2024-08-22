@@ -9,8 +9,6 @@ import {
   RevokeKeyDialog,
 } from '@/components';
 import { AccessKeyExtended } from '@/interfaces';
-import { AccessKey } from '@bsv/spv-wallet-js-client';
-import { Row } from '@tanstack/react-table';
 
 export interface AccessKeysTabContentProps {
   accessKeys: AccessKeyExtended[];
@@ -28,7 +26,7 @@ export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessK
           <DataTable
             columns={accessKeysColumns}
             data={accessKeys}
-            renderItem={(row) => hasRevokeKeyDialog && <RevokeKeyDialog row={row as Row<AccessKey>} />}
+            renderItem={(row) => hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
           />
         ) : (
           <NoRecordsText message="No Access Keys to show." />
