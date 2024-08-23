@@ -84,19 +84,7 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
-                <TableCell>
-                  {/*{table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (*/}
-                  {/*  <div className="grid grid-cols-2 items-center w-fit gap-4 ">*/}
-                  {/*    {isContact(row.original) && row.original.status === ContactStatus.Awaiting && (*/}
-                  {/*      <>*/}
-                  {/*        <ContactAcceptDialog row={row as Row<Contact>} />*/}
-                  {/*        <ContactRejectDialog row={row as Row<Contact>} />*/}
-                  {/*      </>*/}
-                  {/*    )}*/}
-                  {/*  </div>*/}
-                  {/*) : null}*/}
-                  {renderInlineItem ? renderInlineItem(row) : null}
-                </TableCell>
+                <TableCell>{renderInlineItem ? renderInlineItem(row) : null}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
