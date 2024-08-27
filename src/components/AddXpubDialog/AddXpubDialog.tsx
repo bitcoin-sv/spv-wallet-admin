@@ -42,6 +42,8 @@ const formSchema = z.object({
     .refine((val) => val.length === 111, 'Invalid xPub length.'),
 });
 
+const xPrivSchema = formSchema.pick({ xPriv: true });
+
 export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -52,8 +54,8 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      xPriv: undefined,
-      xPub: undefined,
+      xPriv: '',
+      xPub: '',
     },
   });
 
@@ -85,7 +87,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   };
 
   const debouncedXPriv = useDebouncedCallback(() => {
-    const parsedXPriv = formSchema.safeParse({ xPriv: form.getValues('xPriv') });
+    const parsedXPriv = xPrivSchema.safeParse({ xPriv: form.getValues('xPriv') });
 
     if (form.getValues('xPriv').length === 0) {
       form.clearErrors();
