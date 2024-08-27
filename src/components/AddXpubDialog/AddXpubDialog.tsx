@@ -8,27 +8,54 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input.tsx';
-import { Label } from '@/components/ui/label.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { HD } from '@bsv/sdk';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CirclePlus } from 'lucide-react';
+import { CirclePlus, CircleX } from 'lucide-react';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { toast } from 'sonner';
+import { useDebouncedCallback } from 'use-debounce';
+import { z } from 'zod';
 
 interface AddXpubDialogProps {
   className?: string;
 }
 
+const formSchema = z.object({
+  xPriv: z.union([
+    z
+      .string()
+      .refine((val) => val.startsWith('xprv'), 'xPriv should start with xprv')
+      .refine((val) => val.length === 111, 'Invalid xPriv length.'),
+    z.literal(''),
+  ]),
+  xPub: z
+    .string()
+    .refine((val) => val.startsWith('xpub'), 'xPub should starts with xpub.')
+    .refine((val) => val.length === 111, 'Invalid xPub length.'),
+});
+
 export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [xPriv, setXPriv] = useState<string>('');
-  const [xPub, setXPub] = useState<string>('');
   const queryClient = useQueryClient();
+
+  const xPrivRef = useRef<HTMLInputElement>(null);
+  const xPubRef = useRef<HTMLInputElement>(null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      xPriv: undefined,
+      xPub: undefined,
+    },
+  });
 
   const { spvWalletClient } = useSpvWalletClient();
 
@@ -40,53 +67,81 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     onSuccess: () => queryClient.invalidateQueries(),
   });
 
-  const handleXPrivChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setXPriv(event.target.value);
-  };
-
-  const handleXPubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setXPub(event.target.value);
-  };
-
   useEffect(() => {
-    if (!xPriv) {
-      return;
-    }
+    form.reset();
+  }, [isOpen]);
 
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const { xPub } = values;
     try {
-      const xPrivHD = HD.fromString(xPriv);
-      const xPubString = xPrivHD.toPublic().toString();
-      setXPub(xPubString);
-      toast.success('Converted xPriv to xPub');
-    } catch (error) {
-      toast.error('Unable to convert xPriv to xPub');
-      setXPub('');
-    }
-  }, [xPriv]);
-
-  useEffect(() => {
-    setXPriv('');
-  }, [xPub]);
-
-  const handeDialogToggle = () => {
-    setIsOpen((prev) => !prev);
-    setXPriv('');
-    setXPub('');
-  };
-
-  const onSubmit = async () => {
-    if (!xPub) {
-      return;
-    }
-    try {
-      HD.fromString(xPub);
+      HD.fromString(values.xPub);
       await mutation.mutateAsync(xPub);
-      toast.success('Added xPub');
-      setXPriv('');
-      setXPub('');
+      toast.success('xPub successfully added');
+      form.reset();
     } catch (error) {
       toast.error('Unable to add xPub');
       errorWrapper(error);
+    }
+  };
+
+  const debouncedXPriv = useDebouncedCallback(() => {
+    const parsedXPriv = formSchema.safeParse({ xPriv: form.getValues('xPriv') });
+
+    if (form.getValues('xPriv').length === 0) {
+      form.clearErrors();
+      return;
+    }
+    form.trigger('xPriv');
+
+    if (!parsedXPriv.success) {
+      return;
+    }
+
+    try {
+      const xPrivHD = HD.fromString(parsedXPriv.data.xPriv);
+      const xPubString = xPrivHD.toPublic().toString();
+      form.setValue('xPub', xPubString);
+      toast.success('Converted xPriv to xPub');
+    } catch (error) {
+      toast.error('Unable to convert xPriv to xPub');
+    }
+  }, 700);
+
+  const debouncedXPub = useDebouncedCallback(() => {
+    if (form.getValues('xPub')?.length === 0) {
+      form.clearErrors();
+      return;
+    }
+    form.trigger('xPub');
+  }, 700);
+
+  const handeDialogToggle = () => {
+    setIsOpen((prev) => !prev);
+    form.reset();
+  };
+
+  const onXPrivChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    form.setValue('xPriv', e.target.value);
+    debouncedXPriv();
+  };
+
+  const onXPubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    form.setValue('xPub', e.target.value);
+    form.resetField('xPriv');
+    debouncedXPub();
+  };
+
+  const onXPubClear = () => {
+    form.resetField('xPub');
+    if (xPubRef.current) {
+      xPubRef.current?.focus();
+    }
+  };
+
+  const onXPrivClear = () => {
+    form.resetField('xPriv');
+    if (xPrivRef.current) {
+      xPrivRef.current?.focus();
     }
   };
 
@@ -99,29 +154,57 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add xPub</DialogTitle>
-          <DialogDescription>Get xpub from xpriv</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-[1fr_10fr] items-center gap-4">
-            <Label htmlFor="xPriv" className="text-right">
-              xPriv
-            </Label>
-            <Input id="xPriv" placeholder="xprv..." value={xPriv} onChange={handleXPrivChange} />
-          </div>
-          <div className="flex justify-center text-gray-400 text-xs">Or put xpub directly</div>
-
-          <div className="grid grid-cols-[1fr_10fr] items-center gap-4">
-            <Label htmlFor="xPub" className="text-right">
-              xPub
-            </Label>
-            <Input id="xPub" value={xPub} onChange={handleXPubChange} placeholder="xpub..." />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={onSubmit}>Add xPub</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>Add xPub</DialogTitle>
+              <DialogDescription>Get xpub from xpriv</DialogDescription>
+            </DialogHeader>
+            <FormField
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel>xPriv</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="xprv..."
+                      autoComplete="off"
+                      className="pr-12"
+                      {...field}
+                      ref={xPrivRef}
+                      onChange={onXPrivChange}
+                    />
+                  </FormControl>
+                  <CircleX size={16} className="absolute top-9 right-4 cursor-pointer" onClick={onXPrivClear} />
+                  <FormMessage />
+                </FormItem>
+              )}
+              name="xPriv"
+            />
+            <FormField
+              render={({ field }) => (
+                <FormItem className="mt-2 relative">
+                  <FormLabel>xPub</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      placeholder="xpub..."
+                      className="pr-12"
+                      {...field}
+                      ref={xPubRef}
+                      onChange={(e) => onXPubChange(e)}
+                    />
+                  </FormControl>
+                  <CircleX size={16} className="absolute top-9 right-4 cursor-pointer" onClick={onXPubClear} />
+                  <FormMessage />
+                </FormItem>
+              )}
+              name="xPub"
+            />
+            <DialogFooter className="mt-4">
+              <Button type="submit">Add xPub</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
