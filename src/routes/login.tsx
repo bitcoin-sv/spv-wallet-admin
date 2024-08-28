@@ -112,7 +112,11 @@ export function LoginForm() {
       await router.invalidate();
     } catch (error) {
       logger.error(error);
-      toast.error('xPriv or Access Key is invalid');
+      if (role === Role.Admin) {
+        toast.error('Admin Key is invalid');
+      } else {
+        toast.error('xPriv or Access Key is invalid');
+      }
     }
   };
 
