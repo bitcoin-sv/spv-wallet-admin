@@ -126,7 +126,8 @@ export function LoginForm() {
         toast.error('Admin Key is invalid');
       } else {
         toast.error('xPriv or Access Key is invalid');
-      }    }
+      }
+    }
   };
 
   return (
