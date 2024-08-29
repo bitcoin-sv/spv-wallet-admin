@@ -1,10 +1,3 @@
-import { useConfig } from '@4chain-ag/react-configuration';
-import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
-
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Card,
@@ -28,6 +21,12 @@ import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 
 import logger from '@/logger';
 import { createClient, getShortXprv } from '@/utils';
+import { useConfig } from '@4chain-ag/react-configuration';
+import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
+
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/login')({
   component: LoginForm,
@@ -69,17 +68,23 @@ export function LoginForm() {
   };
 
   const handleSignIn = async () => {
-    setServerUrl(serverUrl);
-
     try {
-      const client = await createClient(role, key);
+      const client = await createClient(role, key, serverUrl);
       setSpvWalletClient(client);
 
       setLoginKey(getShortXprv(key));
 
       await router.invalidate();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error(error);
+      if (typeof error === 'object' && error !== null && 'content' in error) {
+        const errorContent = (error as { content: string }).content;
+        const parsedError = JSON.parse(errorContent);
+        if (parsedError.message === 'route not found') {
+          toast.error('Invalid ServerUrl');
+          return;
+        }
+      }
       toast.error('xPriv or Access Key is invalid');
     }
   };

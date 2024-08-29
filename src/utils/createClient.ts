@@ -1,10 +1,8 @@
-import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 import { Role, SpvWalletClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils/errorWrapper.ts';
+import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
 
-export const createClient = async (role: Role, key: string) => {
-  const serverUrl = window.localStorage.getItem('login.serverUrl') ?? '';
-
+export const createClient = async (role: Role, key: string, serverUrl: string) => {
   let client: SpvWalletClientExtended;
 
   if (role === Role.Admin && key.startsWith('xprv')) {
