@@ -1,22 +1,6 @@
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-} from '@tanstack/react-table';
-import { EllipsisVertical } from 'lucide-react';
-
-import React, { useState } from 'react';
-
-import {
-  ContactStatus,
-  ContactDeleteDialogProps,
-  ContactEditDialogProps,
-  ContactAcceptDialogProps,
-  DataTablePagination,
   Button,
+  DataTablePagination,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
@@ -28,20 +12,28 @@ import {
   TableHeader,
   TableRow,
   ViewDialog,
-  ContactRejectDialogProps,
-  RevokeKeyDialogProps,
-  TransactionEditDialogProps,
-  DestinationEditDialogProps,
 } from '@/components';
+import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  Row,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { EllipsisVertical } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress | Tx;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  EditDialog?: React.ComponentType<ContactEditDialogProps | TransactionEditDialogProps | DestinationEditDialogProps>;
-  AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
-  DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
-  RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
-  RevokeKeyDialog?: React.ComponentType<RevokeKeyDialogProps>;
+  renderItem?: (row: Row<TData>) => React.ReactNode;
+  renderInlineItem?: (row: Row<TData>) => React.ReactNode;
 }
 
 const initialSorting = { id: 'id', desc: false };
@@ -49,11 +41,8 @@ const initialSorting = { id: 'id', desc: false };
 export function DataTable<TData, TValue>({
   columns,
   data,
-  EditDialog,
-  AcceptDialog,
-  DeleteDialog,
-  RejectDialog,
-  RevokeKeyDialog,
+  renderItem,
+  renderInlineItem,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([initialSorting]);
 
@@ -95,14 +84,7 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
-                <TableCell>
-                  {table.getColumn('status') && row.getValue('status') === ContactStatus.Awaiting ? (
-                    <div className="grid grid-cols-2 items-center w-fit gap-4 ">
-                      {AcceptDialog ? <AcceptDialog row={row} /> : null}
-                      {RejectDialog ? <RejectDialog row={row} /> : null}
-                    </div>
-                  ) : null}
-                </TableCell>
+                <TableCell>{renderInlineItem ? renderInlineItem(row) : null}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -112,10 +94,8 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <ViewDialog row={row} />
-                      {EditDialog ? <EditDialog row={row} /> : null}
-                      {DeleteDialog ? <DeleteDialog row={row} /> : null}
-                      {RevokeKeyDialog ? <RevokeKeyDialog row={row} /> : null}
+                      <ViewDialog row={row as Row<RowType>} />
+                      {renderItem ? renderItem(row) : null}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

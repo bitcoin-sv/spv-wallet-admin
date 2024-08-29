@@ -17,11 +17,10 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { Contact } from '@bsv/spv-wallet-js-client';
 
 export interface ContactAcceptDialogProps {
-  // TODO [explicit-any]: consider add type if it's possible
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  row: Row<any>;
+  row: Row<Contact>;
 }
 
 export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {

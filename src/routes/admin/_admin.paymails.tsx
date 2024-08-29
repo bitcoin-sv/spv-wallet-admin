@@ -2,7 +2,6 @@ import {
   AddPaymailDialog,
   CustomErrorComponent,
   DateRangeFilter,
-  PaymailDeleteDialog,
   PaymailsTabContent,
   Searchbar,
   Tabs,
@@ -126,7 +125,7 @@ export function Paymails() {
           </div>
         </div>
         <TabsContent value="all">
-          <PaymailsTabContent paymails={mappedPaymails} DeleteDialog={PaymailDeleteDialog} />
+          <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
         </TabsContent>
         <TabsContent value="deleted">
           <PaymailsTabContent paymails={deletedPaymails} />

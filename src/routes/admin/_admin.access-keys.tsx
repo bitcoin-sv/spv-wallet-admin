@@ -111,7 +111,7 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
+          <AccessKeysTabContent accessKeys={mappedAccessKeys} hasRevokeKeyDialog />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

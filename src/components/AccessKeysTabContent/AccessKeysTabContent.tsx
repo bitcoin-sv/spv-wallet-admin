@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   accessKeysColumns,
   Card,
@@ -8,15 +6,16 @@ import {
   CardTitle,
   DataTable,
   NoRecordsText,
-  RevokeKeyDialogProps,
+  RevokeKeyDialog,
 } from '@/components';
 import { AccessKeyExtended } from '@/interfaces';
 
 export interface AccessKeysTabContentProps {
   accessKeys: AccessKeyExtended[];
-  RevokeKeyDialog?: React.ComponentType<RevokeKeyDialogProps>;
+  hasRevokeKeyDialog?: boolean;
 }
-export const AccessKeysTabContent = ({ accessKeys, RevokeKeyDialog }: AccessKeysTabContentProps) => {
+
+export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessKeysTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -24,7 +23,11 @@ export const AccessKeysTabContent = ({ accessKeys, RevokeKeyDialog }: AccessKeys
       </CardHeader>
       <CardContent className="mb-2">
         {accessKeys.length > 0 ? (
-          <DataTable columns={accessKeysColumns} data={accessKeys} RevokeKeyDialog={RevokeKeyDialog} />
+          <DataTable
+            columns={accessKeysColumns}
+            data={accessKeys}
+            renderItem={(row) => hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
+          />
         ) : (
           <NoRecordsText message="No Access Keys to show." />
         )}

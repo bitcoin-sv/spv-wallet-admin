@@ -2,7 +2,6 @@ import {
   AddDestinationDialog,
   CustomErrorComponent,
   DateRangeFilter,
-  DestinationEditDialog,
   Searchbar,
   Tabs,
   TabsContent,
@@ -128,7 +127,7 @@ export function Destinations() {
           </div>
         </div>
         <TabsContent value="all">
-          <DestinationsTabContent destinations={mappedDestinations} EditDialog={DestinationEditDialog} />
+          <DestinationsTabContent destinations={mappedDestinations} hasDestinationEditDialog />
         </TabsContent>
         <TabsContent value="deleted">
           <DestinationsTabContent destinations={deletedDests} />
