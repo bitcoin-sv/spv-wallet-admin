@@ -1,3 +1,11 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+
+import { z } from 'zod';
+
 import {
   AddXpubDialog,
   CustomErrorComponent,
@@ -12,14 +20,7 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import { addStatusField, getDeletedElements, xPubQueryOptions } from '@/utils';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-
-import { z } from 'zod';
+import { addStatusField, xPubQueryOptions } from '@/utils';
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
   validateSearch: z.object({
@@ -45,8 +46,6 @@ export function Xpub() {
 
   const mappedXpubs = addStatusField(xpubs);
 
-  const deletedXpubs = getDeletedElements(mappedXpubs);
-
   // TODO: Add server pagination for xpubs when search and count will be merged
 
   return (
@@ -55,7 +54,6 @@ export function Xpub() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
@@ -64,9 +62,6 @@ export function Xpub() {
         </div>
         <TabsContent value="all">
           <XpubsTabContent xpubs={mappedXpubs} />
-        </TabsContent>
-        <TabsContent value="deleted">
-          <XpubsTabContent xpubs={deletedXpubs} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
