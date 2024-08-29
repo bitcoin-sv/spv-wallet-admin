@@ -1,10 +1,3 @@
-import { useConfig } from '@4chain-ag/react-configuration';
-import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
-
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Card,
@@ -28,6 +21,12 @@ import { Role, useAuth, useSpvWalletClient } from '@/contexts';
 
 import logger from '@/logger';
 import { createClient, getShortXprv } from '@/utils';
+import { useConfig } from '@4chain-ag/react-configuration';
+import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
+
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/login')({
   component: LoginForm,
@@ -99,9 +98,9 @@ export function LoginForm() {
             <CardContent className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="role">Role</Label>
-                <Select onValueChange={handleSelect}>
+                <Select defaultValue={role} onValueChange={handleSelect}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="User" />
+                    <SelectValue placeholder="Role" />
                   </SelectTrigger>
                   <SelectContent defaultValue={role}>
                     <SelectItem value={Role.Admin}>Admin</SelectItem>
