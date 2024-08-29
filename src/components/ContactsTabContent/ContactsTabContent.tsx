@@ -1,36 +1,24 @@
-import React from 'react';
-
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  ContactAcceptDialogProps,
-  ContactDeleteDialogProps,
-  ContactEditDialogProps,
-  ContactRejectDialogProps,
+  ContactAcceptDialog,
+  ContactDeleteDialog,
+  ContactEditDialog,
+  ContactRejectDialog,
   contactsColumns,
+  ContactStatus,
   DataTable,
   NoRecordsText,
-  TransactionEditDialogProps,
 } from '@/components';
 import { ContactExtended } from '@/interfaces/contacts.ts';
 
 export interface ContactsTabContentProps {
   contacts: ContactExtended[];
-  EditDialog?: React.ComponentType<ContactEditDialogProps | TransactionEditDialogProps>;
-  AcceptDialog?: React.ComponentType<ContactAcceptDialogProps>;
-  DeleteDialog?: React.ComponentType<ContactDeleteDialogProps>;
-  RejectDialog?: React.ComponentType<ContactRejectDialogProps>;
 }
 
-export const ContactsTabContent = ({
-  contacts,
-  EditDialog,
-  AcceptDialog,
-  DeleteDialog,
-  RejectDialog,
-}: ContactsTabContentProps) => {
+export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -41,10 +29,20 @@ export const ContactsTabContent = ({
           <DataTable
             columns={contactsColumns}
             data={contacts}
-            AcceptDialog={AcceptDialog}
-            EditDialog={EditDialog}
-            DeleteDialog={DeleteDialog}
-            RejectDialog={RejectDialog}
+            renderInlineItem={(row) =>
+              row.getValue('status') === ContactStatus.Awaiting ? (
+                <div className="grid grid-cols-2 items-center w-fit gap-4 ">
+                  <ContactAcceptDialog row={row} />
+                  <ContactRejectDialog row={row} />
+                </div>
+              ) : null
+            }
+            renderItem={(row) => (
+              <>
+                <ContactEditDialog row={row} />
+                <ContactDeleteDialog row={row} />
+              </>
+            )}
           />
         ) : (
           <NoRecordsText message="No Contacts to show." />

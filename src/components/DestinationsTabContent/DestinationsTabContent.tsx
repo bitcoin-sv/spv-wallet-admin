@@ -1,12 +1,10 @@
-import React from 'react';
-
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   DataTable,
-  DestinationEditDialogProps,
+  DestinationEditDialog,
   destinationsColumns,
   NoRecordsText,
 } from '@/components';
@@ -14,9 +12,10 @@ import { DestinationExtended } from '@/interfaces/destination.ts';
 
 export interface DestinationsTabContentProps {
   destinations: DestinationExtended[];
-  EditDialog?: React.ComponentType<DestinationEditDialogProps>;
+  hasDestinationEditDialog?: boolean;
 }
-export const DestinationsTabContent = ({ destinations, EditDialog }: DestinationsTabContentProps) => {
+
+export const DestinationsTabContent = ({ destinations, hasDestinationEditDialog }: DestinationsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -24,7 +23,11 @@ export const DestinationsTabContent = ({ destinations, EditDialog }: Destination
       </CardHeader>
       <CardContent className="mb-2">
         {destinations.length > 0 ? (
-          <DataTable columns={destinationsColumns} data={destinations} EditDialog={EditDialog} />
+          <DataTable
+            columns={destinationsColumns}
+            data={destinations}
+            renderItem={(row) => hasDestinationEditDialog && <DestinationEditDialog row={row} />}
+          />
         ) : (
           <NoRecordsText message="No Destinations to show." />
         )}
