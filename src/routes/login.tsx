@@ -103,6 +103,7 @@ export function LoginForm() {
 
   const onSubmit = async ({ role, key }: z.infer<typeof formSchema>) => {
     setServerUrl(serverUrl);
+
     try {
       const client = await createClient(role, key);
       setSpvWalletClient(client);

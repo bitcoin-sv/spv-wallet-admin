@@ -1,8 +1,4 @@
 import {
-  ContactAcceptDialog,
-  ContactDeleteDialog,
-  ContactEditDialog,
-  ContactRejectDialog,
   ContactsTabContent,
   ContactStatus,
   CustomErrorComponent,
@@ -159,50 +155,22 @@ export function Contacts() {
           </div>
         </div>
         <TabsContent value="all">
-          <ContactsTabContent
-            contacts={contacts}
-            AcceptDialog={ContactAcceptDialog}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-            RejectDialog={ContactRejectDialog}
-          />
+          <ContactsTabContent contacts={contacts} />
         </TabsContent>
         <TabsContent value="unconfirmed">
-          <ContactsTabContent
-            contacts={unconfirmedContacts}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={unconfirmedContacts} />
         </TabsContent>
         <TabsContent value="awaiting">
-          <ContactsTabContent
-            contacts={awaitingContacts}
-            AcceptDialog={ContactAcceptDialog}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-            RejectDialog={ContactRejectDialog}
-          />
+          <ContactsTabContent contacts={awaitingContacts} />
         </TabsContent>
         <TabsContent value="confirmed">
-          <ContactsTabContent
-            contacts={confirmedContacts}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={confirmedContacts} />
         </TabsContent>
         <TabsContent value="rejected">
-          <ContactsTabContent
-            contacts={rejectedContacts}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={rejectedContacts} />
         </TabsContent>
         <TabsContent value="deleted">
-          <ContactsTabContent
-            contacts={deletedContacts}
-            EditDialog={ContactEditDialog}
-            DeleteDialog={ContactDeleteDialog}
-          />
+          <ContactsTabContent contacts={deletedContacts} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />

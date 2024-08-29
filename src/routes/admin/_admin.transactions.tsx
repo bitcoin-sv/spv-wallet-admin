@@ -56,9 +56,9 @@ export function Transactions() {
   /**
    * Hiding record transaction button and dialog,
    * until spv-wallet functionality for recording transactions would fulfil users needs and expectations
-   * @var {boolean} showRecordTransaction
+   * @var {boolean} hasRecordTransaction
    */
-  const showRecordTransaction = false;
+  const hasRecordTransaction = false;
 
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
@@ -80,12 +80,17 @@ export function Transactions() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            {showRecordTransaction && <RecordTxDialogAdmin />}
+            {hasRecordTransaction && <RecordTxDialogAdmin />}
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
           </div>
         </div>
         <TabsContent value="all">
-          <TransactionsTabContent transactions={transactions} TxDialog={RecordTxDialogAdmin} />
+          <TransactionsTabContent
+            transactions={transactions}
+            hasRecordTransaction={hasRecordTransaction}
+            hasTransactionEditDialog
+            TxDialog={RecordTxDialogAdmin}
+          />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />

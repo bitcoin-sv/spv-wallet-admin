@@ -63,7 +63,12 @@ function Transactions() {
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
           </div>
         </div>
-        <TransactionsTabContent transactions={transactions} TxDialog={PrepareTxDialogUser} />
+        <TransactionsTabContent
+          transactions={transactions}
+          hasTransactionEditDialog
+          hasRecordTransaction
+          TxDialog={PrepareTxDialogUser}
+        />
         <Toaster position="bottom-center" />
       </div>
     </>
