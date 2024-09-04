@@ -21,7 +21,7 @@ import {
   SelectValue,
   Toaster,
 } from '@/components';
-import { Role, useAuth, useSpvWalletClient } from '@/contexts';
+import { Role, TRole, useAuth, useSpvWalletClient } from '@/contexts';
 
 import logger from '@/logger';
 import { createClient, getShortXprv } from '@/utils';
@@ -40,9 +40,12 @@ export const Route = createFileRoute('/login')({
   component: LoginForm,
 });
 
+const XPRIV_TYPE = 'xPriv';
+const ACCESS_KEY_TYPE = 'Access Key';
+
 const formSchema = z.object({
   role: z.enum([Role.User, Role.Admin]),
-  type: z.enum(['xPriv', 'Access Key']).optional(),
+  type: z.enum([XPRIV_TYPE, ACCESS_KEY_TYPE]).optional(),
   key: z.string({
     required_error: 'This field is required',
   }),
@@ -101,6 +104,24 @@ export function LoginForm() {
     inputRef.current?.focus();
   };
 
+  const errorToMessage = (role: TRole, error: unknown): string => {
+    if (!(error instanceof SpvWalletError)) {
+      return 'Invalid credentials';
+    }
+    if (!(error instanceof ErrorResponse)) {
+      return 'SPV Wallet client error';
+    }
+    switch (error.response.status) {
+      case 401:
+        return role === Role.Admin ? 'Admin Key is invalid' : 'xPriv or Access Key is invalid';
+      case 404:
+        return 'Invalid ServerUrl';
+      default:
+        errorWrapper(error);
+        return 'Response error';
+    }
+  };
+
   const onSubmit = async ({ role, key }: z.infer<typeof formSchema>) => {
     setServerUrl(serverUrl);
 
@@ -108,25 +129,16 @@ export function LoginForm() {
       const client = await createClient(role, key, serverUrl);
       setSpvWalletClient(client);
 
-      setLoginKey(getShortXprv(key));
+      const shortKey = getShortXprv(key);
+      setLoginKey(shortKey);
 
       await router.invalidate();
+      toast.success('Successfully logged in');
     } catch (error: unknown) {
-      logger.error(error);
+      const message = errorToMessage(role, error);
 
-      if (typeof error === 'object' && error !== null && 'content' in error) {
-        const errorContent = (error as { content: string }).content;
-        const parsedError = JSON.parse(errorContent);
-        if (parsedError.message === 'route not found') {
-          toast.error('Invalid ServerUrl');
-          return;
-        }
-      }
-      if (role === Role.Admin) {
-        toast.error('Admin Key is invalid');
-      } else {
-        toast.error('xPriv or Access Key is invalid');
-      }
+      toast.error(message);
+      console.error('Login error:', error);
     }
   };
 

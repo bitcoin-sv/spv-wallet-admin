@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 export const useServerUrl = () => {
   const { config } = useConfig();
-  const [serverUrl, setServerUrl] = useState<string>('');
+  const [serverUrl, setServerUrl] = useState<string>(config.serverUrl);
 
   useEffect(() => {
     setServerUrl(config.serverUrl);
