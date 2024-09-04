@@ -23,14 +23,14 @@ import {
 } from '@/components';
 import { Role, TRole, useAuth, useSpvWalletClient } from '@/contexts';
 
-import logger from '@/logger';
-import { createClient, getShortXprv } from '@/utils';
+import { createClient, errorWrapper, getShortXprv } from '@/utils';
 import { useConfig } from '@4chain-ag/react-configuration';
+import { ErrorResponse, SpvWalletError } from '@bsv/spv-wallet-js-client';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { toast } from 'sonner';
@@ -69,7 +69,7 @@ export function LoginForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       role: Role.Admin,
-      type: 'xPriv',
+      type: XPRIV_TYPE,
       key: '',
       serverUrl: serverUrl,
     },
@@ -142,6 +142,14 @@ export function LoginForm() {
     }
   };
 
+  const onServerUrlChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    formChangeCallback: (ev: React.ChangeEvent<HTMLInputElement>) => void,
+  ) => {
+    setServerUrl(e.target.value);
+    formChangeCallback(e);
+  };
+
   return (
     <div className="relative">
       <div className="absolute top-8 right-8">
@@ -160,16 +168,16 @@ export function LoginForm() {
                   <FormField
                     control={form.control}
                     name="role"
-                    render={({ field }) => (
+                    render={({ field: { onChange, value } }) => (
                       <FormItem>
                         <FormLabel>Role</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={onChange} defaultValue={value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a role" defaultValue={field.value} />
+                              <SelectValue placeholder="Select a role" defaultValue={value} />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent defaultValue={field.value}>
+                          <SelectContent defaultValue={value}>
                             <SelectItem value={Role.Admin}>Admin</SelectItem>
                             <SelectItem value={Role.User}>User</SelectItem>
                           </SelectContent>
@@ -181,11 +189,11 @@ export function LoginForm() {
                     <FormField
                       control={form.control}
                       name="type"
-                      render={({ field }) => (
+                      render={({ field: { value, onChange } }) => (
                         <FormItem>
                           <FormLabel>Key</FormLabel>
                           <FormControl>
-                            <RadioGroup defaultValue={field.value} className="mb-2" onValueChange={field.onChange}>
+                            <RadioGroup defaultValue={value} className="mb-2" onValueChange={onChange}>
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
                                   <RadioGroupItem value="xPriv" />
@@ -243,7 +251,11 @@ export function LoginForm() {
                           <FormLabel>Server Url</FormLabel>
                           <div className="relative">
                             <FormControl>
-                              <Input {...field} placeholder="Server Url" />
+                              <Input
+                                {...field}
+                                onChange={(e) => onServerUrlChange(e, field.onChange)}
+                                placeholder="Server Url"
+                              />
                             </FormControl>
                           </div>
                         </FormItem>
