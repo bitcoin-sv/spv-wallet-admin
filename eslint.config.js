@@ -1,12 +1,12 @@
+import globals from 'globals';
 import eslint from '@eslint/js';
-
-import * as tanstackQuery from '@tanstack/eslint-plugin-query';
+import ts from 'typescript-eslint';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import globals from 'globals';
-import ts from 'typescript-eslint';
+
+import * as tanstackQuery from '@tanstack/eslint-plugin-query';
 
 export default [
   eslint.configs.recommended,
