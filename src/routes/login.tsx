@@ -21,11 +21,11 @@ import {
   SelectValue,
   Toaster,
 } from '@/components';
-import { Role, useAuth, useSpvWalletClient } from '@/contexts';
+import { Role, TRole, useAuth, useSpvWalletClient } from '@/contexts';
 
-import logger from '@/logger';
-import { createClient, getShortXprv } from '@/utils';
+import { createClient, errorWrapper, getShortXprv } from '@/utils';
 import { useConfig } from '@4chain-ag/react-configuration';
+import { ErrorResponse, SpvWalletError } from '@bsv/spv-wallet-js-client';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
@@ -40,9 +40,12 @@ export const Route = createFileRoute('/login')({
   component: LoginForm,
 });
 
+const XPRIV_TYPE = 'xPriv';
+const ACCESS_KEY_TYPE = 'Access Key';
+
 const formSchema = z.object({
   role: z.enum([Role.User, Role.Admin]),
-  type: z.enum(['xPriv', 'Access Key']).optional(),
+  type: z.enum([XPRIV_TYPE, ACCESS_KEY_TYPE]).optional(),
   key: z.string({
     required_error: 'This field is required',
   }),
@@ -50,6 +53,24 @@ const formSchema = z.object({
     required_error: 'Server URL is required',
   }),
 });
+
+const errorToMessage = (role: TRole, error: unknown): string => {
+  if (!(error instanceof SpvWalletError)) {
+    return 'Invalid credentials';
+  }
+  if (!(error instanceof ErrorResponse)) {
+    return 'SPV Wallet client error';
+  }
+  switch (error.response.status) {
+    case 401:
+      return role === Role.Admin ? 'Admin Key is invalid' : 'xPriv or Access Key is invalid';
+    case 404:
+      return 'Invalid ServerUrl';
+    default:
+      errorWrapper(error);
+      return 'Response error';
+  }
+};
 
 export function LoginForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -71,6 +92,10 @@ export function LoginForm() {
       serverUrl: serverUrl,
     },
   });
+
+  useEffect(() => {
+    form.setValue('serverUrl', serverUrl);
+  }, [serverUrl]);
 
   const ShowPasswordIcon = isPasswordVisible ? EyeSlashIcon : EyeIcon;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -101,32 +126,21 @@ export function LoginForm() {
     inputRef.current?.focus();
   };
 
-  const onSubmit = async ({ role, key }: z.infer<typeof formSchema>) => {
-    setServerUrl(serverUrl);
-
+  const onSubmit = async (formData: z.infer<typeof formSchema>) => {
     try {
-      const client = await createClient(role, key, serverUrl);
+      const client = await createClient(
+        formData.role,
+        formData.key,
+        formData.serverUrl,
+        formData.type === ACCESS_KEY_TYPE,
+      );
       setSpvWalletClient(client);
-
-      setLoginKey(getShortXprv(key));
+      setServerUrl(formData.serverUrl);
+      setLoginKey(getShortXprv(formData.key));
 
       await router.invalidate();
     } catch (error: unknown) {
-      logger.error(error);
-
-      if (typeof error === 'object' && error !== null && 'content' in error) {
-        const errorContent = (error as { content: string }).content;
-        const parsedError = JSON.parse(errorContent);
-        if (parsedError.message === 'route not found') {
-          toast.error('Invalid ServerUrl');
-          return;
-        }
-      }
-      if (role === Role.Admin) {
-        toast.error('Admin Key is invalid');
-      } else {
-        toast.error('xPriv or Access Key is invalid');
-      }
+      toast.error(errorToMessage(formData.role, error));
     }
   };
 
