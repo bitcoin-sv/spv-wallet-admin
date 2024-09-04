@@ -12,7 +12,7 @@ export default [
   eslint.configs.recommended,
   ...ts.configs.recommended,
   {
-    ignores: ['dist/**/*', 'node_modules/**/*', 'eslint.config.js'],
+    ignores: ['dist/**/*', 'node_modules/**/*', 'eslint.config.js', 'tailwind.config.js'],
   },
   {
     files: ['*.ts', '*.tsx'],
