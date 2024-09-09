@@ -21,7 +21,7 @@ import {
   SelectValue,
   Toaster,
 } from '@/components';
-import { Role, TRole, useAuth, useSpvWalletClient } from '@/contexts';
+import { Role, TRole, LoginType, useAuth, useSpvWalletClient } from '@/contexts';
 
 import { createClient, errorWrapper, getShortXprv } from '@/utils';
 import { useConfig } from '@4chain-ag/react-configuration';
@@ -40,12 +40,9 @@ export const Route = createFileRoute('/login')({
   component: LoginForm,
 });
 
-const XPRIV_TYPE = 'xPriv';
-const ACCESS_KEY_TYPE = 'Access Key';
-
 const formSchema = z.object({
   role: z.enum([Role.User, Role.Admin]),
-  type: z.enum([XPRIV_TYPE, ACCESS_KEY_TYPE]).optional(),
+  type: z.enum([LoginType.AccessKey, LoginType.Xprv]).optional(),
   key: z.string({
     required_error: 'This field is required',
   }),
@@ -69,7 +66,7 @@ export function LoginForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       role: Role.Admin,
-      type: XPRIV_TYPE,
+      type: LoginType.Xprv,
       key: '',
       serverUrl: serverUrl,
     },
@@ -122,11 +119,11 @@ export function LoginForm() {
     }
   };
 
-  const onSubmit = async ({ role, key }: z.infer<typeof formSchema>) => {
+  const onSubmit = async ({ role, key, type }: z.infer<typeof formSchema>) => {
     setServerUrl(serverUrl);
 
     try {
-      const client = await createClient(role, key, serverUrl);
+      const client = await createClient(role, key, serverUrl, type);
       setSpvWalletClient(client);
 
       const shortKey = getShortXprv(key);
@@ -196,15 +193,19 @@ export function LoginForm() {
                             <RadioGroup defaultValue={value} className="mb-2" onValueChange={onChange}>
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
-                                  <RadioGroupItem value="xPriv" />
+                                  <RadioGroupItem value="xPriv" id="xprv" />
                                 </FormControl>
-                                <FormLabel className="ml-2">xPriv</FormLabel>
+                                <FormLabel htmlFor="xprv" className="ml-2 cursor-pointer">
+                                  xPriv
+                                </FormLabel>
                               </FormItem>
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
-                                  <RadioGroupItem value="Access Key" />
+                                  <RadioGroupItem id="accessKey" value="Access Key" />
                                 </FormControl>
-                                <FormLabel className="ml-2">Access Key</FormLabel>
+                                <FormLabel htmlFor="accessKey" className="ml-2 cursor-pointer">
+                                  Access Key
+                                </FormLabel>
                               </FormItem>
                             </RadioGroup>
                           </FormControl>
