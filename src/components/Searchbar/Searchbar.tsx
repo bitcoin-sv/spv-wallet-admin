@@ -6,9 +6,10 @@ import React from 'react';
 export interface SearchbarProps {
   filter: string;
   setFilter: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
 }
 
-export const Searchbar = ({ filter, setFilter }: SearchbarProps) => {
+export const Searchbar = ({ filter, setFilter, placeholder }: SearchbarProps) => {
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
@@ -18,7 +19,7 @@ export const Searchbar = ({ filter, setFilter }: SearchbarProps) => {
       <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
       <Input
         type="search"
-        placeholder="Search"
+        placeholder={placeholder || 'Search'}
         className="w-full h-10 rounded-lg bg-background pl-8 pr-8 md:w-[200px] lg:w-[336px]"
         value={filter}
         onChange={handleFilterChange}
