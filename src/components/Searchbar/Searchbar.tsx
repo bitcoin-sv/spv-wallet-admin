@@ -1,8 +1,7 @@
-import { CircleX, Search } from 'lucide-react';
+import { Input } from '@/components';
+import { Search } from 'lucide-react';
 
 import React from 'react';
-
-import { Input } from '@/components';
 
 export interface SearchbarProps {
   filter: string;
@@ -17,12 +16,6 @@ export const Searchbar = ({ filter, setFilter }: SearchbarProps) => {
   return (
     <div className="relative flex-1 md:grow-0 mr-3">
       <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-      {filter.length > 0 && (
-        <CircleX
-          onClick={() => setFilter('')}
-          className="h-4 w-4 right-2.5 top-3 text-muted-foreground absolute cursor-pointer"
-        />
-      )}
       <Input
         type="search"
         placeholder="Search"
