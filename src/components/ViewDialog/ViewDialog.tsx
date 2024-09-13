@@ -30,10 +30,10 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
           </div>
         );
       }
-
       return (
         <div key={field} className="break-all">
-          <span className="text-gray-400">{field}:</span> {value as React.ReactNode}
+          <span className="text-gray-400">{field}:</span>{' '}
+          {typeof value === 'boolean' ? value.toString() : (value as React.ReactNode)}
         </div>
       );
     });
