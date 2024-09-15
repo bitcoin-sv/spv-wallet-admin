@@ -19,13 +19,13 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   Row,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import { EllipsisVertical } from 'lucide-react';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress | Tx;
 
@@ -44,20 +44,14 @@ export function DataTable<TData, TValue>({
   renderItem,
   renderInlineItem,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([initialSorting]);
-
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    manualSorting: true,
+    getSortedRowModel: getSortedRowModel(),
     initialState: {
       sorting: [initialSorting],
-    },
-    state: {
-      sorting,
     },
   });
 
