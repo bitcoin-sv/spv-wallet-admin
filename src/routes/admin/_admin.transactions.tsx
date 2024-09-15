@@ -88,7 +88,6 @@ export function Transactions() {
           <TransactionsTabContent
             transactions={transactions}
             hasRecordTransaction={hasRecordTransaction}
-            hasTransactionEditDialog
             TxDialog={RecordTxDialogAdmin}
           />
         </TabsContent>

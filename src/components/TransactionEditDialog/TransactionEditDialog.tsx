@@ -1,10 +1,3 @@
-import { Metadata, Tx } from '@bsv/spv-wallet-js-client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -19,6 +12,12 @@ import {
 
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { Metadata, Tx } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface TransactionEditDialogProps {
   row: Row<Tx>;
@@ -42,9 +41,15 @@ export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
       return await spvWalletClient!.UpdateTransactionMetadata(row.original.id, metadata);
     },
     onSuccess: () => {
+      toast.success('Transaction edited');
+
       return queryClient.invalidateQueries({
         queryKey: ['transactions'],
       });
+    },
+    onError: (error) => {
+      errorWrapper(error);
+      toast.error('Failed to edit transaction');
     },
   });
 
@@ -53,7 +58,6 @@ export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
       const metadataParsed = JSON.parse(metadata) as Metadata;
       mutation.mutate(metadataParsed);
 
-      toast.success('Transaction edited');
       setMetadata(JSON.stringify({}));
       setIsEditDialogOpen(false);
     } catch (err) {
