@@ -34,6 +34,8 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
 
   const navigate = useNavigate({ from: Route.fullPath });
 
+  const { createdRange, updatedRange, revokedRange } = Route.useSearch();
+
   const onApplyDateRange = () => {
     navigate({
       search: (old) => {
@@ -74,6 +76,11 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         <Button variant="outline">
           <ListFilter className="w-5 h-5" />
           <span className="ml-2">Filter</span>
+          {createdRange || updatedRange || revokedRange ? (
+            <span className="ml-2 bg-black/80 rounded-full text-white h-6 w-6 text-xs flex justify-center items-center">
+              +1
+            </span>
+          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -139,8 +146,13 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
           Apply
         </Button>
         <Button onClick={onClearDateRange} className="mt-4 w-full" variant="secondary">
-          Clear
+          Reset
         </Button>
+        <div className="font-medium leading-none mt-4 text-sm">
+          Applied Filters: {createdRange && 'Created Range'}
+          {updatedRange && 'Updated Range'}
+          {revokedRange && 'Revoked Range'}
+        </div>
       </PopoverContent>
     </Popover>
   );
