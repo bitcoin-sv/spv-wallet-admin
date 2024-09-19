@@ -5,8 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Route } from '@/routes/admin/_admin.access-keys.tsx';
-import { useNavigate } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { addDays, format, subDays } from 'date-fns';
 import { Calendar as CalendarIcon, ListFilter } from 'lucide-react';
 
@@ -32,16 +31,25 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
   const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
 
-  const navigate = useNavigate({ from: Route.fullPath });
+  const {
+    search: { updatedRange, createdRange, revokedRange },
+  } = useLocation();
 
-  const { createdRange, updatedRange, revokedRange } = Route.useSearch();
+  const navigate = useNavigate();
 
   const onApplyDateRange = () => {
     navigate({
       search: (old) => {
-        delete old?.createdRange;
-        delete old?.updatedRange;
-        delete old?.revokedRange;
+        if ('createdRange' in old) {
+          delete old.createdRange;
+        }
+        if ('updatedRange' in old) {
+          delete old.updatedRange;
+        }
+        if ('revokedRange' in old) {
+          delete old.revokedRange;
+        }
+
         return {
           ...old,
           [dateRangeOption]: {
@@ -58,9 +66,15 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const onClearDateRange = () => {
     navigate({
       search: (old) => {
-        delete old?.createdRange;
-        delete old?.updatedRange;
-        delete old?.revokedRange;
+        if ('createdRange' in old) {
+          delete old.createdRange;
+        }
+        if ('updatedRange' in old) {
+          delete old.updatedRange;
+        }
+        if ('revokedRange' in old) {
+          delete old.revokedRange;
+        }
         return {
           ...old,
         };
