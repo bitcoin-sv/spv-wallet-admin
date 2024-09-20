@@ -34,15 +34,19 @@ export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.RevokeAccessKey(row.original.id);
     },
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['accessKeys'],
-      }),
+      });
+      toast.success('Access key revoked');
+    },
+    onError: () => {
+      toast.error('Error revoking access key');
+    },
   });
 
   const handleRevokeAccessKey = () => {
     mutation.mutate();
-    toast.success('Access key revoked');
     setIsRevokeDialogOpen(false);
   };
   return (

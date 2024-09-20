@@ -60,7 +60,7 @@ function Transactions() {
         <div className="flex items-center justify-end mb-2">
           <div className="flex">
             <PrepareTxDialogUser />
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
+            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
           </div>
         </div>
         <TransactionsTabContent

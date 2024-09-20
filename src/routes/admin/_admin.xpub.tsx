@@ -1,11 +1,3 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
-
-import { z } from 'zod';
-
 import {
   AddXpubDialog,
   CustomErrorComponent,
@@ -21,6 +13,13 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, xPubQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+
+import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
   validateSearch: z.object({
@@ -57,7 +56,7 @@ export function Xpub() {
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID" />
           </div>
         </div>
         <TabsContent value="all">

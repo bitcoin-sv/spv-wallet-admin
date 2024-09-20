@@ -1,1 +1,3 @@
-export const getAddress = (filter: string) => (filter.length > 0 && filter.length < 30 ? filter : undefined);
+export const getAddress = (filter: string) => {
+  return filter.length > 0 && filter.length < 35 ? filter : undefined;
+};
