@@ -92,7 +92,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
           <span className="ml-2">Filter</span>
           {createdRange || updatedRange || revokedRange ? (
             <span className="ml-2 bg-black/80 rounded-full text-white h-6 w-6 text-xs flex justify-center items-center">
-              +1
+              1
             </span>
           ) : null}
         </Button>
