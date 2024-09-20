@@ -81,7 +81,7 @@ export function Transactions() {
           </TabsList>
           <div className="flex">
             {hasRecordTransaction && <RecordTxDialogAdmin />}
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} />
+            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
           </div>
         </div>
         <TabsContent value="all">
