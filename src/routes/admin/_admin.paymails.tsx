@@ -120,7 +120,7 @@ export function Paymails() {
           </TabsList>
           <div className="flex">
             <AddPaymailDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
             <DateRangeFilter />
           </div>
         </div>
