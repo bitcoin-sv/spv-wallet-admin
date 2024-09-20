@@ -122,7 +122,7 @@ export function Destinations() {
           </TabsList>
           <div className="flex">
             <AddDestinationDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by lockingScript or address" />
             <DateRangeFilter />
           </div>
         </div>

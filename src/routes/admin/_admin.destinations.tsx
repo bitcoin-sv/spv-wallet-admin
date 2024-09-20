@@ -120,7 +120,7 @@ export function Destinations() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by lockingScript or address" />
             <DateRangeFilter />
           </div>
         </div>
