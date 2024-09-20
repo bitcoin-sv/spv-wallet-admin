@@ -9,9 +9,11 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 
-import { addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
-import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+import { accessKeysAdminQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
@@ -41,26 +43,47 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
   loader: async ({
     context: {
       spvWallet: { spvWalletClient },
+      queryClient,
     },
     deps: { order_by_field, sort_direction, xpubId, createdRange, revokedRange, updatedRange },
-  }) =>
-    await spvWalletClient!.AdminGetAccessKeys(
-      { xpubId, createdRange, updatedRange, revokedRange },
-      {},
-      { order_by_field, sort_direction },
-    ),
+  }) => {
+    await queryClient.ensureQueryData(
+      accessKeysAdminQueryOptions({
+        spvWalletClient: spvWalletClient!,
+        xpubId,
+        createdRange,
+        updatedRange,
+        revokedRange,
+        sort_direction,
+        order_by_field,
+      }),
+    );
+  },
 });
 
 export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { xpubId } = useSearch({ from: '/admin/_admin/access-keys' });
+  const { xpubId, order_by_field, sort_direction, createdRange, updatedRange, revokedRange } = useSearch({
+    from: '/admin/_admin/access-keys',
+  });
 
   const [debouncedFilter] = useDebounce(filter, 500);
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const accessKeys = useLoaderData({ from: '/admin/_admin/access-keys' });
+  const { spvWalletClient } = useSpvWalletClient();
+
+  const { data: accessKeys } = useSuspenseQuery(
+    accessKeysAdminQueryOptions({
+      spvWalletClient: spvWalletClient!,
+      order_by_field,
+      sort_direction,
+      createdRange,
+      updatedRange,
+      revokedRange,
+    }),
+  );
 
   const mappedAccessKeys = addStatusField(accessKeys);
   const revokedKeys = getRevokedElements(mappedAccessKeys);

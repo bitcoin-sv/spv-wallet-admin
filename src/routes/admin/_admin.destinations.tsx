@@ -9,9 +9,12 @@ import {
   Toaster,
 } from '@/components';
 import { DestinationsTabContent } from '@/components/DestinationsTabContent';
+import { useSpvWalletClient } from '@/contexts';
 import { destinationSearchSchema } from '@/searchSchemas/destinationSearchSchema.tsx';
 import { addStatusField, getAddress, getDeletedElements, getLockingScript } from '@/utils';
-import { createFileRoute, useLoaderData, useNavigate, useSearch } from '@tanstack/react-router';
+import { destinationsAdminQueryOptions } from '@/utils/destinationsAdminQueryOptions.tsx';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
@@ -30,26 +33,48 @@ export const Route = createFileRoute('/admin/_admin/destinations')({
   loader: async ({
     context: {
       spvWallet: { spvWalletClient },
+      queryClient,
     },
     deps: { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange },
-  }) =>
-    await spvWalletClient!.AdminGetDestinations(
-      { lockingScript, address, createdRange, updatedRange },
-      {},
-      { order_by_field, sort_direction },
-    ),
+  }) => {
+    await queryClient.ensureQueryData(
+      destinationsAdminQueryOptions({
+        spvWalletClient: spvWalletClient!,
+        address,
+        lockingScript,
+        order_by_field,
+        sort_direction,
+        createdRange,
+        updatedRange,
+      }),
+    );
+  },
 });
 
 export function Destinations() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { lockingScript, address } = useSearch({ from: '/admin/_admin/destinations' });
+  const { lockingScript, address, order_by_field, sort_direction, createdRange, updatedRange } = useSearch({
+    from: '/admin/_admin/destinations',
+  });
 
   const [debouncedFilter] = useDebounce(filter, 200);
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const destinations = useLoaderData({ from: '/admin/_admin/destinations' });
+  const { spvWalletClient } = useSpvWalletClient();
+
+  const { data: destinations } = useSuspenseQuery(
+    destinationsAdminQueryOptions({
+      spvWalletClient: spvWalletClient!,
+      address,
+      lockingScript,
+      order_by_field,
+      sort_direction,
+      createdRange,
+      updatedRange,
+    }),
+  );
 
   const mappedDestinations = addStatusField(destinations);
   const deletedDests = getDeletedElements(mappedDestinations);
