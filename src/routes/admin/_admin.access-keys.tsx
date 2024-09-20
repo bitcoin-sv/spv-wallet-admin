@@ -106,7 +106,7 @@ export function AccessKeys() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
             <DateRangeFilter withRevokedRange />
           </div>
         </div>

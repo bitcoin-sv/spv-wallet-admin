@@ -150,7 +150,7 @@ export function Contacts() {
             <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID, Paymail or PubKey" />
             <DateRangeFilter />
           </div>
         </div>
