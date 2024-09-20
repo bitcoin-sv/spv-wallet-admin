@@ -134,7 +134,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   };
 
   const onXPubClear = () => {
-    form.resetField('xPub');
+    form.reset();
     if (xPubRef.current) {
       xPubRef.current?.focus();
     }
