@@ -354,10 +354,10 @@
   resolved "https://registry.yarnpkg.com/@bsv/sdk/-/sdk-1.1.23.tgz#a90ea7c2c9fe071d1bd1dfd3ac9f13b4cd79eb77"
   integrity sha512-9RXEamEimTPieaz2XH4mdhrDE7hf06fzDPwr5bpENxjTwE1omFpVidg67nQowB4/mRQRaR92/BQxNvgofbP1oA==
 
-"@bsv/spv-wallet-js-client@^1.0.0-beta.20":
-  version "1.0.0-beta.20"
-  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-1.0.0-beta.20.tgz#6d19916563c21a65fe1d1367827437f4585c1182"
-  integrity sha512-7DDQyLlOnQl2dYAuMKpAxjByH+SqI0PjUZwOib3bAz52XmUPg1Y5l1xwUa+HOCPbN6oBwe7XeUr8spaWrb+eAg==
+"@bsv/spv-wallet-js-client@^1.0.0-beta.21":
+  version "1.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@bsv/spv-wallet-js-client/-/spv-wallet-js-client-1.0.0-beta.21.tgz#c3bd4770a47c923a11577b40179072e22519b5d3"
+  integrity sha512-VQ1q22/VQ1xETgRetkyQ/oqlXROlUGxfiC3EUQXYoIKwrzVpXumifv59e4tBxjjIiF7XBh4qX2tfJ2r77QlSDg==
   dependencies:
     "@bsv/sdk" "^1.1.13"
     "@types/rollup-plugin-node-builtins" "^2.1.5"

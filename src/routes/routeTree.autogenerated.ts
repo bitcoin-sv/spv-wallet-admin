@@ -99,7 +99,7 @@ const AdminAdminXpubRoute = AdminAdminXpubImport.update({
 const AdminAdminWebhooksRoute = AdminAdminWebhooksImport.update({
   path: '/webhooks',
   getParentRoute: () => AdminAdminRoute,
-} as any);
+} as any)
 
 const AdminAdminTransactionsRoute = AdminAdminTransactionsImport.update({
   path: '/transactions',
@@ -220,7 +220,7 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/webhooks'
       preLoaderRoute: typeof AdminAdminWebhooksImport
       parentRoute: typeof AdminAdminImport
-    };
+    }
     '/admin/_admin/xpub': {
       id: '/admin/_admin/xpub'
       path: '/xpub'
