@@ -21,7 +21,7 @@ export const Route = createFileRoute('/admin/_admin/webhooks')({
 
 export function Webhooks() {
   const { spvWalletClient } = useSpvWalletClient();
-  const [tab, setTab] = useState<string>('all');
+  const [tab, setTab] = useState('all');
 
   const { data: webhooks } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
