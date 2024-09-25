@@ -1,11 +1,3 @@
-import { useNavigate } from '@tanstack/react-router';
-import { addDays, format, subDays } from 'date-fns';
-import { Calendar as CalendarIcon, ListFilter } from 'lucide-react';
-
-import React, { useState } from 'react';
-
-import { DateRange } from 'react-day-picker';
-
 import { Button } from '@/components/ui';
 import { Calendar } from '@/components/ui/calendar.tsx';
 import { Label } from '@/components/ui/label.tsx';
@@ -13,7 +5,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Route } from '@/routes/admin/_admin.access-keys.tsx';
+import { useLocation, useNavigate } from '@tanstack/react-router';
+import { addDays, format, subDays } from 'date-fns';
+import { Calendar as CalendarIcon, ListFilter } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+import { DateRange } from 'react-day-picker';
+import { toast } from 'sonner';
 
 export interface DateRangeFilterProps {
   withRevokedRange?: boolean;
@@ -32,14 +31,25 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
   const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
 
-  const navigate = useNavigate({ from: Route.fullPath });
+  const {
+    search: { updatedRange, createdRange, revokedRange },
+  } = useLocation();
+
+  const navigate = useNavigate();
 
   const onApplyDateRange = () => {
     navigate({
       search: (old) => {
-        delete old?.createdRange;
-        delete old?.updatedRange;
-        delete old?.revokedRange;
+        if ('createdRange' in old) {
+          delete old.createdRange;
+        }
+        if ('updatedRange' in old) {
+          delete old.updatedRange;
+        }
+        if ('revokedRange' in old) {
+          delete old.revokedRange;
+        }
+
         return {
           ...old,
           [dateRangeOption]: {
@@ -50,6 +60,28 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
       },
       replace: true,
     });
+    toast.success('Date range applied');
+  };
+
+  const onClearDateRange = () => {
+    navigate({
+      search: (old) => {
+        if ('createdRange' in old) {
+          delete old.createdRange;
+        }
+        if ('updatedRange' in old) {
+          delete old.updatedRange;
+        }
+        if ('revokedRange' in old) {
+          delete old.revokedRange;
+        }
+        return {
+          ...old,
+        };
+      },
+      replace: true,
+    });
+    toast.success('Date range cleared');
   };
 
   return (
@@ -58,6 +90,11 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         <Button variant="outline">
           <ListFilter className="w-5 h-5" />
           <span className="ml-2">Filter</span>
+          {createdRange || updatedRange || revokedRange ? (
+            <span className="ml-2 bg-black/80 rounded-full text-white h-6 w-6 text-xs flex justify-center items-center">
+              1
+            </span>
+          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -122,6 +159,14 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         <Button onClick={onApplyDateRange} className="mt-4 w-full" variant="default">
           Apply
         </Button>
+        <Button onClick={onClearDateRange} className="mt-4 w-full" variant="secondary">
+          Reset
+        </Button>
+        <div className="font-medium leading-none mt-4 text-sm">
+          Applied Filters: {createdRange && 'Created Range'}
+          {updatedRange && 'Updated Range'}
+          {revokedRange && 'Revoked Range'}
+        </div>
       </PopoverContent>
     </Popover>
   );
