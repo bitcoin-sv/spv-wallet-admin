@@ -7,6 +7,7 @@ import {
   NoRecordsText,
   paymailColumns,
   PaymailDeleteDialog,
+  ViewDialog,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
 
@@ -26,9 +27,12 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: Paymail
           <DataTable
             columns={paymailColumns}
             data={paymails}
-            renderItem={(row) =>
-              hasPaymailDeleteDialog && row.original.status !== 'deleted' && <PaymailDeleteDialog row={row} />
-            }
+            renderItem={(row) => (
+              <>
+                <ViewDialog row={row} />
+                {hasPaymailDeleteDialog && row.original.status !== 'deleted' && <PaymailDeleteDialog row={row} />}
+              </>
+            )}
           />
         ) : (
           <NoRecordsText message="No Paymails to show." />

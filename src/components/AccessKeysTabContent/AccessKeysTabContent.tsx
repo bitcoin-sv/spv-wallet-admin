@@ -7,6 +7,7 @@ import {
   DataTable,
   NoRecordsText,
   RevokeKeyDialog,
+  ViewDialog,
 } from '@/components';
 import { AccessKeyExtended } from '@/interfaces';
 
@@ -26,7 +27,12 @@ export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessK
           <DataTable
             columns={accessKeysColumns}
             data={accessKeys}
-            renderItem={(row) => hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
+            renderItem={(row) => (
+              <>
+                <ViewDialog row={row} />
+                {hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
+              </>
+            )}
           />
         ) : (
           <NoRecordsText message="No Access Keys to show." />

@@ -59,10 +59,7 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
           <DialogHeader>
             <DialogTitle>Unsubscribe webhook</DialogTitle>
           </DialogHeader>
-          <DialogDescription>
-            Are you sure you want to unsubscribe a <span className="font-bold text-black">{row.getValue('url')}</span>{' '}
-            webhook ?
-          </DialogDescription>
+          <DialogDescription>Are you sure you want to unsubscribe a webhook ?</DialogDescription>
           <div className="grid grid-cols-2 gap-4">
             <Button onClick={onRemove}>Unsubscribe</Button>
             <Button variant="ghost" onClick={handleIsOpenToggle}>

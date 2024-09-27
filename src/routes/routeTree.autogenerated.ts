@@ -284,6 +284,6 @@ export const routeTree = rootRoute.addChildren({
       UserUserXpubRoute,
     }),
   }),
-});
+})
 
 /* prettier-ignore-end */
