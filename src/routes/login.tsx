@@ -157,7 +157,7 @@ export function LoginForm() {
           <h1 className="text-2xl font-bold mb-16">SPV Wallet Admin</h1>
           <Card className="w-full max-w-sm">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
+              <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
                 <CardHeader>
                   <CardTitle className="text-2xl">Login</CardTitle>
                 </CardHeader>
