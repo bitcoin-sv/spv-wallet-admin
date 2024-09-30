@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DropdownMenuItem,
+  LoadingSpinner,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { AccessKey } from '@bsv/spv-wallet-js-client';
@@ -34,8 +35,8 @@ export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.RevokeAccessKey(row.original.id);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ['accessKeys'],
       });
       toast.success('Access key revoked');
@@ -49,6 +50,8 @@ export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
     mutation.mutate();
     setIsRevokeDialogOpen(false);
   };
+
+  const { isPending } = mutation;
   return (
     <Dialog open={isRevokeDialogOpen} onOpenChange={handleRevokeDialogOpen}>
       <DialogTrigger className="w-full">
@@ -62,8 +65,8 @@ export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
           <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="destructive" onClick={handleRevokeAccessKey}>
-            Revoke
+          <Button variant="destructive" onClick={handleRevokeAccessKey} disabled={isPending}>
+            Revoke {isPending && <LoadingSpinner className="ml-2" />}
           </Button>
           <Button variant="ghost" onClick={handleRevokeDialogOpen}>
             Cancel

@@ -1,8 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import { useState } from 'react';
-
-import { toast } from 'sonner';
+import { LoadingSpinner } from '@/components';
 
 import { Button } from '@/components/ui';
 import {
@@ -17,6 +13,11 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface ContactDeleteDialogProps {
   row: Row<Contact>;
@@ -32,18 +33,27 @@ export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
     setIsDeleteDialogOpen((prev) => !prev);
   };
 
-  const handleDelete = async () => {
-    try {
-      await spvWalletClient?.AdminDeleteContact(row.original.id);
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminDeleteContact(id);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries();
-
       toast.success('Contact deleted');
       setIsDeleteDialogOpen(false);
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error('Failed to delete contact');
       errorWrapper(error);
-    }
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate(row.original.id);
   };
+
+  const { isPending } = deleteMutation;
 
   return (
     <Dialog open={isDeleteDialogOpen} onOpenChange={handleDeleteDialogOpen}>
@@ -56,8 +66,8 @@ export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
           <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
+          <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
+            Delete {isPending && <LoadingSpinner className="ml-2" />}
           </Button>
           <Button variant="ghost" onClick={handleDeleteDialogOpen}>
             Cancel

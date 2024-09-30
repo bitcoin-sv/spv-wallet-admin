@@ -1,11 +1,3 @@
-import { Metadata } from '@bsv/spv-wallet-js-client';
-import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CirclePlus } from 'lucide-react';
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -14,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
   Label,
+  LoadingSpinner,
   Textarea,
   Tooltip,
   TooltipContent,
@@ -23,6 +16,13 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
+import { Metadata } from '@bsv/spv-wallet-js-client';
+import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CirclePlus } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface AddAccessKeyDialogProps {
   className?: string;
@@ -69,6 +69,8 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
     }
   };
 
+  const { isPending } = mutation;
+
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={handleDialogOpen}>
       <DialogTrigger asChild className={className}>
@@ -98,7 +100,9 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
 
         <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
         <div className="grid grid-cols-2 gap-4">
-          <Button onClick={handleAdd}>Add</Button>
+          <Button onClick={handleAdd} disabled={isPending}>
+            Add {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
           <Button variant="ghost" onClick={handleDialogOpen}>
             Cancel
           </Button>
