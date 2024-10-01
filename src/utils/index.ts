@@ -15,3 +15,4 @@ export * from './getContactId.ts';
 export * from './getContactPaymail.ts';
 export * from './accessKeysAdminQueryOptions.tsx';
 export * from './destinationsAdminQueryOptions.tsx';
+export * from './webhooksQueryOptions.tsx';

@@ -7,6 +7,7 @@ import {
   DestinationEditDialog,
   destinationsColumns,
   NoRecordsText,
+  ViewDialog,
 } from '@/components';
 import { DestinationExtended } from '@/interfaces/destination.ts';
 
@@ -26,7 +27,12 @@ export const DestinationsTabContent = ({ destinations, hasDestinationEditDialog 
           <DataTable
             columns={destinationsColumns}
             data={destinations}
-            renderItem={(row) => hasDestinationEditDialog && <DestinationEditDialog row={row} />}
+            renderItem={(row) => (
+              <>
+                <ViewDialog row={row} />
+                {hasDestinationEditDialog && <DestinationEditDialog row={row} />}
+              </>
+            )}
           />
         ) : (
           <NoRecordsText message="No Destinations to show." />

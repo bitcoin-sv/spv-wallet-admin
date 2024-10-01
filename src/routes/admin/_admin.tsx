@@ -1,10 +1,9 @@
-import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
+import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 
-import { KeyRound, KeySquare, Route as RouteIcon, Mail, ArrowLeftRight, UsersRound } from 'lucide-react';
+import { ArrowLeftRight, KeyRound, KeySquare, Mail, Route as RouteIcon, UsersRound, Webhook } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
-
-import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 
 export const Route = createFileRoute('/admin/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -110,6 +109,18 @@ function LayoutComponent() {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Contacts</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/admin/webhooks"
+                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/admin/webhooks')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
+              >
+                <Webhook className="h-5 w-5" />
+                <span className="sr-only">Webhooks</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Webhooks</TooltipContent>
           </Tooltip>
         </nav>
       </aside>

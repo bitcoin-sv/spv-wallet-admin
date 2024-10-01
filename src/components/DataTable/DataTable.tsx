@@ -11,7 +11,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  ViewDialog,
 } from '@/components';
 import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
 import {
@@ -79,20 +78,22 @@ export function DataTable<TData, TValue>({
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
                 <TableCell>{renderInlineItem ? renderInlineItem(row) : null}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <EllipsisVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <ViewDialog row={row as Row<RowType>} />
-                      {renderItem ? renderItem(row) : null}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+
+                {renderItem && (
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <EllipsisVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        {renderItem ? renderItem(row) : null}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                )}
               </TableRow>
             ))
           ) : (

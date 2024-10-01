@@ -3,7 +3,7 @@ type ExtractElementType<T> = T extends (infer U)[] ? U : never;
 export const addStatusField = <T extends object[]>(data: T): Array<ExtractElementType<T> & { status: string }> => {
   return data.map((el) => {
     const element = el as ExtractElementType<T>;
-    const { revoked_at, deleted_at } = el as { revoked_at?: string; deleted_at?: string };
+    const { revoked_at, deleted_at, banned } = el as { revoked_at?: string; deleted_at?: string; banned?: boolean };
 
     let status;
 
@@ -11,6 +11,8 @@ export const addStatusField = <T extends object[]>(data: T): Array<ExtractElemen
       status = 'revoked';
     } else if (deleted_at) {
       status = 'deleted';
+    } else if (banned) {
+      status = 'banned';
     } else {
       status = 'active';
     }

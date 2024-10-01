@@ -11,6 +11,7 @@ import {
   ContactStatus,
   DataTable,
   NoRecordsText,
+  ViewDialog,
 } from '@/components';
 import { ContactExtended } from '@/interfaces/contacts.ts';
 
@@ -29,16 +30,19 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
           <DataTable
             columns={contactsColumns}
             data={contacts}
-            renderInlineItem={(row) =>
-              row.getValue('status') === ContactStatus.Awaiting ? (
-                <div className="grid grid-cols-2 items-center w-fit gap-4 ">
-                  <ContactAcceptDialog row={row} />
-                  <ContactRejectDialog row={row} />
-                </div>
-              ) : null
-            }
+            renderInlineItem={(row) => (
+              <>
+                {row.getValue('status') === ContactStatus.Awaiting ? (
+                  <div className="grid grid-cols-2 items-center w-fit gap-4 ">
+                    <ContactAcceptDialog row={row} />
+                    <ContactRejectDialog row={row} />
+                  </div>
+                ) : null}
+              </>
+            )}
             renderItem={(row) => (
               <>
+                <ViewDialog row={row} />
                 <ContactEditDialog row={row} />
                 <ContactDeleteDialog row={row} />
               </>

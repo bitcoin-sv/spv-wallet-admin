@@ -1,4 +1,13 @@
-import { AddXpubDialog, Card, CardContent, CardHeader, CardTitle, DataTable, xPubsColumns } from '@/components';
+import {
+  AddXpubDialog,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  DataTable,
+  ViewDialog,
+  xPubsColumns,
+} from '@/components';
 import { XpubExtended } from '@/interfaces';
 
 export interface XpubsTabContentProps {
@@ -13,7 +22,7 @@ export const XpubsTabContent = ({ xpubs }: XpubsTabContentProps) => {
       </CardHeader>
       <CardContent className="mb-2">
         {xpubs.length > 0 ? (
-          <DataTable columns={xPubsColumns} data={xpubs} />
+          <DataTable columns={xPubsColumns} data={xpubs} renderItem={(row) => <ViewDialog row={row} />} />
         ) : (
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="text-2xl font-bold tracking-tight">You have no xPubs</h3>
