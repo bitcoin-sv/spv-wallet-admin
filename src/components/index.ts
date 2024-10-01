@@ -33,6 +33,7 @@ export * from './XPubColumns/XPubsColumns.tsx';
 export * from './XpubsSkeleton';
 export * from './XpubsTabContent';
 export * from './CustomErrorComponent';
+export * from './LoadingSpinner';
 export * from './WebhooksColumns/WebhooksColumns.tsx';
 export * from './WebhooksTabContent';
 export * from './UnsubscribeWebhook';

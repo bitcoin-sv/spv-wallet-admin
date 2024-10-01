@@ -1,10 +1,3 @@
-import { Contact, Metadata } from '@bsv/spv-wallet-js-client';
-import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -15,10 +8,17 @@ import {
   DropdownMenuItem,
   Input,
   Label,
+  LoadingSpinner,
   Textarea,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { Contact, Metadata } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface ContactEditDialogProps {
   row: Row<Contact>;
@@ -36,19 +36,24 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
     setIsEditDialogOpen((prev) => !prev);
   };
 
-  const handleEdit = async () => {
-    try {
+  const editMutation = useMutation({
+    mutationFn: async ({ id, fullName, metadata }: { id: string; fullName: string; metadata: string }) => {
       const metadataParsed = JSON.parse(metadata) as Metadata;
-
-      await spvWalletClient?.AdminUpdateContact(row.original.id, fullName, metadataParsed);
+      return await spvWalletClient!.AdminUpdateContact(id, fullName, metadataParsed);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries();
-
       toast.success('Contact updated');
       setIsEditDialogOpen(false);
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error('Failed to update contact');
       errorWrapper(error);
-    }
+    },
+  });
+
+  const handleEdit = () => {
+    editMutation.mutate({ id: row.original.id, fullName, metadata });
   };
 
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +63,8 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
   const handleMetadataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMetadata(e.target.value);
   };
+
+  const { isPending } = editMutation;
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={handleEditDialogOpen}>
@@ -75,7 +82,9 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
         <Label htmlFor="metadata">Metadata</Label>
         <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
         <div className="grid grid-cols-2 gap-4">
-          <Button onClick={handleEdit}>Edit</Button>
+          <Button onClick={handleEdit} disabled={isPending}>
+            Edit {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
           <Button variant="ghost" onClick={handleEditDialogOpen}>
             Cancel
           </Button>

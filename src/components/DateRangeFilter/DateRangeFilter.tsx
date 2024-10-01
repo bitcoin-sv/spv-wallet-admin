@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components';
 import { Button } from '@/components/ui';
 import { Calendar } from '@/components/ui/calendar.tsx';
 import { Label } from '@/components/ui/label.tsx';
@@ -30,6 +31,7 @@ const initialTimeRange = () => {
 export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilterProps) => {
   const [dateRangeOption, setDateRangeOption] = useState<string>('createdRange');
   const [date, setDate] = React.useState<DateRange | undefined>(initialTimeRange);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     search: { updatedRange, createdRange, revokedRange },
@@ -38,6 +40,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const navigate = useNavigate();
 
   const onApplyDateRange = () => {
+    setIsLoading(true);
     navigate({
       search: (old) => {
         if ('createdRange' in old) {
@@ -59,11 +62,17 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         };
       },
       replace: true,
-    });
-    toast.success('Date range applied');
+    })
+      .then(() => {
+        toast.success('Date range applied');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const onClearDateRange = () => {
+    setIsLoading(true);
     navigate({
       search: (old) => {
         if ('createdRange' in old) {
@@ -80,8 +89,13 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         };
       },
       replace: true,
-    });
-    toast.success('Date range cleared');
+    })
+      .then(() => {
+        toast.success('Date range cleared');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -156,11 +170,11 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
             </PopoverContent>
           </Popover>
         </div>
-        <Button onClick={onApplyDateRange} className="mt-4 w-full" variant="default">
-          Apply
+        <Button onClick={onApplyDateRange} className="mt-4 w-full" variant="default" disabled={isLoading}>
+          Apply {isLoading && <LoadingSpinner className="ml-2" />}
         </Button>
-        <Button onClick={onClearDateRange} className="mt-4 w-full" variant="secondary">
-          Reset
+        <Button onClick={onClearDateRange} className="mt-4 w-full" variant="secondary" disabled={isLoading}>
+          Reset {isLoading && <LoadingSpinner className="ml-2" />}
         </Button>
         <div className="font-medium leading-none mt-4 text-sm">
           Applied Filters: {createdRange && 'Created Range'}
