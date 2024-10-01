@@ -1,3 +1,4 @@
+import { LoadingSpinner } from '@/components';
 import { Button } from '@/components/ui';
 import {
   Dialog,
@@ -147,6 +148,8 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     }
   };
 
+  const { isPending } = mutation;
+
   return (
     <Dialog open={isOpen} onOpenChange={handeDialogToggle}>
       <DialogTrigger asChild className={className}>
@@ -203,7 +206,9 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
               name="xPub"
             />
             <DialogFooter className="mt-4">
-              <Button type="submit">Add xPub</Button>
+              <Button type="submit" disabled={isPending}>
+                Add xPub {isPending && <LoadingSpinner className="ml-2" />}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -7,6 +7,7 @@ import {
   DialogTrigger,
   DropdownMenuItem,
   Label,
+  LoadingSpinner,
   Textarea,
 } from '@/components';
 
@@ -69,6 +70,8 @@ export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
   const handleEditDialogToggle = () => {
     setIsEditDialogOpen((prev) => !prev);
   };
+
+  const { isPending } = mutation;
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={handleEditDialogToggle}>
       <DialogTrigger className="w-full">
@@ -83,7 +86,9 @@ export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
         <Label htmlFor="metadata">Metadata</Label>
         <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
         <div className="grid grid-cols-2 gap-4">
-          <Button onClick={handleEdit}>Edit</Button>
+          <Button onClick={handleEdit} disabled={isPending}>
+            Edit {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
           <Button variant="ghost" onClick={handleEditDialogToggle}>
             Cancel
           </Button>

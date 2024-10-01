@@ -1,10 +1,3 @@
-import { Destination, Metadata } from '@bsv/spv-wallet-js-client';
-import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -14,11 +7,18 @@ import {
   DialogTrigger,
   DropdownMenuItem,
   Label,
+  LoadingSpinner,
   Textarea,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { Destination, Metadata } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface DestinationEditDialogProps {
   row: Row<Destination>;
@@ -39,20 +39,27 @@ export const DestinationEditDialog = ({ row }: DestinationEditDialogProps) => {
     setMetadata(e.target.value);
   };
 
-  const handleEdit = async () => {
-    try {
+  const editMutation = useMutation({
+    mutationFn: async ({ id, metadata }: { id: string; metadata: string }) => {
       const metadataParsed = JSON.parse(metadata) as Metadata;
-
-      await spvWalletClient?.UpdateDestinationMetadataByID(row.original.id, metadataParsed);
+      await spvWalletClient?.UpdateDestinationMetadataByID(id, metadataParsed);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries();
-
       toast.success('Destination metadata updated');
       setIsEditDialogOpen(false);
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error('Failed to update destination metadata');
       errorWrapper(error);
-    }
+    },
+  });
+
+  const handleEdit = () => {
+    editMutation.mutate({ id: row.original.id, metadata });
   };
+
+  const { isPending } = editMutation;
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={handleEditDialogOpen}>
@@ -68,7 +75,9 @@ export const DestinationEditDialog = ({ row }: DestinationEditDialogProps) => {
         <Label htmlFor="metadata">Metadata</Label>
         <Textarea placeholder="Metadata" id="metadata" value={metadata} onChange={handleMetadataChange} />
         <div className="grid grid-cols-2 gap-4">
-          <Button onClick={handleEdit}>Edit</Button>
+          <Button onClick={handleEdit} disabled={isPending}>
+            Edit {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
           <Button variant="ghost" onClick={handleEditDialogOpen}>
             Cancel
           </Button>

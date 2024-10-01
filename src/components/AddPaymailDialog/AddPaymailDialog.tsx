@@ -1,10 +1,4 @@
-import { HD } from '@bsv/sdk';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CirclePlus } from 'lucide-react';
-
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
+import { LoadingSpinner } from '@/components';
 
 import { Button } from '@/components/ui';
 import {
@@ -20,6 +14,13 @@ import { Input } from '@/components/ui/input.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
+import { HD } from '@bsv/sdk';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CirclePlus } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+import { toast } from 'sonner';
 
 interface AddPaymailDialogProps {
   className?: string;
@@ -92,6 +93,8 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       errorWrapper(error);
     }
   };
+
+  const { isPending } = mutation;
   return (
     <Dialog>
       <DialogTrigger asChild className={className}>
@@ -150,7 +153,9 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={onSubmit}>Add Paymail</Button>
+          <Button onClick={onSubmit} disabled={isPending}>
+            Add Paymail {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

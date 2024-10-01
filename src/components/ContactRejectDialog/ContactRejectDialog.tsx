@@ -1,11 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import { UserRoundX } from 'lucide-react';
-
-import { useState } from 'react';
-
-import { toast } from 'sonner';
-
 import {
   Button,
   Dialog,
@@ -14,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  LoadingSpinner,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -23,6 +16,13 @@ import { useSpvWalletClient } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import { UserRoundX } from 'lucide-react';
+
+import { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface ContactRejectDialogProps {
   row: Row<Contact>;
@@ -38,17 +38,27 @@ export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
     setIsRejectDialogOpen((prev) => !prev);
   };
 
-  const handleRejectContact = async () => {
-    try {
-      await spvWalletClient?.AdminRejectContact(row.original.id);
+  const rejectContactMutation = useMutation({
+    mutationFn: async (id: string) => {
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminRejectContact(id);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries();
       setIsRejectDialogOpen(false);
       toast.success('Contact rejected');
-    } catch (err) {
+    },
+    onError: (err) => {
       toast.error('Failed to reject contact');
       errorWrapper(err);
-    }
+    },
+  });
+
+  const handleRejectContact = () => {
+    rejectContactMutation.mutate(row.original.id);
   };
+
+  const { isPending } = rejectContactMutation;
 
   return (
     <Dialog open={isRejectDialogOpen} onOpenChange={handleRejectDialogOpen}>
@@ -73,8 +83,8 @@ export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
-          <Button variant="destructive" onClick={handleRejectContact}>
-            Reject
+          <Button variant="destructive" onClick={handleRejectContact} disabled={isPending}>
+            Reject {isPending && <LoadingSpinner className="ml-2" />}
           </Button>
           <Button variant="outline" onClick={handleRejectDialogOpen}>
             Cancel

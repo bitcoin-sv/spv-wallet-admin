@@ -1,9 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
-import { UserRoundCheck } from 'lucide-react';
-import { useState } from 'react';
-
-import { toast } from 'sonner';
+import { LoadingSpinner } from '@/components';
 
 import { Button } from '@/components/ui';
 import {
@@ -18,6 +13,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Row } from '@tanstack/react-table';
+import { UserRoundCheck } from 'lucide-react';
+import { useState } from 'react';
+
+import { toast } from 'sonner';
 
 export interface ContactAcceptDialogProps {
   row: Row<Contact>;
@@ -30,21 +31,32 @@ export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
 
   const queryClient = useQueryClient();
 
+  const acceptContactMutation = useMutation({
+    mutationFn: async (id: string) => {
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminAcceptContact(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+      setIsAcceptDialogOpen(false);
+      toast.success('Contact accepted');
+    },
+    onError: (err) => {
+      toast.error('Failed to accept contact');
+      errorWrapper(err);
+    },
+  });
+
   const handleAcceptDialogOpen = () => {
     setIsAcceptDialogOpen((prev) => !prev);
   };
 
-  const handleAcceptContact = async () => {
-    try {
-      await spvWalletClient?.AdminAcceptContact(row.original.id);
-      await queryClient.invalidateQueries();
-      setIsAcceptDialogOpen(false);
-      toast.success('Contact accepted');
-    } catch (err) {
-      toast.error('Failed to accept contact');
-      errorWrapper(err);
-    }
+  const handleAcceptContact = () => {
+    acceptContactMutation.mutate(row.original.id);
   };
+
+  const { isPending } = acceptContactMutation;
+
   return (
     <Dialog open={isAcceptDialogOpen} onOpenChange={handleAcceptDialogOpen}>
       <DialogTrigger>
@@ -68,7 +80,9 @@ export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
-          <Button onClick={handleAcceptContact}>Accept</Button>
+          <Button onClick={handleAcceptContact} disabled={isPending}>
+            Accept {isPending && <LoadingSpinner className="ml-2" />}
+          </Button>
           <Button variant="outline" onClick={handleAcceptDialogOpen}>
             Cancel
           </Button>
