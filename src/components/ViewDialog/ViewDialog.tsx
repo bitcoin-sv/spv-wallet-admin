@@ -10,6 +10,7 @@ import {
 } from '@/components';
 import { Row } from '@tanstack/react-table';
 import React from 'react';
+import ReactJson from 'react-json-view';
 
 export interface ViewDialogProps {
   row: Row<RowType>;
@@ -23,17 +24,22 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
         return;
       }
 
-      if (field === 'metadata' || field === 'outputs') {
+      if ((field === 'metadata' || field === 'outputs') && value !== null) {
         return (
-          <div key={field}>
-            <span className="text-gray-400">{field}:</span> {JSON.stringify(value) as React.ReactNode}
+          <div key={field} className="flex justify-between">
+            <span className="text-gray-400">{field}:</span>{' '}
+            <span>
+              <ReactJson src={value as Record<string, unknown>} name={false} collapsed={true} />
+            </span>
           </div>
         );
       }
       return (
-        <div key={field} className="break-all">
-          <span className="text-gray-400">{field}:</span>{' '}
-          {typeof value === 'boolean' ? value.toString() : (value as React.ReactNode)}
+        <div key={field} className="flex flex-1 justify-between">
+          <span className="text-gray-400 mr-2">{field}:</span>
+          <div className="overflow-x-scroll max-w-xl whitespace-nowrap">
+            {typeof value === 'boolean' ? value.toString() : (value as React.ReactNode)}
+          </div>
         </div>
       );
     });
