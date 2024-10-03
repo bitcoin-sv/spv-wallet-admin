@@ -1,9 +1,19 @@
-import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { Button, Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 
-import { ArrowLeftRight, KeyRound, KeySquare, Mail, Route as RouteIcon, UsersRound, Webhook } from 'lucide-react';
+import {
+  ArrowLeftRight,
+  KeyRound,
+  KeySquare,
+  Mail,
+  RefreshCcw,
+  Route as RouteIcon,
+  UsersRound,
+  Webhook,
+} from 'lucide-react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const Route = createFileRoute('/admin/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -17,6 +27,9 @@ export const Route = createFileRoute('/admin/_admin')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/admin/xpub');
   const { pathname } = useLocation();
+  const queryClient = useQueryClient();
+
+  const refreshRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     setRoute(pathname);
@@ -26,6 +39,13 @@ function LayoutComponent() {
     if (path === route) {
       return 'bg-accent text-accent-foreground';
     }
+  };
+
+  const onRefreshClick = () => {
+    refreshRef.current?.classList.add('animate-spin');
+    queryClient.invalidateQueries().finally(() => {
+      refreshRef.current?.classList.remove('animate-spin');
+    });
   };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -129,6 +149,10 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
+          <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
+            <RefreshCcw className="h-4 w-4 mr-2" ref={refreshRef} />
+            Refresh
+          </Button>
           <ModeToggle />
           <Profile />
         </header>
