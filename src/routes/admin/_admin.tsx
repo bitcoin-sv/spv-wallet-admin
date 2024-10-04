@@ -8,13 +8,14 @@ import {
   KeyRound,
   KeySquare,
   Mail,
-  RefreshCcw,
+  RefreshCw,
   Route as RouteIcon,
   UsersRound,
   Webhook,
 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
+import logger from '@/logger';
 
 export const Route = createFileRoute('/admin/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -31,11 +32,20 @@ function LayoutComponent() {
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const onRefreshClick = () => {
+  const onRefreshClick = async () => {
     setIsRefreshing(true);
-    queryClient.invalidateQueries().finally(() => {
+    try {
+      // Wait for all queries invalidation (data refetching)
+      // and a minimum delay of 0.5sec before proceeding to make sure the UI doesn't flicker
+      await Promise.all([
+        queryClient.invalidateQueries(),
+        new Promise((resolve) => setTimeout(resolve, 500))
+      ]);
+    }catch {
+      logger.error('Failed to refresh');
+    }finally {
       setIsRefreshing(false);
-    });
+    }
   };
 
   useEffect(() => {
@@ -150,7 +160,7 @@ function LayoutComponent() {
             <h1>SPV Wallet Admin</h1>
           </Sheet>
           <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
-            <RefreshCcw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
+            <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
             Refresh
           </Button>
           <ModeToggle />
