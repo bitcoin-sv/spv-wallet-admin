@@ -1,5 +1,6 @@
 import { Button, Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils.ts';
+import logger from '@/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 
@@ -8,13 +9,14 @@ import {
   KeyRound,
   KeySquare,
   Mail,
-  RefreshCcw,
+  RefreshCw,
   Route as RouteIcon,
   UsersRound,
   Webhook,
 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/admin/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -33,9 +35,18 @@ function LayoutComponent() {
 
   const onRefreshClick = () => {
     setIsRefreshing(true);
-    queryClient.invalidateQueries().finally(() => {
-      setIsRefreshing(false);
-    });
+    queryClient
+      .invalidateQueries()
+      .then(() => {
+        toast.success('Data refreshed!');
+      })
+      .catch((err) => {
+        toast.error(err.message);
+        logger.error(err);
+      })
+      .finally(() => {
+        setIsRefreshing(false);
+      });
   };
 
   useEffect(() => {
@@ -150,7 +161,7 @@ function LayoutComponent() {
             <h1>SPV Wallet Admin</h1>
           </Sheet>
           <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
-            <RefreshCcw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
+            <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
             Refresh
           </Button>
           <ModeToggle />
