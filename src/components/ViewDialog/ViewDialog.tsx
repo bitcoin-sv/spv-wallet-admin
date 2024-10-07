@@ -47,7 +47,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       return (
         <div key={field} className="flex flex-1 justify-between">
           <span className="text-gray-400 mr-2">{field}:</span>
-          <div className="overflow-x-scroll max-w-xl whitespace-nowrap">
+          <div className="overflow-x-auto max-w-2xl whitespace-nowrap">
             {typeof value === 'boolean' ? value.toString() : (value as React.ReactNode)}
           </div>
         </div>
