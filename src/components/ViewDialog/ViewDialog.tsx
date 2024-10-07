@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   RowType,
 } from '@/components';
+import { useTheme } from '@/contexts';
 import { Row } from '@tanstack/react-table';
 import React from 'react';
 import ReactJson from 'react-json-view';
@@ -17,6 +18,10 @@ export interface ViewDialogProps {
 }
 
 export const ViewDialog = ({ row }: ViewDialogProps) => {
+  const { theme } = useTheme();
+
+  const isDarkTheme = theme === 'dark';
+
   const renderInfo = (obj: RowType) =>
     Object.entries(obj as NonNullable<unknown>).map((item) => {
       const [field, value] = item;
@@ -27,9 +32,14 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       if ((field === 'metadata' || field === 'outputs') && value !== null) {
         return (
           <div key={field} className="flex justify-between">
-            <span className="text-gray-400">{field}:</span>{' '}
+            <span className="text-gray-400">{field}:</span>
             <span>
-              <ReactJson src={value as Record<string, unknown>} name={false} collapsed={true} />
+              <ReactJson
+                src={value as Record<string, unknown>}
+                theme={isDarkTheme ? 'monokai' : 'rjv-default'}
+                name={false}
+                collapsed={true}
+              />
             </span>
           </div>
         );
