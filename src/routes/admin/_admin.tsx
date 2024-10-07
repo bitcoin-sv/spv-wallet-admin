@@ -1,9 +1,8 @@
 import { Button, Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils.ts';
 import logger from '@/logger';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-
 import {
   ArrowLeftRight,
   KeyRound,
@@ -31,10 +30,9 @@ function LayoutComponent() {
   const [route, setRoute] = useState<string>('/admin/xpub');
   const { pathname } = useLocation();
   const queryClient = useQueryClient();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFetching = useIsFetching();
 
   const onRefreshClick = () => {
-    setIsRefreshing(true);
     queryClient
       .invalidateQueries()
       .then(() => {
@@ -43,9 +41,6 @@ function LayoutComponent() {
       .catch((err) => {
         toast.error(err.message);
         logger.error(err);
-      })
-      .finally(() => {
-        setIsRefreshing(false);
       });
   };
 
@@ -161,7 +156,7 @@ function LayoutComponent() {
             <h1>SPV Wallet Admin</h1>
           </Sheet>
           <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
-            <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
+            <RefreshCw className={cn('h-4 w-4 mr-2', isFetching && 'animate-spin')} />
             Refresh
           </Button>
           <ModeToggle />
