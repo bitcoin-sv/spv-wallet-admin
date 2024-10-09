@@ -39,6 +39,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
                 theme={isDarkTheme ? 'monokai' : 'rjv-default'}
                 name={false}
                 collapsed={true}
+                enableClipboard={false}
               />
             </span>
           </div>
