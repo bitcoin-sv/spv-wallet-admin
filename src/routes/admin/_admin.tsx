@@ -1,7 +1,7 @@
 import { Button, Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { cn } from '@/lib/utils.ts';
 import logger from '@/logger';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 import {
   ArrowLeftRight,
@@ -30,18 +30,21 @@ function LayoutComponent() {
   const [route, setRoute] = useState<string>('/admin/xpub');
   const { pathname } = useLocation();
   const queryClient = useQueryClient();
-  const isFetching = useIsFetching();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const onRefreshClick = () => {
-    queryClient
-      .invalidateQueries()
-      .then(() => {
-        toast.success('Data refreshed!');
-      })
-      .catch((err) => {
-        toast.error(err.message);
-        logger.error(err);
-      });
+  const onRefreshClick = async () => {
+    setIsRefreshing(true);
+    try {
+      // Wait for all queries invalidation (data refetching)
+      // and a minimum delay of 0.5sec before proceeding to make sure the UI doesn't flicker
+      await Promise.all([queryClient.invalidateQueries(), new Promise((resolve) => setTimeout(resolve, 500))]);
+      toast.success('Data refreshed');
+    } catch {
+      logger.error('Failed to refresh');
+      toast.error('Failed to refresh');
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   useEffect(() => {
@@ -156,7 +159,7 @@ function LayoutComponent() {
             <h1>SPV Wallet Admin</h1>
           </Sheet>
           <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
-            <RefreshCw className={cn('h-4 w-4 mr-2', isFetching && 'animate-spin')} />
+            <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
             Refresh
           </Button>
           <ModeToggle />
