@@ -45,6 +45,16 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
           </div>
         );
       }
+      if (field === 'hex' || field === 'xpub_in_ids') {
+        return (
+          <div key={field} className="flex flex-1 justify-between">
+            <span className="text-gray-400 mr-2">{field}:</span>
+            <div className="max-w-xl break-words">
+              {typeof value === 'boolean' ? value.toString() : (value as React.ReactNode)}
+            </div>
+          </div>
+        );
+      }
       return (
         <div key={field} className="flex flex-1 justify-between">
           <span className="text-gray-400 mr-2">{field}:</span>
@@ -59,7 +69,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       <DialogTrigger className="w-full">
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-5/6 overflow-auto">
+      <DialogContent className="max-w-3xl max-h-[90%] overflow-auto">
         <DialogHeader>
           <DialogTitle>Details</DialogTitle>
           <DialogDescription>Show full information</DialogDescription>
