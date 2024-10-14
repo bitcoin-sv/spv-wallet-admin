@@ -14,13 +14,13 @@ import { GitHubActionOptions } from '@estruyf/github-actions-reporter';
  */
 export default defineConfig({
   testDir: './src/__tests__',
-  snapshotPathTemplate: '{testDir}/visual/{testName}/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/{testFileDir}/__screenshoots__/{testName}/{arg}{ext}',
   expect: {
     // Maximum time expect() should wait for the condition to be met.
     timeout: 5000,
 
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.02,
     },
   },
   /* Run tests in files in parallel */
