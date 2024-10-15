@@ -30,7 +30,7 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: Paymail
             renderItem={(row) => (
               <>
                 <ViewDialog row={row} />
-                {hasPaymailDeleteDialog && row.original.status !== 'deleted' && <PaymailDeleteDialog row={row} />}
+                {hasPaymailDeleteDialog && row.original.deleted_at ? null : <PaymailDeleteDialog row={row} />}
               </>
             )}
           />
