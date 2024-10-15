@@ -158,7 +158,7 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
-          <Button variant="ghost" className="ml-auto" onClick={onRefreshClick}>
+          <Button variant="ghost" className="ml-auto" disabled={isRefreshing} onClick={onRefreshClick}>
             <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
             Refresh
           </Button>
