@@ -14,7 +14,7 @@ import { GitHubActionOptions } from '@estruyf/github-actions-reporter';
  */
 export default defineConfig({
   testDir: './src/__tests__',
-  snapshotPathTemplate: '{testDir}/{testFileDir}/__screenshoots__/{testName}/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/visual/__screenshoots__/{testName}/{platform}/{arg}-{projectName}{ext}',
   expect: {
     // Maximum time expect() should wait for the condition to be met.
     timeout: 5000,
