@@ -50,6 +50,8 @@ test.describe('xpubs page', () => {
       await route.fulfill({ json });
     });
 
+    await page.waitForLoadState('domcontentloaded');
+
     await expect(page).toHaveScreenshot();
   });
 });

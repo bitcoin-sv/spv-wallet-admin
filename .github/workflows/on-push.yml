@@ -94,7 +94,7 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
 
       - name: Run Playwright tests
-        run: yarn test:visual
+        run: npx playwright test -c playwright.config.ts
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

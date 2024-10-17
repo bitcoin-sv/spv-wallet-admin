@@ -1,0 +1,20 @@
+services:
+  playwright-tests:
+    build:
+      context: ./..
+      dockerfile: playwright/Dockerfile
+    volumes:
+      - ../src/__tests__/visual/__screenshoots__:/app/src/__tests__/visual/__screenshoots__
+      - ../playwright-report:/app/playwright-report
+      - ../test-results:/app/test-results
+    command: npx playwright test --reporter=html
+    environment:
+      CI: false
+
+  playwright-update-tests:
+    build:
+      context: ./..
+      dockerfile: playwright/Dockerfile
+    volumes:
+      - ../src/__tests__/visual/__screenshoots__:/app/src/__tests__/visual/__screenshoots__
+    command: npx playwright test --update-snapshots
