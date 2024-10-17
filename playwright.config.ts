@@ -20,7 +20,7 @@ export default defineConfig({
     timeout: 5000,
 
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.02,
+      maxDiffPixelRatio: 0.01,
     },
   },
   /* Run tests in files in parallel */
