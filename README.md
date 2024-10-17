@@ -30,6 +30,8 @@ yarn dev
 ```
 
 ## Documentation
+- [Running visual tests](playwright/README.md)
+
 <details>
 <summary><strong><code>Release Deployment</code></strong></summary>
 <br/>
