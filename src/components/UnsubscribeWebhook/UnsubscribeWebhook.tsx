@@ -59,11 +59,7 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
           <DialogHeader>
             <DialogTitle>Are you sure you want to unsubscribe a webhook ?</DialogTitle>
           </DialogHeader>
-          <DialogDescription className="break-all font-bold text-xs">
-            Access key ID:
-            <br />
-            {row.original.url}
-          </DialogDescription>
+          <DialogDescription className="break-all font-bold text-xs">{row.original.url}</DialogDescription>
           <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
           <div className="grid grid-cols-2 gap-4">
             <Button onClick={onRemove}>Unsubscribe</Button>
