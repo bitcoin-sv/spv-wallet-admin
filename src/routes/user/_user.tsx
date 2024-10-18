@@ -1,10 +1,11 @@
-import { Outlet, createFileRoute, Link, useLocation, redirect } from '@tanstack/react-router';
+import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 
-import { KeySquare, Route as RouteIcon, ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, KeySquare, Route as RouteIcon } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
+import { PageRefreshButton } from '@/components/PageRefreshButton';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -82,6 +83,7 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
+          <PageRefreshButton />
           <ModeToggle />
           <Profile />
         </header>
