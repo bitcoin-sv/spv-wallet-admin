@@ -8,6 +8,7 @@ import {
   DialogTrigger,
   DropdownMenuItem,
   LoadingSpinner,
+  TooltipProvider,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
@@ -59,24 +60,32 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   const { isPending } = deletePaymailMutation;
 
   return (
-    <Dialog open={isDeleteDialogOpen} onOpenChange={handleDeleteDialogOpen}>
-      <DialogTrigger className="w-full">
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Delete</DropdownMenuItem>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you sure you want to delete {address} paymail?</DialogTitle>
-          <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
-        </DialogHeader>
-        <div className="grid grid-cols-2 gap-4">
-          <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
-            Delete {isPending && <LoadingSpinner className="ml-2" />}
-          </Button>
-          <Button variant="ghost" onClick={handleDeleteDialogOpen}>
-            Cancel
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <TooltipProvider>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={handleDeleteDialogOpen}>
+        <DialogTrigger className="w-full">
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Delete</DropdownMenuItem>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to delete the paymail?
+              <br />
+            </DialogTitle>
+            <DialogDescription className="break-all font-bold">{address}</DialogDescription>
+            <DialogDescription>
+              This action cannot be undone. Please confirm your decision to proceed.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-4">
+            <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
+              Delete {isPending && <LoadingSpinner className="ml-2" />}
+            </Button>
+            <Button variant="ghost" onClick={handleDeleteDialogOpen}>
+              Cancel
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </TooltipProvider>
   );
 };
