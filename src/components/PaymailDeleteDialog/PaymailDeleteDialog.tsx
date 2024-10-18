@@ -8,10 +8,7 @@ import {
   DialogTrigger,
   DropdownMenuItem,
   LoadingSpinner,
-  Tooltip,
-  TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
@@ -71,18 +68,13 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Are you sure you want to delete{' '}
-              <Tooltip>
-                <TooltipTrigger>
-                  {address.slice(0, 8)}...{address.slice(-12)}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{address}</p>
-                </TooltipContent>
-              </Tooltip>{' '}
-              paymail?
+              Are you sure you want to delete the paymail?
+              <br />
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="break-all font-bold">
+              {address}
+            </DialogDescription>
+            <DialogDescription >
               This action cannot be undone. Please confirm your decision to proceed.
             </DialogDescription>
           </DialogHeader>

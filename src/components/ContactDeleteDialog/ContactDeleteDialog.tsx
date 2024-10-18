@@ -62,7 +62,10 @@ export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure you want to delete {row.original.paymail} contact?</DialogTitle>
+          <DialogTitle>Are you sure you want to delete the contact?</DialogTitle>
+          <DialogDescription className="break-all font-bold">
+            {row.original.paymail}
+          </DialogDescription>
           <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
