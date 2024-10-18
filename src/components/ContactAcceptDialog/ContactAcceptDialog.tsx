@@ -73,10 +73,10 @@ export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Are you sure you want to <u>accept</u> the contact?</DialogTitle>
-          <DialogDescription className="break-all font-bold">
-            {row.getValue('paymail')}
-          </DialogDescription>
+          <DialogTitle>
+            Are you sure you want to <u>accept</u> the contact?
+          </DialogTitle>
+          <DialogDescription className="break-all font-bold">{row.getValue('paymail')}</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <Button onClick={handleAcceptContact} disabled={isPending}>

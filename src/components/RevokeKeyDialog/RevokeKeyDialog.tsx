@@ -59,14 +59,15 @@ export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
       </DialogTrigger>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle>Are you sure you want to <u>revoke</u> selected access key?</DialogTitle>
+          <DialogTitle>
+            Are you sure you want to <u>revoke</u> selected access key?
+          </DialogTitle>
           <DialogDescription className="break-all font-bold text-xs">
-            Access key ID:<br/>
+            Access key ID:
+            <br />
             {row.original.id}
           </DialogDescription>
-          <DialogDescription>
-            This action cannot be undone. Please confirm your decision to proceed.
-          </DialogDescription>
+          <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <Button variant="destructive" onClick={handleRevokeAccessKey} disabled={isPending}>

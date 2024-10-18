@@ -71,10 +71,8 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
               Are you sure you want to delete the paymail?
               <br />
             </DialogTitle>
-            <DialogDescription className="break-all font-bold">
-              {address}
-            </DialogDescription>
-            <DialogDescription >
+            <DialogDescription className="break-all font-bold">{address}</DialogDescription>
+            <DialogDescription>
               This action cannot be undone. Please confirm your decision to proceed.
             </DialogDescription>
           </DialogHeader>
