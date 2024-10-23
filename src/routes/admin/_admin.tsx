@@ -1,21 +1,9 @@
-import { Button, Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
-import { cn } from '@/lib/utils.ts';
-import logger from '@/logger';
-import { useQueryClient } from '@tanstack/react-query';
+import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-import {
-  ArrowLeftRight,
-  KeyRound,
-  KeySquare,
-  Mail,
-  RefreshCw,
-  Route as RouteIcon,
-  UsersRound,
-  Webhook,
-} from 'lucide-react';
+import { ArrowLeftRight, KeyRound, KeySquare, Mail, Route as RouteIcon, UsersRound, Webhook } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { PageRefreshButton } from '@/components/PageRefreshButton';
 
 export const Route = createFileRoute('/admin/_admin')({
   beforeLoad: ({ context, location }) => {
@@ -29,23 +17,6 @@ export const Route = createFileRoute('/admin/_admin')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/admin/xpub');
   const { pathname } = useLocation();
-  const queryClient = useQueryClient();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const onRefreshClick = async () => {
-    setIsRefreshing(true);
-    try {
-      // Wait for all queries invalidation (data refetching)
-      // and a minimum delay of 0.5sec before proceeding to make sure the UI doesn't flicker
-      await Promise.all([queryClient.invalidateQueries(), new Promise((resolve) => setTimeout(resolve, 500))]);
-      toast.success('Data refreshed');
-    } catch {
-      logger.error('Failed to refresh');
-      toast.error('Failed to refresh');
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
 
   useEffect(() => {
     setRoute(pathname);
@@ -56,6 +27,7 @@ function LayoutComponent() {
       return 'bg-accent text-accent-foreground';
     }
   };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -158,10 +130,7 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
-          <Button variant="ghost" className="ml-auto" disabled={isRefreshing} onClick={onRefreshClick}>
-            <RefreshCw className={cn('h-4 w-4 mr-2', isRefreshing && 'animate-spin')} />
-            Refresh
-          </Button>
+          <PageRefreshButton />
           <ModeToggle />
           <Profile />
         </header>
