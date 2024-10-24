@@ -20,6 +20,8 @@ export const RefreshButtonComponent = forwardRef<HTMLButtonElement>((_, ref) => 
   const onRefreshClick = async () => {
     setIsRefreshing(true);
     try {
+      // Wait for all queries invalidation (data refetching)
+      // and a minimum delay of 0.5sec before proceeding to make sure the UI doesn't flicker
       await Promise.all([queryClient.invalidateQueries(), new Promise((resolve) => setTimeout(resolve, 500))]);
       toast.success('Data refreshed');
     } catch {
