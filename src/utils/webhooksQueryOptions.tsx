@@ -10,6 +10,6 @@ export const webhooksQueryOptions = (opts: WebhooksQueryOptions) => {
 
   return queryOptions({
     queryKey: ['webhooks', opts],
-    queryFn: () => spvWalletClient.AdminGetWebhooks(),
+    queryFn: async () => spvWalletClient.AdminGetWebhooks(),
   });
 };
