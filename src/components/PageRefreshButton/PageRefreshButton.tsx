@@ -12,7 +12,7 @@ export const PageRefreshButton = () => {
   return <RefreshButtonComponent ref={refreshButtonRef} />;
 };
 
-export const RefreshButtonComponent = forwardRef<HTMLButtonElement>((_, ref) => {
+const RefreshButtonComponent = forwardRef<HTMLButtonElement>((_, ref) => {
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [catchEye, setCatchEye] = useState(false);
