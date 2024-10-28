@@ -12,8 +12,8 @@ interface ApiErrorInfo {
 }
 
 const extractApiError = (error: ErrorResponse | Error): ApiErrorInfo | null => {
-  let errorMessage = '';
   if (error instanceof ErrorResponse) {
+    let errorMessage = '';
     try {
       errorMessage = JSON.parse(error.content).message;
     } catch (error) {
