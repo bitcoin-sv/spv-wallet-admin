@@ -46,8 +46,11 @@ export const mapOldAccessKeyToAccessKey = (accessKey: OldAccessKey): AccessKey =
   };
 };
 
-export const mapOldAccessKeysToAccessKeys = (accessKeys: OldAccessKey[]): AccessKey[] => {
-  return accessKeys.map((element) => {
+export const mapOldAccessKeysToAccessKeys = (oldAccessKeys: OldAccessKey[]): AccessKey[] => {
+  if (oldAccessKeys.length === 0) {
+    return [];
+  }
+  return oldAccessKeys.map((element) => {
     return mapOldAccessKeyToAccessKey(element);
   });
 };
@@ -72,6 +75,9 @@ export const mapOldTxToTx = (oldTx: OldTx): Tx => {
 };
 
 export const mapOldTxsToTxs = (oldTransactions: OldTx[]): Tx[] => {
+  if (oldTransactions.length === 0) {
+    return [];
+  }
   return oldTransactions.map((element) => {
     return mapOldTxToTx(element);
   });
@@ -92,6 +98,10 @@ export const mapOldContactToContact = (oldContact: OldContact): Contact => {
 };
 
 export const mapOldContactsToContacts = (oldContacts: OldContact[]): Contact[] => {
+  if (oldContacts.length === 0) {
+    return [];
+  }
+
   return oldContacts.map((element) => {
     return mapOldContactToContact(element);
   });

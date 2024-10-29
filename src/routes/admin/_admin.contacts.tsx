@@ -70,7 +70,9 @@ export function Contacts() {
     from: '/admin/_admin/contacts',
   });
 
-  const { data } = useSuspenseQuery(
+  const {
+    data: { content },
+  } = useSuspenseQuery(
     contactsQueryOptions({
       spvWalletClient: spvWalletClient!,
       updatedRange,
@@ -85,7 +87,7 @@ export function Contacts() {
 
   const [debouncedFilter] = useDebounce(filter, 200);
 
-  const contacts = mapOldContactsToContacts(data);
+  const contacts = mapOldContactsToContacts(content);
   const unconfirmedContacts = contacts.filter((c) => c.status === ContactStatus.Unconfirmed && c.deletedAt === null);
   const awaitingContacts = contacts.filter((c) => c.status === ContactStatus.Awaiting);
   const confirmedContacts = contacts.filter((c) => c.status === ContactStatus.Confirmed);

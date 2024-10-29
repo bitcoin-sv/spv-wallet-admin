@@ -119,7 +119,6 @@ function LayoutComponent() {
             <h1>SPV Wallet Admin</h1>
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
-            <div>BALANCE: 2 SATOSHI</div>
             <PageRefreshButton />
             <ModeToggle />
             <Profile />
