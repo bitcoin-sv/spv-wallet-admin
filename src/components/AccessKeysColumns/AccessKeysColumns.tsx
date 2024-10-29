@@ -34,7 +34,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
     },
   },
   {
-    accessorKey: 'xpub_id',
+    accessorKey: 'xpubId',
     header: ({ column }) => {
       return (
         <Link
@@ -73,7 +73,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Link
@@ -91,7 +91,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('created_at') && new Date(row.getValue('created_at')).toLocaleString();
+      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
     },
   },
 ];
