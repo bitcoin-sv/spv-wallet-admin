@@ -1,22 +1,21 @@
-import {
-  CustomErrorComponent,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Toaster,
-  WebhooksTabContent,
-} from '@/components';
+import { Tabs, TabsContent, TabsList, TabsTrigger, Toaster, WebhooksTabContent } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, webhooksQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
+import { WebhookErrorComponent } from '@/components/WebhookErrorComponent';
 
 export const Route = createFileRoute('/admin/_admin/webhooks')({
   component: Webhooks,
-  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
+  errorComponent: WebhookErrorComponent,
+  loader: async ({ context: { queryClient, spvWallet } }) =>
+    await queryClient.ensureQueryData(
+      webhooksQueryOptions({
+        spvWalletClient: spvWallet.spvWalletClient!,
+      }),
+    ),
 });
 
 export function Webhooks() {
