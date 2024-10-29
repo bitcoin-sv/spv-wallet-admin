@@ -13,7 +13,7 @@ import {
 
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
-import { PaymailAddress } from '@bsv/spv-wallet-js-client';
+import { OldPaymailAddress } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export interface PaymailDeleteDialogProps {
-  row: Row<PaymailAddress>;
+  row: Row<OldPaymailAddress>;
 }
 
 export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {

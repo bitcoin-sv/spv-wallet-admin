@@ -1,4 +1,4 @@
-import { Metadata, Recipient } from '@bsv/spv-wallet-js-client';
+import { Metadata, Output } from '@bsv/spv-wallet-js-client';
 import { ArchiveRestore } from 'lucide-react';
 import { useState } from 'react';
 
@@ -42,8 +42,8 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
   };
 
   const mutation = useMutation({
-    mutationFn: async ({ newRecipient, metadata }: { newRecipient: Recipient; metadata: Metadata }) =>
-      await spvWalletClient?.SendToRecipients([newRecipient], metadata),
+    mutationFn: async ({ newRecipient, metadata }: { newRecipient: Output; metadata: Metadata }) =>
+      await spvWalletClient?.SendToRecipients({ outputs: [newRecipient] }, metadata),
     onSuccess: () => queryClient.invalidateQueries(),
   });
 
@@ -79,7 +79,7 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
 
   const onSubmit = async ({ recipient, amount, metadata }: z.infer<typeof formSchema>) => {
     try {
-      const newRecipient: Recipient = { to: recipient, satoshis: amount };
+      const newRecipient: Output = { to: recipient, satoshis: amount };
 
       await mutation.mutateAsync({ newRecipient, metadata });
 

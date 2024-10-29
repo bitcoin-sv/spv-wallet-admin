@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components';
-import { AccessKey, Contact, Destination, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
+import { AccessKey, Contact, OldPaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
 import {
   ColumnDef,
   flexRender,
@@ -26,7 +26,7 @@ import { EllipsisVertical } from 'lucide-react';
 
 import React from 'react';
 
-export type RowType = XPub | Contact | AccessKey | Destination | PaymailAddress | Tx;
+export type RowType = XPub | Contact | AccessKey | OldPaymailAddress | Tx;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

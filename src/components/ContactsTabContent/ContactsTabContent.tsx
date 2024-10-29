@@ -44,7 +44,7 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
               <>
                 <ViewDialog row={row} />
                 <ContactEditDialog row={row} />
-                {row.original.deleted_at == null && <ContactDeleteDialog row={row} />}
+                {row.original.deletedAt == null && <ContactDeleteDialog row={row} />}
               </>
             )}
           />

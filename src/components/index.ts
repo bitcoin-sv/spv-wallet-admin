@@ -1,7 +1,6 @@
 export * from './AccessKeysColumns/AccessKeysColumns.tsx';
 export * from './AccessKeysTabContent';
 export * from './AddAccessKeyDialog';
-export * from './AddDestinationDialog';
 export * from './AddPaymailDialog';
 export * from './AddXpubDialog';
 export * from './ContactAcceptDialog';
@@ -11,8 +10,6 @@ export * from './ContactRejectDialog';
 export * from './ContactsColumns/ContactsColumns.tsx';
 export * from './DataTable';
 export * from './DateRangeFilter';
-export * from './DestinationsColumns/DestinationsColumns.tsx';
-export * from './DestinationEditDialog';
 export * from './ContactsTabContent';
 export * from './Logo';
 export * from './ModeToggle';

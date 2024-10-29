@@ -86,7 +86,7 @@ export function AccessKeys() {
     }),
   );
 
-  const mappedAccessKeys = addStatusField(accessKeys);
+  const mappedAccessKeys = addStatusField(accessKeys.content);
   const revokedKeys = getRevokedElements(mappedAccessKeys);
   const deletedKeys = getDeletedElements(mappedAccessKeys);
 

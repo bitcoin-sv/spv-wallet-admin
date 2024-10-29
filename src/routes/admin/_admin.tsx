@@ -1,6 +1,6 @@
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-import { ArrowLeftRight, KeyRound, KeySquare, Mail, Route as RouteIcon, UsersRound, Webhook } from 'lucide-react';
+import { ArrowLeftRight, KeyRound, KeySquare, Mail, UsersRound, Webhook } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
@@ -66,18 +66,6 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/admin/destinations"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/admin/destinations')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                <RouteIcon className="h-5 w-5" />
-                <span className="sr-only">Destinations</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Destinations</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
                 to="/admin/paymails"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/admin/paymails')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
@@ -130,9 +118,12 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
-          <PageRefreshButton />
-          <ModeToggle />
-          <Profile />
+          <div className="ml-auto flex items-center gap-4">
+            <div>BALANCE: 2 SATOSHI</div>
+            <PageRefreshButton />
+            <ModeToggle />
+            <Profile />
+          </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Outlet />

@@ -64,7 +64,7 @@ function Transactions() {
           </div>
         </div>
         <TransactionsTabContent
-          transactions={transactions}
+          transactions={transactions.content}
           hasTransactionEditDialog
           hasRecordTransaction
           TxDialog={PrepareTxDialogUser}

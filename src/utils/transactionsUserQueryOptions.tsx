@@ -25,7 +25,7 @@ export const transactionsUserQueryOptions = (opts: TransactionsQueryOptions) => 
       await spvWalletClient.GetTransactions(
         { blockHeight, createdRange, updatedRange },
         {},
-        { page, page_size, order_by_field, sort_direction },
+        { page, pageSize: page_size, orderByField: order_by_field, sortDirection: sort_direction },
       ),
   });
 };

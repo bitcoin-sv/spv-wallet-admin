@@ -25,9 +25,9 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
         {},
         {
           page,
-          page_size,
-          order_by_field: order_by_field ?? 'id',
-          sort_direction: sort_direction ?? 'desc',
+          pageSize: page_size,
+          orderByField: order_by_field ?? 'id',
+          sortDirection: sort_direction ?? 'desc',
         },
       ),
   });

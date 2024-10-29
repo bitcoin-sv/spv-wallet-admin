@@ -132,6 +132,7 @@ export function LoginForm() {
       await router.invalidate();
       toast.success('Successfully logged in');
     } catch (error: unknown) {
+      console.log(error);
       const message = errorToMessage(role, error);
 
       toast.error(message);

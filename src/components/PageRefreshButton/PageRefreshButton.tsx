@@ -63,7 +63,7 @@ const RefreshButtonComponent = forwardRef<HTMLButtonElement>((_, ref) => {
     <Button
       ref={ref}
       variant="ghost"
-      className={cn('ml-auto', catchEye && 'animate-pulse bg-violet-400 ')}
+      className={catchEye ? 'animate-pulse bg-violet-400 ' : ''}
       disabled={isRefreshing}
       onClick={onRefreshClick}
     >
