@@ -23,40 +23,40 @@ export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
   validateSearch: z.object({
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    order_by_field: z.string().optional().catch('id'),
+    orderByField: z.string().optional().catch('id'),
     revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    sort_direction: z.string().optional().catch('desc'),
+    sortDirection: z.string().optional().catch('desc'),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     page: z.number().optional().catch(1),
-    page_size: z.number().optional().catch(10),
+    pageSize: z.number().optional().catch(10),
   }),
   loaderDeps: ({
-    search: { order_by_field, sort_direction, createdRange, revokedRange, updatedRange, page, page_size },
+    search: { orderByField, sortDirection, createdRange, revokedRange, updatedRange, page, pageSize },
   }) => {
     return {
-      order_by_field,
-      sort_direction,
+      orderByField,
+      sortDirection,
       createdRange,
       updatedRange,
       revokedRange,
       page,
-      page_size,
+      pageSize,
     };
   },
   loader: async ({
     context: { queryClient, spvWallet },
-    deps: { order_by_field, sort_direction, page, page_size, createdRange, revokedRange, updatedRange },
+    deps: { orderByField, sortDirection, page, pageSize, createdRange, revokedRange, updatedRange },
   }) =>
     await queryClient.ensureQueryData(
       accessKeysQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
-        order_by_field,
-        sort_direction,
+        orderByField,
+        sortDirection,
         createdRange,
         updatedRange,
         revokedRange,
         page,
-        page_size,
+        pageSize,
       }),
     ),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
@@ -69,20 +69,20 @@ export function AccessKeys() {
 
   const { spvWalletClient } = useSpvWalletClient();
 
-  const { order_by_field, sort_direction, createdRange, updatedRange, revokedRange, page, page_size } = useSearch({
+  const { orderByField, sortDirection, createdRange, updatedRange, revokedRange, page, pageSize } = useSearch({
     from: '/user/_user/access-keys',
   });
 
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysQueryOptions({
       spvWalletClient: spvWalletClient!,
-      order_by_field,
-      sort_direction,
+      orderByField,
+      sortDirection,
       createdRange,
       updatedRange,
       revokedRange,
       page,
-      page_size,
+      pageSize,
     }),
   );
 
