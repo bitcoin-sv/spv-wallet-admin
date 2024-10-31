@@ -29,7 +29,7 @@ export const columns: ColumnDef<Tx>[] = [
     },
   },
   {
-    accessorKey: 'block_height',
+    accessorKey: 'blockHeight',
     header: ({ column }) => {
       return (
         <Link
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Tx>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Link
@@ -84,7 +84,7 @@ export const columns: ColumnDef<Tx>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('created_at') && new Date(row.getValue('created_at')).toLocaleString();
+      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
     },
   },
 ];

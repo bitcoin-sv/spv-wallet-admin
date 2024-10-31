@@ -1,7 +1,7 @@
-import { AccessKeysQueryOptions } from '@/utils/accessKeysQueryOptions.tsx';
+import { OldAccessKeysQueryOptions } from '@/utils/accessKeysQueryOptions.tsx';
 import { queryOptions } from '@tanstack/react-query';
 
-export interface AccessKeysAdminQueryOptions extends AccessKeysQueryOptions {
+export interface AccessKeysAdminQueryOptions extends OldAccessKeysQueryOptions {
   xpubId?: string;
 }
 

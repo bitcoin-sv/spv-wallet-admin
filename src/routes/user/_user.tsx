@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
 
-import { ArrowLeftRight, KeySquare, Route as RouteIcon } from 'lucide-react';
+import { ArrowLeftRight, KeySquare } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -55,18 +55,6 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/user/destinations"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/destinations')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                <RouteIcon className="h-5 w-5" />
-                <span className="sr-only">Destinations</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Destinations</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
                 to="/user/transactions"
                 className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/transactions')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
@@ -83,9 +71,11 @@ function LayoutComponent() {
           <Sheet>
             <h1>SPV Wallet Admin</h1>
           </Sheet>
-          <PageRefreshButton />
-          <ModeToggle />
-          <Profile />
+          <div className="ml-auto flex items-center gap-4">
+            <PageRefreshButton />
+            <ModeToggle />
+            <Profile />
+          </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Outlet />

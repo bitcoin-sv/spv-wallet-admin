@@ -12,7 +12,7 @@ import {
 import { useSpvWalletClient } from '@/contexts';
 
 import { transactionSearchSchema } from '@/searchSchemas';
-import { transactionsQueryOptions } from '@/utils';
+import { mapOldTxsToTxs, transactionsQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 
@@ -86,7 +86,7 @@ export function Transactions() {
         </div>
         <TabsContent value="all">
           <TransactionsTabContent
-            transactions={transactions}
+            transactions={mapOldTxsToTxs(transactions)}
             hasRecordTransaction={hasRecordTransaction}
             TxDialog={RecordTxDialogAdmin}
           />

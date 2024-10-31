@@ -11,7 +11,13 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import { accessKeysAdminQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
+import {
+  accessKeysAdminQueryOptions,
+  addStatusField,
+  getDeletedElements,
+  getRevokedElements,
+  mapOldAccessKeysToAccessKeys,
+} from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -85,7 +91,8 @@ export function AccessKeys() {
     }),
   );
 
-  const mappedAccessKeys = addStatusField(accessKeys);
+  const accessKeysFromOldAccessKeys = mapOldAccessKeysToAccessKeys(accessKeys);
+  const mappedAccessKeys = addStatusField(accessKeysFromOldAccessKeys);
   const revokedKeys = getRevokedElements(mappedAccessKeys);
   const deletedKeys = getDeletedElements(mappedAccessKeys);
 

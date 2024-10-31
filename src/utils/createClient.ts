@@ -13,7 +13,7 @@ export const createClient = async (role: Role, key: string, serverUrl: string, t
   }
 
   if (role === Role.User) {
-    await client.GetXPub();
+    await client.GetUserInfo();
     client.role = Role.User;
     return client;
   }

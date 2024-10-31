@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent } from '@/components';
-import { createFileRoute, useLoaderData } from '@tanstack/react-router';
+import { ReactNode, createFileRoute, useLoaderData } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/user/_user/xpub')({
   component: XPub,
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { spvWallet } }) => await spvWallet.spvWalletClient!.GetXPub(),
+  loader: async ({ context: { spvWallet } }) => await spvWallet.spvWalletClient!.GetUserInfo(),
 });
 
 function XPub() {
@@ -17,7 +17,7 @@ function XPub() {
 
     return Object.entries(xPub).map(([key, value]) => (
       <div key={key} className="flex justify-between">
-        <span className="text-gray-400">{key}:</span> <span>{value}</span>
+        <span className="text-gray-400">{key}:</span> <span>{value as ReactNode}</span>
       </div>
     ));
   };

@@ -12,7 +12,7 @@ import {
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
-import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
+import { contactsQueryOptions, getContactId, getContactPaymail, mapOldContactsToContacts } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -71,7 +71,7 @@ export function Contacts() {
   });
 
   const {
-    data: { content: contacts },
+    data: { content },
   } = useSuspenseQuery(
     contactsQueryOptions({
       spvWalletClient: spvWalletClient!,
@@ -87,11 +87,12 @@ export function Contacts() {
 
   const [debouncedFilter] = useDebounce(filter, 200);
 
-  const unconfirmedContacts = contacts.filter((c) => c.status === ContactStatus.Unconfirmed && c.deleted_at === null);
+  const contacts = mapOldContactsToContacts(content);
+  const unconfirmedContacts = contacts.filter((c) => c.status === ContactStatus.Unconfirmed && c.deletedAt === null);
   const awaitingContacts = contacts.filter((c) => c.status === ContactStatus.Awaiting);
   const confirmedContacts = contacts.filter((c) => c.status === ContactStatus.Confirmed);
   const rejectedContacts = contacts.filter((c) => c.status === ContactStatus.Rejected);
-  const deletedContacts = contacts.filter((c) => c.deleted_at !== null);
+  const deletedContacts = contacts.filter((c) => c.deletedAt !== null);
 
   const navigate = useNavigate({ from: Route.fullPath });
 

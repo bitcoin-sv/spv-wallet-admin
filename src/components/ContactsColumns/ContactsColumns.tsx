@@ -41,7 +41,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         <Link
           search={(prev) => ({
             ...prev,
-            order_by_field: 'full_name',
+            order_by_field: 'fullName',
             sort_direction: getSortDirection(column),
           })}
         >
@@ -79,7 +79,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         <Link
           search={(prev) => ({
             ...prev,
-            order_by_field: 'pub_key',
+            order_by_field: 'pubKey',
             sort_direction: getSortDirection(column),
           })}
         >
@@ -110,7 +110,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.original.deleted_at ? (
+      return row.original.deletedAt ? (
         <Badge variant="destructive">Deleted</Badge>
       ) : row.getValue('status') === ContactStatus.Confirmed ? (
         <Badge variant="outline">Confirmed</Badge>
