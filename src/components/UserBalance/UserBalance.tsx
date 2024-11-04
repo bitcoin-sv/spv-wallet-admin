@@ -15,12 +15,10 @@ export const UserBalance = () => {
 
   return (
     <>
-      {balance ? (
-        <Badge variant="outline" className="p-2 pl-3 pr-3 flex justify-center items-center gap-2">
-          <WalletIcon size="16px" />
-          {balance.toLocaleString()} SATS
-        </Badge>
-      ) : null}
+      <Badge variant="outline" className="p-2 pl-3 pr-3 flex justify-center items-center gap-2">
+        <WalletIcon size="16px" />
+        {balance ? balance.toLocaleString() : 0} SATS
+      </Badge>
     </>
   );
 };
