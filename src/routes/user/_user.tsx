@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
+import { UserBalance } from '@/components/UserBalance';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -73,6 +74,7 @@ function LayoutComponent() {
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
             <PageRefreshButton />
+            <UserBalance />
             <ModeToggle />
             <Profile />
           </div>
