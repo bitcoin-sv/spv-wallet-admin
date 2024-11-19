@@ -30,8 +30,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   const { spvWalletClient } = useSpvWalletClient();
   const queryClient = useQueryClient();
 
-  const { alias, domain } = row.original;
-  const address = `${alias}@${domain}`;
+  const { address } = row.original;
 
   const handleDeleteDialogOpen = () => {
     setIsDeleteDialogOpen((prev) => !prev);
