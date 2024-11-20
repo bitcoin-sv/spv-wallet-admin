@@ -83,6 +83,7 @@ export function AccessKeys() {
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysAdminQueryOptions({
       spvWalletClient: spvWalletClient!,
+      xpubId,
       order_by_field,
       sort_direction,
       createdRange,
