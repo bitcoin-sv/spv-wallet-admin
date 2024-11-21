@@ -37,7 +37,7 @@ interface DataTableProps<TData, TValue> {
   initialSorting?: ColumnSort[];
 }
 
-const defaultInitialSorting: ColumnSort = { id: 'id', desc: false };
+const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
 export function DataTable<TData, TValue>({
   columns,
@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: initialSorting ? initialSorting : [defaultInitialSorting],
+      sorting: initialSorting ? initialSorting : defaultInitialSorting,
     },
   });
 

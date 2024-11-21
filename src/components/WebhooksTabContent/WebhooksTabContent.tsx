@@ -1,10 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle, DataTable, webhookColumns } from '@/components';
 import { UnsubscribeWebhook } from '@/components/UnsubscribeWebhook/UnsubscribeWebhook.tsx';
 import { WebhookExtended } from '@/interfaces/webhook.ts';
+import { ColumnSort } from '@tanstack/react-table';
 
 export interface WebhooksTabContentProps {
   webhooks: WebhookExtended[];
 }
+
+const initalSorting: ColumnSort[] = [{ id: 'url', desc: false }];
 
 export const WebhooksTabContent = ({ webhooks }: WebhooksTabContentProps) => {
   return (
@@ -17,7 +20,7 @@ export const WebhooksTabContent = ({ webhooks }: WebhooksTabContentProps) => {
           <DataTable
             columns={webhookColumns}
             data={webhooks}
-            initialSorting={[{ id: 'url', desc: false }]}
+            initialSorting={initalSorting}
             renderInlineItem={(row) => (
               <>
                 <UnsubscribeWebhook row={row} />
