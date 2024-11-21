@@ -17,6 +17,7 @@ export const WebhooksTabContent = ({ webhooks }: WebhooksTabContentProps) => {
           <DataTable
             columns={webhookColumns}
             data={webhooks}
+            initialSorting={[{ id: 'url', desc: false }]}
             renderInlineItem={(row) => (
               <>
                 <UnsubscribeWebhook row={row} />
