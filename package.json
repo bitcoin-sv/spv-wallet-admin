@@ -46,7 +46,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-qr-code": "^2.0.15",
     "react-router": "^6.24.0",
-    "react-router-dom": "^6.26.0",
+    "react-router-dom": "^7.0.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.2"
   },
