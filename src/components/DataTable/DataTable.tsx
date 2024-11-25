@@ -15,6 +15,7 @@ import {
 import { AccessKey, Contact, OldPaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
 import {
   ColumnDef,
+  ColumnSort,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -33,15 +34,17 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   renderItem?: (row: Row<TData>) => React.ReactNode;
   renderInlineItem?: (row: Row<TData>) => React.ReactNode;
+  initialSorting?: ColumnSort[];
 }
 
-const initialSorting = { id: 'id', desc: false };
+const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   renderItem,
   renderInlineItem,
+  initialSorting,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -50,7 +53,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: [initialSorting],
+      sorting: initialSorting ? initialSorting : defaultInitialSorting,
     },
   });
 
