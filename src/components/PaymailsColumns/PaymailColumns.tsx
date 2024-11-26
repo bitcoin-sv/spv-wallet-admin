@@ -18,7 +18,7 @@ export interface PaymailColumns extends OldPaymailAddress {
   status: string;
 }
 
-const onClickCopy = async (e: React.MouseEvent<HTMLButtonElement>) => {
+const onClickCopy = (columnName: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
   const text = e.currentTarget.textContent;
 
   if (!text) {
@@ -26,10 +26,47 @@ const onClickCopy = async (e: React.MouseEvent<HTMLButtonElement>) => {
   }
 
   await navigator.clipboard.writeText(text);
-  toast.success(`Xpub ID Copied to clipboard`);
+  toast.success(`${columnName} Copied to clipboard`);
 };
 
 export const paymailColumns: ColumnDef<PaymailColumns>[] = [
+  {
+    accessorKey: 'id',
+    header: ({ column }) => {
+      return (
+        <Link
+          search={(prev) => ({
+            ...prev,
+            order_by_field: 'id',
+            sort_direction: getSortDirection(column),
+          })}
+        >
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Id
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
+      );
+    },
+    cell: ({ row }) => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="align-middle">
+            <span
+              onClick={onClickCopy('ID')}
+              className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
+            >
+              {row.getValue('id')}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{row.getValue('id')}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    ),
+  },
+
   {
     accessorKey: 'avatar',
     header: () => {
@@ -75,7 +112,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
             <Tooltip>
               <TooltipTrigger className="align-middle">
                 <span
-                  onClick={onClickCopy}
+                  onClick={onClickCopy('Xpub ID')}
                   className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
                 >
                   {row.getValue('xpub_id')}

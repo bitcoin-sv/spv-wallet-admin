@@ -27,12 +27,14 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: Paymail
           <DataTable
             columns={paymailColumns}
             data={paymails}
-            renderItem={(row) => (
-              <>
-                <ViewDialog row={row} />
-                {hasPaymailDeleteDialog && row.original.deleted_at == null && <PaymailDeleteDialog row={row} />}
-              </>
-            )}
+            renderItem={(row) => {
+              return (
+                <>
+                  <ViewDialog row={row} />
+                  {hasPaymailDeleteDialog && row.original.deleted_at == null && <PaymailDeleteDialog row={row} />}
+                </>
+              );
+            }}
           />
         ) : (
           <NoRecordsText message="No Paymails to show." />
