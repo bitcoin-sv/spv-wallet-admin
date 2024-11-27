@@ -91,10 +91,12 @@ export function LoginForm() {
       return;
     }
 
-    let redirect = search?.redirect?.includes('user') ? search?.redirect : '/user/access-keys';
+    let redirect = '';
 
     if (isAdmin) {
       redirect = search?.redirect?.includes('admin') ? search?.redirect : '/admin/xpub';
+    } else {
+      redirect = search?.redirect?.includes('user') ? search?.redirect : '/user/access-keys';
     }
 
     router.history.push(redirect);
