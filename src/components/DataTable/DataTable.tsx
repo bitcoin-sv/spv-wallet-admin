@@ -39,6 +39,48 @@ interface DataTableProps<TData, TValue> {
 
 const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
+const getColumns = <TData, TValue>(
+  columns: ColumnDef<TData, TValue>[],
+  renderItem?: (row: Row<TData>) => React.ReactNode,
+  renderInlineItem?: (row: Row<TData>) => React.ReactNode,
+): ColumnDef<TData, TValue>[] => {
+  if (renderInlineItem) {
+    columns = [
+      ...columns,
+      {
+        id: 'extraActions',
+        cell: ({ row }) => <>{renderInlineItem(row)}</>,
+      },
+    ];
+  }
+
+  if (renderItem) {
+    columns = [
+      ...columns,
+      {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => {
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <EllipsisVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                {renderItem ? renderItem(row) : null}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      },
+    ];
+  }
+
+  return columns;
+};
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -48,7 +90,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
-    columns,
+    columns: getColumns(columns, renderItem, renderInlineItem),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -80,23 +122,6 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
-                <TableCell>{renderInlineItem ? renderInlineItem(row) : null}</TableCell>
-
-                {renderItem && (
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <EllipsisVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        {renderItem ? renderItem(row) : null}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                )}
               </TableRow>
             ))
           ) : (
