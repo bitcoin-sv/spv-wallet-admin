@@ -55,7 +55,7 @@ export function LoginForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { setSpvWalletClient, serverUrl, setServerUrl } = useSpvWalletClient();
 
-  const { isAuthenticated, setLoginKey, isAdmin, isUser } = useAuth();
+  const { isAuthenticated, setLoginKey, isAdmin } = useAuth();
   const router = useRouter();
   const search = useSearch({ from: '/login' as const }) as { redirect?: string };
 
@@ -87,13 +87,17 @@ export function LoginForm() {
   }, [currentRole, currentType]);
 
   useLayoutEffect(() => {
-    if (isAuthenticated && search?.redirect) {
-      router.history.push(search.redirect);
-    } else if (isAdmin) {
-      router.history.push('/admin/xpub');
-    } else if (isUser) {
-      router.history.push('/user/access-keys');
+    if (!isAuthenticated) {
+      return;
     }
+
+    let redirect = search?.redirect?.includes('user') ? search?.redirect : '/user/access-keys';
+
+    if (isAdmin) {
+      redirect = search?.redirect?.includes('admin') ? search?.redirect : '/admin/xpub';
+    }
+
+    router.history.push(redirect);
   }, [isAuthenticated, search?.redirect]);
 
   const handleTogglePasswordVisibility = () => {
