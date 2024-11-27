@@ -49,7 +49,7 @@ export function Xpub() {
 
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll">
+      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
