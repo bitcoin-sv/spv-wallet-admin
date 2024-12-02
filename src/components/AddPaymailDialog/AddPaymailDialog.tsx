@@ -31,6 +31,8 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   const [address, setAddress] = useState<string>('');
   const [publicName, setPublicName] = useState<string>('');
   const [avatar, setAvatar] = useState<string>('');
+  const [isXPubSet, setIsXPubSet] = useState(true);
+  const [isAddressSet, setIsAddressSet] = useState(true);
 
   const queryClient = useQueryClient();
 
@@ -56,10 +58,12 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
 
   const handleXPubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setXPub(event.target.value);
+    setIsXPubSet(!!event.target.value);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAddress(event.target.value);
+    setIsAddressSet(!!event.target.value);
   };
 
   const handlePublicNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,8 +74,20 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
     setAvatar(event.target.value);
   };
 
+  const checkRequiredFields = () => {
+    setIsXPubSet(!!xPub);
+    setIsAddressSet(!!address);
+  };
+
+  const clearFormErrors = () => {
+    setIsXPubSet(true);
+    setIsAddressSet(true);
+  };
+
   const onSubmit = async () => {
-    if (!xPub || !address || !publicName || !avatar) {
+    checkRequiredFields();
+
+    if (!xPub || !address) {
       return;
     }
 
@@ -98,7 +114,7 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild className={className}>
-        <Button size="sm" variant="secondary" className="h-10 gap-1">
+        <Button size="sm" variant="secondary" className="h-10 gap-1" onClick={clearFormErrors}>
           <CirclePlus className="mr-1" size={16} />
           Add Paymail
         </Button>
@@ -109,14 +125,17 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
           <DialogDescription>Register a new Paymail here.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="xPub" className="text-right">
+          <div className="grid grid-cols-4 items-center">
+            <Label htmlFor="xPub" className="text-right pr-4">
               xPub
             </Label>
             <Input id="xPub" placeholder="xpub..." value={xPub} onChange={handleXPubChange} className="col-span-3" />
+            {!isXPubSet ? (
+              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">*xPub is required</span>
+            ) : null}
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="address" className="text-right">
+          <div className="grid grid-cols-4 items-center">
+            <Label htmlFor="address" className="text-right pr-4">
               Address
             </Label>
             <Input
@@ -126,6 +145,9 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
               onChange={handleAddressChange}
               className="col-span-3"
             />
+            {!isAddressSet ? (
+              <span className="text-red-600 text-xs col-start-2 col-span-3 pt-1">*address is required</span>
+            ) : null}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="public_name" className="text-right">
