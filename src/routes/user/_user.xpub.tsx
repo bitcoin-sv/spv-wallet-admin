@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent } from '@/components';
+import { Metadata } from '@bsv/spv-wallet-js-client';
 import { ReactNode, createFileRoute, useLoaderData } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/user/_user/xpub')({
@@ -10,17 +11,33 @@ export const Route = createFileRoute('/user/_user/xpub')({
 function XPub() {
   const xPub = useLoaderData({ from: '/user/_user/xpub' });
 
+  const renderMetadata = (metadata: Metadata | undefined) => {
+    if (!metadata) {
+      return null;
+    }
+
+    return JSON.stringify(metadata);
+  };
+
   const renderXpub = () => {
     if (!xPub) {
       return null;
     }
 
-    return Object.entries(xPub).map(([key, value]) => (
-      <div key={key} className="flex justify-between">
-        <span className="text-gray-400">{key}:</span> <span>{value as ReactNode}</span>
-      </div>
-    ));
+    return Object.entries(xPub).map(([key, value]) => {
+      return (
+        <div key={key} className="flex justify-between gap-2">
+          <span className="text-gray-400">{key}:</span>
+          {key === 'metadata' ? (
+            <span className="break-words whitespace-pre-wrap overflow-hidden text-right">{renderMetadata(value)}</span>
+          ) : (
+            <span>{value as ReactNode}</span>
+          )}
+        </div>
+      );
+    });
   };
+
   return (
     <Card className="max-w-3xl">
       <CardHeader>
