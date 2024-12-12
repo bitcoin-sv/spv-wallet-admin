@@ -77,7 +77,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { xPub } = values;
     try {
-      HD.fromString(values.xPub);
+      HD.fromString(xPub);
       await mutation.mutateAsync(xPub);
       toast.success('xPub successfully added');
       form.reset();
