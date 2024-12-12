@@ -9,11 +9,11 @@ on:
       version:
         required: true
         type: string
-        description: "Version of the app to release"
+        description: 'Version of the app to release'
       node-version:
         required: false
         type: string
-        description: "Version of Node.js which should be used to perform the checks. Takes precedence over node-version-file."
+        description: 'Version of Node.js which should be used to perform the checks. Takes precedence over node-version-file.'
       node-version-file:
         required: false
         type: string
@@ -32,7 +32,7 @@ on:
         required: false
         type: string
         default: 'dockerhub'
-        description: "Set registry for docker image. Defaults to dockerhub."
+        description: 'Set registry for docker image. Defaults to dockerhub.'
       docker_org:
         required: false
         type: string
@@ -142,7 +142,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: "Prepare working directories"
+      - name: 'Prepare working directories'
         run: |
           mkdir -p dist
       - name: Download
@@ -182,7 +182,7 @@ jobs:
             } else if(isGhcr) {
                 dockerImageHtml = `https://github.com/${organisation}/${imageName}/pkgs/container/${imageName}`
             }   
-            
+
             return {
                 image: image,
                 username: username,
@@ -220,7 +220,7 @@ jobs:
           password: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./release/Dockerfile
@@ -282,7 +282,7 @@ jobs:
           gh release edit ${{ inputs.version }} --draft=false --repo ${{ github.repository }}
 
   notify:
-    name: "Notify"
+    name: 'Notify'
     runs-on: ubuntu-latest
     needs: [dockerize, publish-release]
     env:
@@ -290,11 +290,11 @@ jobs:
       REPO_URL: ${{github.server_url}}/${{ github.repository }}
       RELEASE_URL: ${{github.server_url}}/${{ github.repository }}/releases/tag/${{ inputs.version }}
     steps:
-      - name: "Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set"
+      - name: 'Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set'
         if: ${{ env.SLACK_WEBHOOK_URL == '' }}
         run: echo "::notice::Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set"
 
-      - name: "Resolve docker outputs"
+      - name: 'Resolve docker outputs'
         if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         run: |
           echo "DOCKER_IMAGE=${{ needs.dockerize.outputs.image }}" >> $GITHUB_ENV
@@ -335,7 +335,7 @@ jobs:
             } else if(isGhcr) {
                 dockerImageHtml = `https://github.com/${organisation}/${imageName}/pkgs/container/${imageName}`
             }   
-            
+
             return {
                 image: image,
                 username: username,
@@ -346,15 +346,15 @@ jobs:
                 dockerImageHtml
             }
 
-      - name: "Set missing docker image and image html"
+      - name: 'Set missing docker image and image html'
         if: env.SLACK_WEBHOOK_URL != '' && (env.DOCKER_IMAGE == '' || env.DOCKER_IMAGE_HTML == '')
         run: |
           echo "DOCKER_IMAGE=${{ fromJSON(steps.resolve-docker.outputs.result).image }}" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_HTML=${{ fromJSON(steps.resolve-docker.outputs.result).dockerImageHtml }}" >> $GITHUB_ENV
 
-      - name: "Notify successful release"
+      - name: 'Notify successful release'
         if: ${{ env.SLACK_WEBHOOK_URL != '' }}
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           payload: |
             {
