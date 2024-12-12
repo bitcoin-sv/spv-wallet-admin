@@ -42,10 +42,10 @@
     "@tanstack/react-router": "^1.33.4",
     "@tanstack/react-table": "^8.17.3",
     "@types/eslint__js": "^8.42.3",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "date-fns": "^3.6.0",
-    "lucide-react": "^0.436.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.468.0",
     "next-themes": "^0.3.0",
     "pino": "^9.5.0",
     "react": "^18.2.0",
@@ -57,9 +57,9 @@
     "tailwind-merge": "^2.5.2",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-animate": "^1.0.7",
-    "use-debounce": "^10.0.3",
+    "use-debounce": "^10.0.4",
     "vite-plugin-node-polyfills": "^0.22.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.0.1",
