@@ -16,7 +16,7 @@ export const xPubQueryOptions = (opts: XPubQueryOptions) => {
   const { id, currentBalance = undefined } = prepareXPubFilters(filterStr ?? '');
 
   return queryOptions({
-    queryKey: ['xpubs', opts],
+    queryKey: ['xpubs', id, currentBalance, page, page_size, order_by_field, sort_direction],
     queryFn: async () =>
       await spvWalletClient.AdminGetXPubs(
         { id, currentBalance: currentBalance ?? undefined, includeDeleted: true },

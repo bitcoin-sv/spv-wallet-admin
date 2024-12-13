@@ -19,8 +19,9 @@ export interface ContactsQueryOptions {
 
 export const contactsQueryOptions = (opts: ContactsQueryOptions) => {
   const { createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey } = opts;
+
   return queryOptions({
-    queryKey: ['contacts', opts],
+    queryKey: ['contacts', createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey],
     queryFn: async () =>
       await opts.spvWalletClient.AdminGetContacts(
         { createdRange, updatedRange, id, paymail, pubKey, includeDeleted: true },

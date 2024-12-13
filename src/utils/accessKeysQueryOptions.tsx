@@ -31,8 +31,9 @@ export interface AccessKeysQueryOptions {
 
 export const accessKeysQueryOptions = (opts: AccessKeysQueryOptions) => {
   const { page, pageSize, orderByField, sortDirection, createdRange, updatedRange, revokedRange } = opts;
+
   return queryOptions({
-    queryKey: ['accessKeys', opts],
+    queryKey: ['accessKeys', page, pageSize, orderByField, sortDirection, createdRange, updatedRange, revokedRange],
     queryFn: async () =>
       await opts.spvWalletClient.GetAccessKeys(
         { createdRange, updatedRange, revokedRange },

@@ -7,8 +7,19 @@ export interface AccessKeysAdminQueryOptions extends OldAccessKeysQueryOptions {
 
 export const accessKeysAdminQueryOptions = (opts: AccessKeysAdminQueryOptions) => {
   const { page, page_size, order_by_field, sort_direction, createdRange, updatedRange, revokedRange, xpubId } = opts;
+
   return queryOptions({
-    queryKey: ['accessKeysAdmin', opts],
+    queryKey: [
+      'accessKeysAdmin',
+      page,
+      page_size,
+      order_by_field,
+      sort_direction,
+      createdRange,
+      updatedRange,
+      revokedRange,
+      xpubId,
+    ],
     queryFn: async () =>
       await opts.spvWalletClient.AdminGetAccessKeys(
         { xpubId, createdRange, updatedRange, revokedRange, includeDeleted: true },

@@ -20,7 +20,16 @@ export const transactionsUserQueryOptions = (opts: TransactionsQueryOptions) => 
     opts;
 
   return queryOptions({
-    queryKey: ['transactions', opts],
+    queryKey: [
+      'transactions',
+      sort_direction,
+      createdRange,
+      blockHeight,
+      order_by_field,
+      page,
+      page_size,
+      updatedRange,
+    ],
     queryFn: async () =>
       await spvWalletClient.GetTransactions(
         { blockHeight, createdRange, updatedRange },
