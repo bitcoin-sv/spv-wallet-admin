@@ -17,7 +17,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -37,7 +37,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'current_balance',
@@ -75,7 +75,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',

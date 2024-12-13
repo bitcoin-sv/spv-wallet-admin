@@ -14,7 +14,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -34,7 +34,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'block_height',
@@ -72,7 +72,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to={"."}
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',

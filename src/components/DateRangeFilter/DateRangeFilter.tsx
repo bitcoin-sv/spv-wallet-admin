@@ -42,7 +42,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const onApplyDateRange = () => {
     setIsLoading(true);
     navigate({
-      to: ".",
+      to: '.',
       search: (old) => {
         if ('createdRange' in old) {
           delete old.createdRange;
@@ -75,7 +75,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
   const onClearDateRange = () => {
     setIsLoading(true);
     navigate({
-      to: ".",
+      to: '.',
       search: (old) => {
         if ('createdRange' in old) {
           delete old.createdRange;
