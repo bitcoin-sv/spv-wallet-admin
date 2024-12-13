@@ -1,6 +1,6 @@
-import { TRole, useServerUrl } from '@/contexts';
+import { TRole } from '@/contexts';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext } from 'react';
 
 export interface SpvWalletClientExtended extends SpvWalletClient {
   role?: TRole;
@@ -14,20 +14,3 @@ export interface SpvWalletContext {
 }
 
 export const SpvWalletContext = createContext<SpvWalletContext | null>(null);
-
-export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
-  const { serverUrl, setServerUrl } = useServerUrl();
-
-  const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletClientExtended | null>(null);
-
-  const contextValue = useMemo(
-    () => ({
-      serverUrl,
-      setServerUrl,
-      spvWalletClient,
-      setSpvWalletClient,
-    }),
-    [serverUrl, setServerUrl, spvWalletClient, setSpvWalletClient],
-  );
-  return <SpvWalletContext.Provider value={contextValue}>{children}</SpvWalletContext.Provider>;
-};

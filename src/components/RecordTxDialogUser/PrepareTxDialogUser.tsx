@@ -22,7 +22,8 @@ import { errorWrapper } from '@/utils';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormProvider as Form } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface RecordTxDialogProps {

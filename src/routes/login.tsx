@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -21,6 +20,7 @@ import {
   SelectValue,
   Toaster,
 } from '@/components';
+import { FormProvider as Form } from 'react-hook-form';
 import { Role, TRole, LoginType, useAuth, useSpvWalletClient } from '@/contexts';
 
 import { createClient, errorWrapper, getShortXprv } from '@/utils';
