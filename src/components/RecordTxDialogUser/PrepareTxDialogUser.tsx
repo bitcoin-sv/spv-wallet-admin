@@ -62,6 +62,7 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
 
           return JSON.parse(str);
         } catch (e) {
+          console.error(e);
           ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
           return z.NEVER;
         }

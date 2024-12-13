@@ -107,6 +107,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
       form.setValue('xPub', xPubString);
       toast.success('Converted xPriv to xPub');
     } catch (error) {
+      console.error(error);
       toast.error('Unable to convert xPriv to xPub');
     }
   }, 700);

@@ -1,0 +1,14 @@
+{
+  "name": "accesskeyscolumns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-4c:bitcoin-sv/spv-wallet-admin.git"
+  },
+  "private": true
+}

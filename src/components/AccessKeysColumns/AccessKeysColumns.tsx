@@ -19,6 +19,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={"."}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -38,6 +39,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={"."}
           search={(prev) => ({
             ...prev,
             order_by_field: 'xpub_id',
@@ -77,6 +79,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={"."}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',

@@ -16,6 +16,7 @@ export const webhookColumns: ColumnDef<WebhooksColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={"."}
           search={(prev) => ({
             ...prev,
             order_by_field: 'url',

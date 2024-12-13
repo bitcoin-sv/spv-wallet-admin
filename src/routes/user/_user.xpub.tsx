@@ -29,7 +29,7 @@ function XPub() {
         <div key={key} className="flex justify-between gap-2">
           <span className="text-gray-400">{key}:</span>
           {key === 'metadata' ? (
-            <span className="break-words whitespace-pre-wrap overflow-hidden text-right">{renderMetadata(value)}</span>
+            <span className="break-words whitespace-pre-wrap overflow-hidden text-right">{renderMetadata(value as Metadata | undefined)}</span>
           ) : (
             <span>{value as ReactNode}</span>
           )}
