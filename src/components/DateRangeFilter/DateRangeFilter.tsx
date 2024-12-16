@@ -57,8 +57,8 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         return {
           ...old,
           [dateRangeOption]: {
-            from: date!.from,
-            to: addDays(date!.to!, 1),
+            from: date!.from?.toISOString(),
+            to: addDays(date!.to!, 1).toISOString(),
           },
         };
       },
@@ -86,6 +86,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
         if ('revokedRange' in old) {
           delete old.revokedRange;
         }
+
         return {
           ...old,
         };
