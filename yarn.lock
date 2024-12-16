@@ -1128,10 +1128,10 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
-  version "7.24.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.7.tgz#f4f0d5530e8dbdf59b3451b9b3e594b6ba082e12"
-  integrity sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.26.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.26.0.tgz#8600c2f595f277c60815256418b85356a65173c1"
+  integrity sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -1347,7 +1347,7 @@
     "@emotion/weak-memoize" "^0.3.1"
     stylis "4.2.0"
 
-"@emotion/hash@^0.9.1", "@emotion/hash@^0.9.2":
+"@emotion/hash@^0.9.2":
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.9.2.tgz#ff9221b9f58b4dfe61e619a7788734bd63f6898b"
   integrity sha512-MyqliTZGuOm3+5ZRSaaBGP3USLw6+EGykkwZns2EPC5g8jJ4z9OrdZY9apkl3+UP9+sdz76YYkwCKP5gh8iY3g==
@@ -1865,6 +1865,15 @@
     "@mui/utils" "^5.16.6"
     prop-types "^15.8.1"
 
+"@mui/private-theming@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-6.2.0.tgz#b94a7c5726b7337cfad1800bfd5927cf2af4b131"
+  integrity sha512-lYd2MrVddhentF1d/cMXKnwlDjr/shbO3A2eGq22PCYUoZaqtAGZMc0U86KnJ/Sh5YzNYePqTOaaowAN8Qea8A==
+  dependencies:
+    "@babel/runtime" "^7.26.0"
+    "@mui/utils" "^6.2.0"
+    prop-types "^15.8.1"
+
 "@mui/styled-engine@^5.16.6":
   version "5.16.6"
   resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.16.6.tgz#60110c106dd482dfdb7e2aa94fd6490a0a3f8852"
@@ -1875,17 +1884,17 @@
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.16.7":
-  version "5.16.7"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.16.7.tgz#cf052f0243d283fab837d2505f4901e5207a0575"
-  integrity sha512-FfXhHP/2MlqH+vLs2tIHMeCChmqSRgkOALVNLKkPrDsvtoq5J8OraOutCn1scpvRjr9mO8ZhW6jKx2t/vUDxtQ==
+"@mui/styles@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-6.2.0.tgz#a24cabf0b3084f35967bb0cea7a0bd68b6553bf0"
+  integrity sha512-/fBb08Enfui8NGxbFgoZsJcHFdxFq1gwuzjr9Jwtw3++AMAC3Q7h36xToC52KiZta15lbj3r1Hk+mJC16IOKnw==
   dependencies:
-    "@babel/runtime" "^7.23.9"
-    "@emotion/hash" "^0.9.1"
-    "@mui/private-theming" "^5.16.6"
-    "@mui/types" "^7.2.15"
-    "@mui/utils" "^5.16.6"
-    clsx "^2.1.0"
+    "@babel/runtime" "^7.26.0"
+    "@emotion/hash" "^0.9.2"
+    "@mui/private-theming" "^6.2.0"
+    "@mui/types" "^7.2.19"
+    "@mui/utils" "^6.2.0"
+    clsx "^2.1.1"
     csstype "^3.1.3"
     hoist-non-react-statics "^3.3.2"
     jss "^10.10.0"
@@ -1912,10 +1921,10 @@
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/types@^7.2.14", "@mui/types@^7.2.15":
-  version "7.2.15"
-  resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.15.tgz#dadd232fe9a70be0d526630675dff3b110f30b53"
-  integrity sha512-nbo7yPhtKJkdf9kcVOF8JZHPZTmqXjJ/tI0bdWgHg5tp9AnIN4Y7f7wm9T+0SyGYJk76+GYZ8Q5XaTYAsUHN0Q==
+"@mui/types@^7.2.14", "@mui/types@^7.2.15", "@mui/types@^7.2.19":
+  version "7.2.19"
+  resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.19.tgz#c941954dd24393fdce5f07830d44440cf4ab6c80"
+  integrity sha512-6XpZEM/Q3epK9RN8ENoXuygnqUQxE+siN/6rGRi2iwJPgBUR25mphYQ9ZI87plGh58YoZ5pp40bFvKYOCDJ3tA==
 
 "@mui/utils@^5.15.14", "@mui/utils@^5.16.1", "@mui/utils@^5.16.6":
   version "5.16.6"
@@ -1928,6 +1937,18 @@
     clsx "^2.1.1"
     prop-types "^15.8.1"
     react-is "^18.3.1"
+
+"@mui/utils@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-6.2.0.tgz#a39f0a2837048a42114169d298ce970913097203"
+  integrity sha512-77CaFJi+OIi2SjbPwCis8z5DXvE0dfx9hBz5FguZHt1VYFlWEPCWTHcMsQCahSErnfik5ebLsYK8+D+nsjGVfw==
+  dependencies:
+    "@babel/runtime" "^7.26.0"
+    "@mui/types" "^7.2.19"
+    "@types/prop-types" "^15.7.14"
+    clsx "^2.1.1"
+    prop-types "^15.8.1"
+    react-is "^19.0.0"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -2410,6 +2431,11 @@
   version "15.7.12"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.12.tgz#12bb1e2be27293c1406acb6af1c3f3a1481d98c6"
   integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
+
+"@types/prop-types@^15.7.14":
+  version "15.7.14"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.14.tgz#1433419d73b2a7ebfc6918dcefd2ec0d5cd698f2"
+  integrity sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==
 
 "@types/q@^1.5.1":
   version "1.5.8"
@@ -8363,6 +8389,11 @@ react-is@^18.0.0, react-is@^18.3.1:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
+
+react-is@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.0.0.tgz#d6669fd389ff022a9684f708cf6fa4962d1fea7a"
+  integrity sha512-H91OHcwjZsbq3ClIDHMzBShc1rotbfACdWENsmEf0IFvZ3FgGPtdHMcsv45bQ1hAbgdfiA8SnxTKfDS+x/8m2g==
 
 react-perfect-scrollbar@^1.5.8:
   version "1.5.8"
