@@ -17,8 +17,9 @@ export interface PaymailsQueryOptions {
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
   const { xpubId, page, page_size, order_by_field, sort_direction, createdRange, updatedRange } = opts;
+
   return queryOptions({
-    queryKey: ['paymails', opts],
+    queryKey: ['paymails', xpubId, page, page_size, order_by_field, sort_direction, createdRange, updatedRange],
     queryFn: async () =>
       await opts.spvWalletClient.AdminGetPaymails(
         { xpubId, createdRange, updatedRange, includeDeleted: true },

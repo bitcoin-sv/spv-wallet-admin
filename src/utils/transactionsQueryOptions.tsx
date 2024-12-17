@@ -20,7 +20,17 @@ export const transactionsQueryOptions = (opts: TransactionsQueryOptions) => {
     opts;
 
   return queryOptions({
-    queryKey: ['transactions', opts],
+    queryKey: [
+      'transactions',
+      sort_direction,
+      createdRange,
+      blockHeight,
+      order_by_field,
+      page_size,
+      page,
+      spvWalletClient,
+      updatedRange,
+    ],
     queryFn: async () =>
       await spvWalletClient.AdminGetTransactions(
         { blockHeight, createdRange, updatedRange, includeDeleted: true },

@@ -9,7 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormProvider as Form } from 'react-hook-form';
 import { Input } from '@/components/ui/input.tsx';
 import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
@@ -77,7 +78,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const { xPub } = values;
     try {
-      HD.fromString(values.xPub);
+      HD.fromString(xPub);
       await mutation.mutateAsync(xPub);
       toast.success('xPub successfully added');
       form.reset();
@@ -106,6 +107,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
       form.setValue('xPub', xPubString);
       toast.success('Converted xPriv to xPub');
     } catch (error) {
+      console.error(error);
       toast.error('Unable to convert xPriv to xPub');
     }
   }, 700);

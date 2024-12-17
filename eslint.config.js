@@ -6,11 +6,12 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 
-import * as tanstackQuery from '@tanstack/eslint-plugin-query';
+import tanstackQuery from '@tanstack/eslint-plugin-query';
 
 export default [
   eslint.configs.recommended,
   ...ts.configs.recommended,
+  ...tanstackQuery.configs['flat/recommended'],
   {
     ignores: ['dist/**/*', 'node_modules/**/*', 'eslint.config.js', 'tailwind.config.js'],
   },
@@ -31,14 +32,10 @@ export default [
     plugins: {
       react: reactPlugin,
       'react-hooks': reactHooks,
-      '@tanstack/query': {
-        rules: tanstackQuery.rules,
-      },
       import: { rules: importPlugin.rules },
     },
     rules: {
       ...reactPlugin.configs.flat.recommended.rules,
-      ...tanstackQuery.configs.recommended.rules,
     },
     settings: {
       react: {

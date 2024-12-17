@@ -35,6 +35,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'id',
@@ -92,6 +93,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'xpub_id',
@@ -132,6 +134,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'alias',
@@ -151,6 +154,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'domain',
@@ -170,6 +174,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'public_name',
@@ -209,6 +214,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     header: ({ column }) => {
       return (
         <Link
+          to={'.'}
           search={(prev) => ({
             ...prev,
             order_by_field: 'created_at',
