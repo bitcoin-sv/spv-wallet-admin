@@ -61,6 +61,7 @@ export function LoginForm() {
 
   const { config } = useConfig();
   const { configureServerUrl = false } = config;
+  const isServerUrlInitialized = useRef(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,7 +69,7 @@ export function LoginForm() {
       role: Role.Admin,
       type: LoginType.Xprv,
       key: '',
-      serverUrl: serverUrl,
+      serverUrl: '',
     },
   });
 
@@ -77,6 +78,13 @@ export function LoginForm() {
 
   const currentRole = form.getValues('role');
   const currentType = form.getValues('type');
+
+  useEffect(() => {
+    if (serverUrl && !isServerUrlInitialized.current) {
+      form.reset((prev) => ({ ...prev, serverUrl }));
+      isServerUrlInitialized.current = true;
+    }
+  }, [serverUrl, form.reset]);
 
   useEffect(() => {
     inputRef.current?.focus();
