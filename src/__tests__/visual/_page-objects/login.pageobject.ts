@@ -14,8 +14,6 @@ export class LoginPage {
       xprivKey ||
       'xprv9s21ZrQH143K3CbJXirfrtpLvhT3Vgusdo8coBritQ3rcS7Jy7sxWhatuxG5h2y1Cqj8FKmPp69536gmjYRpfga2MJdsGyBsnB12E19CESK';
 
-    await this.open();
-
     await this.page.route('**/status', async (route) => {
       await route.fulfill({ json: [] });
     });

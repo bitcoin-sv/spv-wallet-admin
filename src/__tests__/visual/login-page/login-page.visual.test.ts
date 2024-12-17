@@ -11,6 +11,8 @@ test.describe('login page', () => {
 
   test('login with invalid credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
+    await loginPage.open();
+
     await loginPage.loginAsAdmin('invalid-xpriv-key');
 
     await expect(loginPage.page).toHaveScreenshot();
