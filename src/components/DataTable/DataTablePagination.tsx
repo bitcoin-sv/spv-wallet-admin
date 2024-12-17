@@ -16,7 +16,7 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-4 my-4">
-      <div className="flex-1 text-sm text-muted-foreground">
+      <div data-testid="table_total" className="flex-1 text-sm text-muted-foreground">
         Total records: {table.getFilteredRowModel().rows.length}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
