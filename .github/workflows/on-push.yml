@@ -90,23 +90,16 @@ jobs:
           cache: ${{ env.PACKAGE_MANGER }}
           cache-dependency-path: ${{ env.PACKAGE_MANGER_LOCK_FILE }}
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile --immutable
+      - name: Run visual test
+        run: |
+          yarn test:visual
 
-      - name: Run Playwright tests
-        run: npx playwright test -c playwright.config.ts
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            test-results/
-            !**/*.zip
-          retention-days: 3
-
-      - name: Publish Test Summary Results
-        run: npx github-actions-ctrf playwright-report/test-results.json
+          name: visual-test-report
+          path: playwright-report
   compile:
     runs-on: ubuntu-latest
     steps:
