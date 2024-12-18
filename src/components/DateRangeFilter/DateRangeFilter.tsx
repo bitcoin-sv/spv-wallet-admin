@@ -44,18 +44,11 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
     navigate({
       to: '.',
       search: (old) => {
-        if ('createdRange' in old) {
-          delete old.createdRange;
-        }
-        if ('updatedRange' in old) {
-          delete old.updatedRange;
-        }
-        if ('revokedRange' in old) {
-          delete old.revokedRange;
-        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { createdRange, updatedRange, revokedRange, ...other } = old;
 
         return {
-          ...old,
+          ...other,
           [dateRangeOption]: {
             from: date!.from?.toISOString(),
             to: addDays(date!.to!, 1).toISOString(),
@@ -77,19 +70,10 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
     navigate({
       to: '.',
       search: (old) => {
-        if ('createdRange' in old) {
-          delete old.createdRange;
-        }
-        if ('updatedRange' in old) {
-          delete old.updatedRange;
-        }
-        if ('revokedRange' in old) {
-          delete old.revokedRange;
-        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { createdRange, updatedRange, revokedRange, ...other } = old;
 
-        return {
-          ...old,
-        };
+        return { ...other };
       },
       replace: true,
     })
