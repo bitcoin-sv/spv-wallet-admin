@@ -12,22 +12,43 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import { addStatusField, xPubQueryOptions } from '@/utils';
+import { addStatusField, prepareXPubFilters, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useSearch } from '@tanstack/react-router';
-import { useState } from 'react';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 
 import { useDebounce } from 'use-debounce';
 
 import { z } from 'zod';
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
+  component: Xpub,
   validateSearch: z.object({
     order_by_field: z.string().optional().catch('id'),
     sort_direction: z.string().optional().catch('asc'),
+    id: z.string().optional(),
+    currentBalance: z.number().optional(),
   }),
-  component: Xpub,
+  loaderDeps: ({ search: { order_by_field, sort_direction, id, currentBalance } }) => ({
+    order_by_field,
+    sort_direction,
+    id,
+    currentBalance,
+  }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
+  loader: async ({
+    context: { queryClient, spvWallet },
+    deps: { order_by_field, sort_direction, id, currentBalance },
+  }) =>
+    await queryClient.ensureQueryData(
+      xPubQueryOptions({
+        spvWalletClient: spvWallet.spvWalletClient!,
+        id,
+        currentBalance,
+        sort_direction,
+        order_by_field,
+      }),
+    ),
   pendingComponent: () => <XpubsSkeleton />,
 });
 
@@ -36,16 +57,28 @@ export function Xpub() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
   const [debouncedFilter] = useDebounce(filter, 200);
-  const { order_by_field, sort_direction } = useSearch({ from: '/admin/_admin/xpub' });
+
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { order_by_field, sort_direction, id, currentBalance } = useSearch({ from: '/admin/_admin/xpub' });
 
   const { data: xpubs } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
-    xPubQueryOptions({ spvWalletClient: spvWalletClient!, filterStr: debouncedFilter, order_by_field, sort_direction }),
+    xPubQueryOptions({ spvWalletClient: spvWalletClient!, id, currentBalance, order_by_field, sort_direction }),
   );
 
   const mappedXpubs = addStatusField(xpubs);
 
-  // TODO: Add server pagination for xpubs when search and count will be merged
+  useEffect(() => {
+    const { id, currentBalance } = prepareXPubFilters(debouncedFilter);
+    navigate({
+      search: (old) => ({
+        ...old,
+        id,
+        currentBalance,
+      }),
+      replace: true,
+    });
+  }, [debouncedFilter]);
 
   return (
     <>
@@ -56,7 +89,7 @@ export function Xpub() {
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID" />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID or current balance" />
           </div>
         </div>
         <TabsContent value="all">
