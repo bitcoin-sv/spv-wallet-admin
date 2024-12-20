@@ -9,7 +9,17 @@ on:
       version:
         required: true
         type: string
-        description: "Version of the app to release"
+        description: |
+          Version of the app to release.
+          By default this value will be used also as a git reference to checkout.
+          If you want to release from a different branch or tag, you can provide it in the ref input.
+      ref:
+        required: false
+        type: string
+        description: |
+          Git reference to checkout the code and use it for release.
+          If not provided, the version will be used as a ref.
+          It can be either a branch name, tag name or commit SHA (long version).
       node-version:
         required: false
         type: string
@@ -21,6 +31,21 @@ on:
         description: |
           File containing the version Spec of the version to use.  Examples: package.json, .nvmrc, .node-version, .tool-versions.
           If node-version and node-version-file are both provided the action will use version from node-version.
+      build_out_dir:
+        required: false
+        type: string
+        default: 'dist'
+        description: "Location of the directory where the output of the build command are stored"
+      release_create:
+        required: false
+        type: boolean
+        default: true
+        description: "If the release should be published"
+      release_bundle:
+        required: false
+        type: boolean
+        default: false
+        description: "If the output of the build command should be attached to release"
       docker_image:
         required: false
         type: string
@@ -54,16 +79,26 @@ on:
         description: |
           Username of docker repository.
           If not set, then defaults to GitHub repository owner (organisation)
+          For AWS ECR: Use AWS access key id
 
       DOCKER_PASSWORD:
         required: false
         description: |
           Password used to authenticate in docker repository.
-          If is not set, and registry is ghcr.io, then defaults to GitHub Token.
+          For ghcr.io: defaults to GitHub Token - no need to set it.
+          For AWS ECR: Use AWS secret key of access key
 
       SLACK_WEBHOOK_URL:
         required: false
         description: 'Provide a Slack incoming webhook url, if you want to have a notification on the slack channel'
+
+    outputs:
+      imageVersion:
+        description: "Version of the docker image (which may be a sanitized version from inputs)"
+        value: ${{ jobs.resolve-config.outputs.version }}
+      imageName:
+        description: "Name of the docker image"
+        value: ${{ jobs.dockerize.outputs.image }}
 
 env:
   GH_TOKEN: ${{ github.token }}
@@ -72,10 +107,24 @@ jobs:
   resolve-config:
     runs-on: ubuntu-latest
     outputs:
-      os: ${{ steps.os.outputs.result }}
       workflow: ${{ steps.workflow.outputs.result }}
+      workflowRunId: ${{ steps.workflow-run-id.outputs.workflowRunId }}
+      ref: ${{ steps.git-ref.outputs.value }}
+      refType: ${{ steps.git-ref.outputs.type }}
+      refSha: ${{ steps.git-ref.outputs.sha }}
+      sanitizedVersion: ${{ steps.version.outputs.sanitized }}
+      version: ${{ steps.version.outputs.value }}
     steps:
+      - name: Generate reusable workflow run id
+        id: workflow-run-id
+        run: |
+          workflowRunId="${{ github.run_id }}-${{ github.run_number }}-$RANDOM"
+          echo "workflowRunId=$workflowRunId" >> $GITHUB_OUTPUT
+          echo "::group::Outputs"
+          cat $GITHUB_OUTPUT
+          echo "::endgroup::"
       - id: workflow
+        name: Resolve workflow config
         uses: actions/github-script@v7
         with:
           script: |
@@ -87,6 +136,73 @@ jobs:
               repo_name: parts[1],
               file: parts.slice(2).join('/')
             }
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || inputs.version }}
+      - name: Resolve ref type
+        # Resolves the git reference value and type of it (tag, branch, sha)
+        id: git-ref
+        run: |
+          value="${{ inputs.ref || inputs.version }}"
+          echo "value=$value" > $GITHUB_OUTPUT
+          
+          echo "::group::Type resolution"
+          # Strip refs/heads/, refs/tags/, or refs/ prefix to get a simple ref name
+          if [[ "$value" == refs/heads/* ]]; then
+            ref_name="${value#refs/heads/}"
+            ref_type="branch"
+          elif [[ "$value" == refs/tags/* ]]; then
+            ref_name="${value#refs/tags/}"
+            ref_type="tag"
+          elif [[ "$value" == refs/* ]]; then
+            ref_name="${value#refs/}"
+            ref_type="unknown"
+          else
+            ref_name="$value"
+            ref_type="unknown"
+          fi
+          
+          echo "possible type=$ref_type"
+          
+          # Determine if the ref is a tag, branch, or commit SHA
+          if git show-ref --verify --quiet "refs/heads/$ref_name"; then
+            ref_type="branch"
+          elif git show-ref --verify --quiet "refs/tags/$ref_name"; then
+            ref_type="tag"
+          elif git cat-file -e "$ref_name^{commit}" 2>/dev/null; then
+            ref_type="commit"
+          else
+            ref_type="unknown"
+          fi
+          
+          echo "confirmed type=$ref_type"
+          echo "::endgroup::"
+          if [ "$ref_type" == "unknown" ]; then
+            echo "Cannot determine the type of ref: $value"
+            exit 1
+          fi
+          
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "type=$ref_type" >> $GITHUB_OUTPUT
+          echo "::group::Outputs"
+          cat $GITHUB_OUTPUT
+          echo "::endgroup::"
+
+      - name: Sanitize version
+        # Adjust version to meet docker tag requirements
+        id: version
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ inputs.version }}';
+            sanitized = version.replace(/[^a-zA-Z0-9._-]+/g, '-')
+            sanitized = sanitized.substring(0, 128)
+            core.setOutput('value', version)
+            core.setOutput('sanitized', sanitized)
+            await core.group("Outputs", async () => {
+              core.info(`value: ${sanitized}`);
+            })
 
   build:
     name: Build bundle
@@ -96,8 +212,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
+          ref: ${{ needs.resolve-config.outputs.ref }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -114,37 +229,47 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: spv-wallet-admin
-          path: dist/**
+          name: bundle
+          path: ${{input.build_out_dir}}/**
 
-      - name: Check if release exists
+      - name: "Create release if there isn't"
+        if: inputs.release_create
         run: |
-          echo "GH_RELEASE_NAME=$(GH_PAGER=cat gh release view ${{ inputs.version }} --json name --jq .name)" >> $GITHUB_ENV
+          GH_PAGER=cat gh release view "${{ needs.resolve-config.outputs.version }}" --json name \
+          || gh release create "${{ needs.resolve-config.outputs.version }}" -t "Release ${{ needs.resolve-config.outputs.version }}" --draft --generate-notes
 
-      - name: Prepare draft of release
-        if: env.GH_RELEASE_NAME == ''
+      - name: Bundle package
+        if: inputs.release_create && inputs.release_binaries
         run: |
-          gh release create ${{ inputs.version }} --draft --generate-notes -t "Release ${{ inputs.version }}"
+            tar -czf ${{inputs.build_out_dir}}/${{github.event.repository.name}}_${{ needs.resolve-config.outputs.version }}.tar.gz -C ${{inputs.build_out_dir}}/ .
+            shasum -a 256 ${{inputs.build_out_dir}}/${{github.event.repository.name}}_${{ needs.resolve-config.outputs.version }}.tar.gz > ${{inputs.build_out_dir}}/${{ needs.resolve-config.outputs.version }}_checksums.txt
+
+      - name: Add binaries to release
+        if: inputs.release_create && inputs.release_binaries
+        run: |
+          gh release upload "${{ needs.resolve-config.outputs.version }}" \
+          ${{inputs.build_out_dir}}/*.tar.gz \
+          ${{inputs.build_out_dir}}/*_checksums.txt \
+          --clobber
 
   dockerize:
     name: Dockerize
-    needs: [build]
+    needs: [resolve-config, build]
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ env.VERSION }}
       image: ${{ env.DOCKER_IMAGE }}
-      image_encoded: ${{ env.DOCKER_IMAGE_ENCODED }}
       html: ${{ env.DOCKER_IMAGE_HTML }}
-      html_encoded: ${{ env.DOCKER_IMAGE_HTML_ENCODED }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-config.outputs.ref }}
 
       - name: Download
         uses: actions/download-artifact@v4
         with:
-          name: spv-wallet-admin
-          path: dist
+          name: bundle
+          path: ${{input.build_out_dir}}
 
       - name: Resolve docker configuration
         id: resolve-docker
@@ -168,7 +293,8 @@ jobs:
             }
             const isDockerhub = registry === 'dockerhub'
             const isGhcr = registry === 'ghcr.io'
-            const username = '${{ secrets.DOCKER_USERNAME || github.repository_owner }}'
+            const isAwsPublicEcr = registry === 'public.ecr.aws'
+            const username = '${{ secrets.DOCKER_USERNAME || inputs.docker_org || vars.DOCKER_ORG || github.repository_owner }}'
             const password = '${{ secrets.DOCKER_PASSWORD }}'
             const ghToken = '${{ github.token }}'
             let dockerImageHtml=''
@@ -185,6 +311,7 @@ jobs:
                 registry: isDockerhub ? '' : registry,
                 isDockerhub,
                 isGhcr,
+                isAwsPublicEcr,
                 dockerImageHtml
             }
 
@@ -192,15 +319,23 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
+          # [sha-issue] There is an issue with metadata-action when we checkout sha and use git context
+          # Because of [sha-issue] we're choosing the context
+          context: ${{ needs.resolve-config.outputs.refType != 'sha' && 'git' || 'workflow' }}
           images: ${{ fromJSON(steps.resolve-docker.outputs.result).image }}
+          # Because of [sha-issue] we're setting short sha by ourselves
           tags: |
-            type=semver,pattern=v{{version}}
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}
-            type=semver,pattern=v{{version}}
-            type=semver,pattern={{raw}}
+            type=raw,value=latest,enable=${{ needs.resolve-config.outputs.refType == 'tag' }}
+            type=raw,value=${{ needs.resolve-config.outputs.sanitizedVersion }}
+            type=semver,prefix=v,pattern={{version}},enable=${{ needs.resolve-config.outputs.refType != 'sha' }}
+            type=semver,prefix=v,pattern={{major}}.{{minor}},enable=${{ needs.resolve-config.outputs.refType != 'sha' }}
+            type=semver,prefix=v,pattern={{major}},enable=${{ needs.resolve-config.outputs.refType != 'sha' }}
+            type=semver,pattern={{raw}},enable=${{ needs.resolve-config.outputs.refType != 'sha' }}
+            type=raw,prefix=sha-,value=${{ needs.resolve-config.outputs.refSha }}
           labels: |
-            ${{ fromJSON(steps.resolve-docker.outputs.result).isDockerhub && format('org.opencontainers.image.url="https://hub.docker.com/r/{0}"', fromJSON(steps.resolve-docker.outputs.result).image) }}
+            ${{ fromJSON(steps.resolve-docker.outputs.result).isDockerhub && format('org.opencontainers.image.url=https://hub.docker.com/r/{0}', fromJSON(steps.resolve-docker.outputs.result).image) }}
+            ${{ needs.resolve-config.outputs.refType == 'sha' && format('org.opencontainers.image.revision={0}', needs.resolve-config.outputs.ref) }}
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -208,18 +343,40 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
+      - name: AWS ECR CREDENTIALS
+        if: fromJSON(steps.resolve-docker.outputs.result).isAwsPublicEcr
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ fromJSON(steps.resolve-docker.outputs.result).username }}
+          aws-secret-access-key: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
+          # AWS ECR Public repository is only available in us-east-1
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR Public
+        if: fromJSON(steps.resolve-docker.outputs.result).isAwsPublicEcr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+
+      - name: Login to Docker
         uses: docker/login-action@v3
+        if: fromJSON(steps.resolve-docker.outputs.result).isAwsPublicEcr != true
         with:
           registry: ${{ fromJSON(steps.resolve-docker.outputs.result).registry }}
           username: ${{ fromJSON(steps.resolve-docker.outputs.result).username }}
           password: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
 
+      - name: Choose dockerfile
+        run: |
+          dockerfile=$([ -f ./Dockerfile ] && echo "./Dockerfile" || echo '')
+          dockerfile=$([ -f ./release/Dockerfile ] && echo './release/Dockerfile' || echo $dockerfile)
+          echo "DOCKER_FILE=$dockerfile" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./release/Dockerfile
+          file: ${{ env.DOCKER_FILE }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -227,23 +384,17 @@ jobs:
           build-args: |
             project_name=${{ github.event.repository.name }}
             repository_owner=${{ github.repository_owner }}
-            tag=${{ github.ref_name }}
+            tag=${{ needs.resolve-config.outputs.ref }}
+            version=${{ needs.resolve-config.outputs.sanitizedVersion }}
             src_url=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.source'] }}
-            version=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             revision=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
 
       - name: Add additional variables to env
         run: |
-          echo "DOCKER_IMAGE=${{ fromJSON(steps.resolve-docker.outputs.result).image }}" >> $GITHUB_ENV
           echo "VERSION=${{ env.DOCKER_METADATA_OUTPUT_VERSION }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=${{ fromJSON(steps.resolve-docker.outputs.result).image }}" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_HTML=${{ fromJSON(steps.resolve-docker.outputs.result).dockerImageHtml }}" >> $GITHUB_ENV
 
-      ### Solve the issue when part of image name is resolved as secret.DOCKER_USERNAME
-      - name: Encoded outputs
-        id: encoded-outputs
-        run: |
-          echo "DOCKER_IMAGE_ENCODED=$(echo "$DOCKER_IMAGE" | base64 -w0 | base64 -w0 )" >> $GITHUB_ENV
-          echo "DOCKER_IMAGE_HTML_ENCODED=$(echo "$DOCKER_IMAGE_HTML" | base64 -w0 | base64 -w0 )" >> $GITHUB_ENV
       - name: Choose dockerhub readme file template
         if: success() && fromJSON(steps.resolve-docker.outputs.result).isDockerhub
         run: |
@@ -255,7 +406,7 @@ jobs:
       - name: Prepare README for dockerhub
         if: success() && fromJSON(steps.resolve-docker.outputs.result).isDockerhub && env.DOCKER_README_FILE != ''
         run: |
-          envsubst < $DOCKER_README_FILE > ./dist/README.DOCKER.md
+          envsubst < $DOCKER_README_FILE > ./${{ inputs.build_out_dir }}/README.DOCKER.md
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
@@ -265,26 +416,28 @@ jobs:
           password: ${{ fromJSON(steps.resolve-docker.outputs.result).password }}
           short-description: ${{ github.event.repository.description }}
           repository: ${{ fromJSON(steps.resolve-docker.outputs.result).image }}
-          readme-filepath: ./dist/README.DOCKER.md
+          readme-filepath: ./${{ inputs.build_out_dir }}/README.DOCKER.md
 
   publish-release:
     name: Publish Release
     runs-on: ubuntu-latest
-    needs: [dockerize]
+    needs: [resolve-config, dockerize]
+    if: inputs.release_create
     steps:
-      - uses: actions/checkout@v4
       - name: Publish
         run: |
-          gh release edit ${{ inputs.version }} --draft=false --repo ${{ github.repository }}
+          gh release edit "${{ needs.resolve-config.outputs.version }}" --draft=false --latest --repo ${{ github.repository }}
 
   notify:
     name: "Notify"
     runs-on: ubuntu-latest
-    needs: [dockerize, publish-release]
+    # TODO adjust notification message if the release is not created, but adopter want to have notification
+    if: inputs.release_create
+    needs: [resolve-config, dockerize, publish-release]
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       REPO_URL: ${{github.server_url}}/${{ github.repository }}
-      RELEASE_URL: ${{github.server_url}}/${{ github.repository }}/releases/tag/${{ inputs.version }}
+      RELEASE_URL: ${{github.server_url}}/${{ github.repository }}/releases/tag/${{ needs.resolve-config.outputs.version }}
     steps:
       - name: "Slack notification is skipped because secret SLACK_WEBHOOK_URL is not set"
         if: ${{ env.SLACK_WEBHOOK_URL == '' }}
@@ -295,7 +448,7 @@ jobs:
         run: |
           echo "DOCKER_IMAGE=${{ needs.dockerize.outputs.image }}" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_HTML=${{ needs.dockerize.outputs.html }}" >> $GITHUB_ENV
-          echo "DOCKER_IMAGE_VERSION=${{ needs.dockerize.outputs.version }}" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_VERSION=${{ needs.resolve-config.outputs.sanitizedVersion }}" >> $GITHUB_ENV
 
       # Sometime GH can treat image name and image url as containing secrets,
       # therefore if they're missing we need to resolve them again
@@ -322,7 +475,7 @@ jobs:
             }
             const isDockerhub = registry === 'dockerhub'
             const isGhcr = registry === 'ghcr.io'
-            const username = '${{ secrets.DOCKER_USERNAME || github.repository_owner }}'
+            const username = '${{ secrets.DOCKER_USERNAME || inputs.docker_org || vars.DOCKER_ORG || github.repository_owner }}'
             const password = '${{ secrets.DOCKER_PASSWORD }}'
             const ghToken = '${{ github.token }}'
             let dockerImageHtml=''
@@ -352,7 +505,7 @@ jobs:
         if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ env.SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
             {
@@ -362,7 +515,7 @@ jobs:
                   "block_id": "release",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*${{ github.event.repository.name || github.repository }}* <${{ env.RELEASE_URL }}|${{ inputs.version }}> is out! :rocket:"
+                    "text": "*${{ github.event.repository.name || github.repository }}* <${{ env.RELEASE_URL }}|${{ needs.resolve-config.outputs.version }}> is out! :rocket:"
                   }
                 },
                 {
