@@ -96,10 +96,10 @@ export const mapOldContactToContact = (oldContact: OldContact): Contact => {
     metadata: oldContact.metadata,
     deletedAt: oldContact.deleted_at,
     updatedAt: oldContact.updated_at,
-    pubKey: oldContact.pub_key,
+    pubKey: oldContact.pubKey,
     status: oldContact.status,
     paymail: oldContact.paymail,
-    fullName: oldContact.full_name,
+    fullName: oldContact.fullName,
   };
 };
 

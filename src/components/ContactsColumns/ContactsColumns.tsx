@@ -43,7 +43,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'fullName',
+            order_by_field: 'full_name',
             sort_direction: getSortDirection(column),
           })}
         >
@@ -83,7 +83,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'pubKey',
+            order_by_field: 'pub_key',
             sort_direction: getSortDirection(column),
           })}
         >
@@ -129,7 +129,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Link
@@ -148,7 +148,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('created_at') && new Date(row.getValue('created_at')).toLocaleString();
+      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
     },
   },
 ];
