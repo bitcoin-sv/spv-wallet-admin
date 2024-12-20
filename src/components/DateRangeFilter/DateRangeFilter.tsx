@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { cn } from '@/lib/utils.ts';
+import { removeKeys } from '@/utils';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { addDays, format, subDays } from 'date-fns';
 import { Calendar as CalendarIcon, ListFilter } from 'lucide-react';
@@ -44,18 +45,10 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
     navigate({
       to: '.',
       search: (old) => {
-        if ('createdRange' in old) {
-          delete old.createdRange;
-        }
-        if ('updatedRange' in old) {
-          delete old.updatedRange;
-        }
-        if ('revokedRange' in old) {
-          delete old.revokedRange;
-        }
+        const newSearch = removeKeys(old, ['createdRange', 'updatedRange', 'revokedRange']);
 
         return {
-          ...old,
+          ...newSearch,
           [dateRangeOption]: {
             from: date!.from?.toISOString(),
             to: addDays(date!.to!, 1).toISOString(),
@@ -77,19 +70,7 @@ export const DateRangeFilter = ({ withRevokedRange, className }: DateRangeFilter
     navigate({
       to: '.',
       search: (old) => {
-        if ('createdRange' in old) {
-          delete old.createdRange;
-        }
-        if ('updatedRange' in old) {
-          delete old.updatedRange;
-        }
-        if ('revokedRange' in old) {
-          delete old.revokedRange;
-        }
-
-        return {
-          ...old,
-        };
+        return removeKeys(old, ['createdRange', 'updatedRange', 'revokedRange']);
       },
       replace: true,
     })
