@@ -357,6 +357,8 @@ jobs:
         if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ env.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -384,5 +386,3 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
