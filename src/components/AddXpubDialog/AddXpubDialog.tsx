@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
+import { KEY_LENGTH } from '@/constants';
 
 interface AddXpubDialogProps {
   className?: string;
@@ -35,13 +36,13 @@ const formSchema = z.object({
     z
       .string()
       .refine((val) => val.startsWith('xprv'), 'xPriv should start with xprv')
-      .refine((val) => val.length === 111, 'Invalid xPriv length.'),
+      .refine((val) => val.length === KEY_LENGTH, 'Invalid xPriv length.'),
     z.literal(''),
   ]),
   xPub: z
     .string()
     .refine((val) => val.startsWith('xpub'), 'xPub should starts with xpub.')
-    .refine((val) => val.length === 111, 'Invalid xPub length.'),
+    .refine((val) => val.length === KEY_LENGTH, 'Invalid xPub length.'),
 });
 
 const xPrivSchema = formSchema.pick({ xPriv: true });
