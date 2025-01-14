@@ -34,7 +34,10 @@ const addPaymailFormSchema = z.object({
     .min(1, 'xPub is required')
     .refine((val) => val.startsWith('xpub'), 'xPub should start with xpub')
     .refine((val) => val.length === KEY_LENGTH, 'Invalid xPriv length.'),
-  address: z.string({ required_error: 'Address is required' }).email('Invalid email format'),
+  paymail: z
+    .string({ required_error: 'Paymail is required' })
+    .min(1, 'Paymail is required')
+    .email('Invalid paymail format'),
   publicName: z.string().default(''),
   avatar: z.string().default(''),
 });
@@ -43,6 +46,15 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   const queryClient = useQueryClient();
 
   const { spvWalletClient } = useSpvWalletClient();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<z.infer<typeof addPaymailFormSchema>>({
+    resolver: zodResolver(addPaymailFormSchema),
+  });
 
   const mutation = useMutation({
     mutationFn: async ({
@@ -59,24 +71,18 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
       return await spvWalletClient!.AdminCreatePaymail(xPub, address, publicName, avatar);
     },
-    onSuccess: () => queryClient.invalidateQueries(),
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      reset();
+    },
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<z.infer<typeof addPaymailFormSchema>>({
-    resolver: zodResolver(addPaymailFormSchema),
-  });
-
-  const onSubmit = async ({ avatar, address, xPub, publicName }: z.infer<typeof addPaymailFormSchema>) => {
+  const onSubmit = async ({ avatar, paymail, xPub, publicName }: z.infer<typeof addPaymailFormSchema>) => {
     try {
       HD.fromString(xPub);
       await mutation.mutateAsync({
         xPub,
-        address,
+        address: paymail,
         publicName,
         avatar,
       });
@@ -89,7 +95,6 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
 
   const { isPending } = mutation;
 
-  console.log();
   return (
     <Dialog>
       <DialogTrigger asChild className={className}>
@@ -116,8 +121,8 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
               <Label htmlFor="address" className="text-right pr-4">
                 Address
               </Label>
-              <Input id="address" placeholder="john@example.com" className="col-span-3" {...register('address')} />
-              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.address?.message}</span>
+              <Input id="paymail" placeholder="john@example.com" className="col-span-3" {...register('paymail')} />
+              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.paymail?.message}</span>
             </div>
             <div className="grid grid-cols-4 items-center ">
               <Label htmlFor="publicName" className="text-right pr-4">
