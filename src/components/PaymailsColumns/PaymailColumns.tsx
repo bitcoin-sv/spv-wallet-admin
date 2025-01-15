@@ -38,8 +38,8 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'id',
-            sort_direction: getSortDirection(column),
+            sortBy: 'id',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -89,15 +89,15 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
   },
   {
-    accessorKey: 'xpub_id',
+    accessorKey: 'xpubId',
     header: ({ column }) => {
       return (
         <Link
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'xpub_id',
-            sort_direction: getSortDirection(column),
+            sortBy: 'xpub_id',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -109,7 +109,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
     cell: ({ row }) => {
       return (
-        row.getValue('xpub_id') && (
+        row.getValue('xpubId') && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="align-middle">
@@ -117,11 +117,11 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
                   onClick={onClickCopy('Xpub ID')}
                   className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
                 >
-                  {row.getValue('xpub_id')}
+                  {row.getValue('xpubId')}
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{row.getValue('xpub_id')}</p>
+                <p>{row.getValue('xpubId')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -137,8 +137,8 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'alias',
-            sort_direction: getSortDirection(column),
+            sortBy: 'alias',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -157,8 +157,8 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'domain',
-            sort_direction: getSortDirection(column),
+            sortBy: 'domain',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -170,15 +170,15 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
   },
   {
-    accessorKey: 'public_name',
+    accessorKey: 'publicName',
     header: ({ column }) => {
       return (
         <Link
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'public_name',
-            sort_direction: getSortDirection(column),
+            sortBy: 'public_name',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -210,15 +210,15 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Link
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'created_at',
-            sort_direction: getSortDirection(column),
+            sortBy: 'created_at',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -229,7 +229,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('created_at') && new Date(row.getValue('created_at')).toLocaleString();
+      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
     },
   },
 ];

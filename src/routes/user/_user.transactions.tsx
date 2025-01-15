@@ -24,7 +24,6 @@ export const Route = createFileRoute('/user/_user/transactions')({
     context: { queryClient, spvWallet },
     deps: { sort, sortBy, blockHeight, createdRange, updatedRange },
   }) =>
-    //TODO: add getDraftTransactions request
     await queryClient.ensureQueryData(
       transactionsUserQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,

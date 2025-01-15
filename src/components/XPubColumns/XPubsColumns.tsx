@@ -33,15 +33,15 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
     },
   },
   {
-    accessorKey: 'current_balance',
+    accessorKey: 'currentBalance',
     header: ({ column }) => {
       return (
         <Link
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'current_balance',
-            sort_direction: getSortDirection(column),
+            sortBy: 'current_balance',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -71,15 +71,15 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Link
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'created_at',
-            sort_direction: getSortDirection(column),
+            sortBy: 'created_at',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -90,7 +90,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('created_at') && new Date(row.getValue('created_at')).toLocaleString();
+      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
     },
   },
 ];

@@ -17,8 +17,8 @@ export const columns: ColumnDef<Tx>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'id',
-            sort_direction: getSortDirection(column),
+            sortBy: 'id',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -37,8 +37,8 @@ export const columns: ColumnDef<Tx>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'block_height',
-            sort_direction: getSortDirection(column),
+            sortBy: 'block_height',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -75,8 +75,8 @@ export const columns: ColumnDef<Tx>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'created_at',
-            sort_direction: getSortDirection(column),
+            sortBy: 'created_at',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>

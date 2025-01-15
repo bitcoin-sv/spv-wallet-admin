@@ -18,7 +18,6 @@ export * from './PaymailsColumns/PaymailColumns.tsx';
 export * from './PaymailDeleteDialog';
 export * from './PaymailsTabContent';
 export * from './Profile';
-export * from './RecordTxDialogAdmin';
 export * from './RecordTxDialogUser';
 export * from './RevokeKeyDialog';
 export * from './Searchbar';

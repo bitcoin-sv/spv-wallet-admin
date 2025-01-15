@@ -23,8 +23,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'id',
-            sort_direction: getSortDirection(column),
+            sortBy: 'id',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -43,8 +43,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'full_name',
-            sort_direction: getSortDirection(column),
+            sortBy: 'full_name',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -63,8 +63,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'paymail',
-            sort_direction: getSortDirection(column),
+            sortBy: 'paymail',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -83,8 +83,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'pub_key',
-            sort_direction: getSortDirection(column),
+            sortBy: 'pub_key',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -103,8 +103,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'status',
-            sort_direction: getSortDirection(column),
+            sortBy: 'status',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -136,8 +136,8 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'created_at',
-            sort_direction: getSortDirection(column),
+            sortBy: 'created_at',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>

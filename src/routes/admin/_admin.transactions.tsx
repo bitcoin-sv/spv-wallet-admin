@@ -1,6 +1,5 @@
 import {
   CustomErrorComponent,
-  RecordTxDialogAdmin,
   Searchbar,
   Tabs,
   TabsContent,
@@ -53,13 +52,6 @@ export function Transactions() {
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort } = useSearch({ from: '/admin/_admin/transactions' });
 
-  /**
-   * Hiding record transaction button and dialog,
-   * until spv-wallet functionality for recording transactions would fulfil users needs and expectations
-   * @var {boolean} hasRecordTransaction
-   */
-  const hasRecordTransaction = false;
-
   const { data: transactions } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
@@ -70,8 +62,6 @@ export function Transactions() {
     }),
   );
 
-  // TODO: Add server pagination for xpubs when search and count will be merged
-
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
@@ -80,15 +70,14 @@ export function Transactions() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            {hasRecordTransaction && <RecordTxDialogAdmin />}
             <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
           </div>
         </div>
         <TabsContent value="all">
           <TransactionsTabContent
             transactions={transactions.content}
-            hasRecordTransaction={hasRecordTransaction}
-            TxDialog={RecordTxDialogAdmin}
+            hasRecordTransaction={false}
+            TxDialog={() => null}
           />
         </TabsContent>
       </Tabs>
