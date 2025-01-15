@@ -4,9 +4,9 @@ import { queryOptions } from '@tanstack/react-query';
 export interface TransactionsQueryOptions {
   blockHeight?: number;
   page?: number;
-  page_size?: number;
-  order_by_field?: string;
-  sort_direction?: string;
+  size?: number;
+  sort?: string;
+  sortBy?: string;
   createdRange?: {
     from: string;
     to: string;
@@ -16,26 +16,15 @@ export interface TransactionsQueryOptions {
 }
 
 export const transactionsQueryOptions = (opts: TransactionsQueryOptions) => {
-  const { sort_direction, createdRange, blockHeight, order_by_field, page, page_size, spvWalletClient, updatedRange } =
-    opts;
+  const { sort, createdRange, blockHeight, sortBy, page, size, spvWalletClient, updatedRange } = opts;
 
   return queryOptions({
-    queryKey: [
-      'transactions',
-      sort_direction,
-      createdRange,
-      blockHeight,
-      order_by_field,
-      page_size,
-      page,
-      spvWalletClient,
-      updatedRange,
-    ],
+    queryKey: ['transactions', sort, createdRange, blockHeight, sortBy, size, page, spvWalletClient, updatedRange],
     queryFn: async () =>
       await spvWalletClient.AdminGetTransactions(
         { blockHeight, createdRange, updatedRange, includeDeleted: true },
         {},
-        { page, page_size, order_by_field, sort_direction },
+        { page, size, sortBy, sort },
       ),
   });
 };

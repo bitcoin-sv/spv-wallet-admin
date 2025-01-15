@@ -5,26 +5,26 @@ export interface XPubQueryOptions {
   id?: string;
   currentBalance?: number;
   page?: number;
-  page_size?: number;
-  order_by_field?: string;
-  sort_direction?: string;
+  size?: number;
+  sort?: string;
+  sortBy?: string;
   spvWalletClient: SpvWalletClientExtended;
 }
 
 export const xPubQueryOptions = (opts: XPubQueryOptions) => {
-  const { id, currentBalance = undefined, page, page_size, order_by_field, sort_direction, spvWalletClient } = opts;
+  const { id, currentBalance = undefined, page, size, sort, sortBy, spvWalletClient } = opts;
 
   return queryOptions({
-    queryKey: ['xpubs', id, currentBalance, page, page_size, order_by_field, sort_direction],
+    queryKey: ['xpubs', id, currentBalance, page, size, sort, sortBy],
     queryFn: async () =>
       await spvWalletClient.AdminGetXPubs(
         { id, currentBalance, includeDeleted: true },
         {},
         {
           page,
-          page_size,
-          order_by_field: order_by_field ?? 'id',
-          sort_direction: sort_direction ?? 'desc',
+          size,
+          sortBy: sortBy ?? 'id',
+          sort: sort ?? 'desc',
         },
       ),
   });
