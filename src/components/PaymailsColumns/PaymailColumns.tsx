@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-import { OldPaymailAddress } from '@bsv/spv-wallet-js-client';
+import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 
-export interface PaymailColumns extends OldPaymailAddress {
+export interface PaymailColumns extends PaymailAddress {
   status: string;
 }
 

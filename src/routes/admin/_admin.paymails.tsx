@@ -23,30 +23,27 @@ import { z } from 'zod';
 export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
   validateSearch: z.object({
-    order_by_field: z.string().optional().catch('id'),
-    sort_direction: z.string().optional().catch('desc'),
+    sortBy: z.string().optional().catch('id'),
+    sort: z.string().optional().catch('desc'),
     xpubId: z.string().optional().catch(''),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
-  loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange } }) => ({
-    order_by_field,
-    sort_direction,
+  loaderDeps: ({ search: { sortBy, sort, xpubId, createdRange, updatedRange } }) => ({
+    sortBy,
+    sort,
     xpubId,
     createdRange,
     updatedRange,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({
-    context: { queryClient, spvWallet },
-    deps: { sort_direction, order_by_field, xpubId, createdRange, updatedRange },
-  }) =>
+  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, xpubId, createdRange, updatedRange } }) =>
     await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         xpubId,
-        sort_direction,
-        order_by_field,
+        sort,
+        sortBy,
         createdRange,
         updatedRange,
       }),
@@ -58,7 +55,7 @@ export function Paymails() {
   const [filter, setFilter] = useState<string>('');
 
   const { spvWalletClient } = useSpvWalletClient();
-  const { order_by_field, sort_direction, xpubId, createdRange, updatedRange } = useSearch({
+  const { sortBy, sort, xpubId, createdRange, updatedRange } = useSearch({
     from: '/admin/_admin/paymails',
   });
 
@@ -70,14 +67,14 @@ export function Paymails() {
     paymailsQueryOptions({
       spvWalletClient: spvWalletClient!,
       xpubId,
-      order_by_field,
-      sort_direction,
+      sortBy,
+      sort,
       createdRange,
       updatedRange,
     }),
   );
 
-  const mappedPaymails = addStatusField(paymails);
+  const mappedPaymails = addStatusField(paymails.content);
   const deletedPaymails = getDeletedElements(mappedPaymails);
 
   useEffect(() => {

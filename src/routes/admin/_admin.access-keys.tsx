@@ -11,13 +11,7 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import {
-  accessKeysAdminQueryOptions,
-  addStatusField,
-  getDeletedElements,
-  getRevokedElements,
-  mapOldAccessKeysToAccessKeys,
-} from '@/utils';
+import { accessKeysAdminQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -31,16 +25,16 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
   validateSearch: z.object({
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    order_by_field: z.string().optional().catch('id'),
+    sortBy: z.string().optional().catch('id'),
     revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    sort_direction: z.string().optional().catch('desc'),
+    sort: z.string().optional().catch('desc'),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     xpubId: z.string().optional().catch(''),
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loaderDeps: ({ search: { order_by_field, sort_direction, xpubId, createdRange, updatedRange, revokedRange } }) => ({
-    order_by_field,
-    sort_direction,
+  loaderDeps: ({ search: { sortBy, sort, xpubId, createdRange, updatedRange, revokedRange } }) => ({
+    sortBy,
+    sort,
     xpubId,
     createdRange,
     updatedRange,
@@ -51,7 +45,7 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
       spvWallet: { spvWalletClient },
       queryClient,
     },
-    deps: { order_by_field, sort_direction, xpubId, createdRange, revokedRange, updatedRange },
+    deps: { sortBy, sort, xpubId, createdRange, revokedRange, updatedRange },
   }) => {
     await queryClient.ensureQueryData(
       accessKeysAdminQueryOptions({
@@ -60,8 +54,8 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
         createdRange,
         updatedRange,
         revokedRange,
-        sort_direction,
-        order_by_field,
+        sort,
+        sortBy,
       }),
     );
   },
@@ -71,7 +65,7 @@ export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { xpubId, order_by_field, sort_direction, createdRange, updatedRange, revokedRange } = useSearch({
+  const { xpubId, sortBy, sort, createdRange, updatedRange, revokedRange } = useSearch({
     from: '/admin/_admin/access-keys',
   });
 
@@ -84,16 +78,15 @@ export function AccessKeys() {
     accessKeysAdminQueryOptions({
       spvWalletClient: spvWalletClient!,
       xpubId,
-      order_by_field,
-      sort_direction,
+      sortBy,
+      sort,
       createdRange,
       updatedRange,
       revokedRange,
     }),
   );
 
-  const accessKeysFromOldAccessKeys = mapOldAccessKeysToAccessKeys(accessKeys);
-  const mappedAccessKeys = addStatusField(accessKeysFromOldAccessKeys);
+  const mappedAccessKeys = addStatusField(accessKeys.content);
   const revokedKeys = getRevokedElements(mappedAccessKeys);
   const deletedKeys = getDeletedElements(mappedAccessKeys);
 

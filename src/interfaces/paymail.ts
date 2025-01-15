@@ -1,5 +1,5 @@
-import { OldPaymailAddress } from '@bsv/spv-wallet-js-client';
+import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 
-export interface PaymailExtended extends OldPaymailAddress {
+export interface PaymailExtended extends PaymailAddress {
   status: string;
 }

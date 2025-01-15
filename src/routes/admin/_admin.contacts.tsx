@@ -12,7 +12,7 @@ import {
 } from '@/components';
 
 import { useSpvWalletClient } from '@/contexts';
-import { contactsQueryOptions, getContactId, getContactPaymail, mapOldContactsToContacts } from '@/utils';
+import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -25,17 +25,17 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
   validateSearch: z.object({
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    order_by_field: z.string().optional().catch('id'),
-    sort_direction: z.string().optional().catch('desc'),
+    sortBy: z.string().optional().catch('id'),
+    sort: z.string().optional().catch('desc'),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     id: z.string().optional(),
     paymail: z.string().optional(),
     pubKey: z.string().optional(),
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loaderDeps: ({ search: { order_by_field, sort_direction, createdRange, updatedRange, id, paymail, pubKey } }) => ({
-    order_by_field,
-    sort_direction,
+  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, id, paymail, pubKey } }) => ({
+    sortBy,
+    sort,
     createdRange,
     updatedRange,
     id,
@@ -44,15 +44,15 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
   }),
   loader: async ({
     context: { spvWallet, queryClient },
-    deps: { createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey },
+    deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
   }) =>
     await queryClient.ensureQueryData(
       contactsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         updatedRange,
         createdRange,
-        sort_direction,
-        order_by_field,
+        sort,
+        sortBy,
         id,
         paymail,
         pubKey,
@@ -66,19 +66,19 @@ export function Contacts() {
 
   const { spvWalletClient } = useSpvWalletClient();
 
-  const { id, paymail, pubKey, createdRange, updatedRange, order_by_field, sort_direction } = useSearch({
+  const { id, paymail, pubKey, createdRange, updatedRange, sortBy, sort } = useSearch({
     from: '/admin/_admin/contacts',
   });
 
   const {
-    data: { content },
+    data: { content: contacts },
   } = useSuspenseQuery(
     contactsQueryOptions({
       spvWalletClient: spvWalletClient!,
       updatedRange,
       createdRange,
-      sort_direction,
-      order_by_field,
+      sort,
+      sortBy,
       id,
       paymail,
       pubKey,
@@ -87,7 +87,6 @@ export function Contacts() {
 
   const [debouncedFilter] = useDebounce(filter, 200);
 
-  const contacts = mapOldContactsToContacts(content);
   const unconfirmedContacts = contacts.filter((c) => c.status === ContactStatus.Unconfirmed && c.deletedAt === null);
   const awaitingContacts = contacts.filter((c) => c.status === ContactStatus.Awaiting);
   const confirmedContacts = contacts.filter((c) => c.status === ContactStatus.Confirmed);
