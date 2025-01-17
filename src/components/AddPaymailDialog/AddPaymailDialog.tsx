@@ -69,7 +69,7 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       avatar: string;
     }) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminCreatePaymail(xPub, address, publicName, avatar);
+      return await spvWalletClient!.AdminCreatePaymail(xPub, address, publicName, avatar, {});
     },
     onSuccess: () => {
       queryClient.invalidateQueries();

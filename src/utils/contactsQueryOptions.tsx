@@ -3,9 +3,9 @@ import { queryOptions } from '@tanstack/react-query';
 
 export interface ContactsQueryOptions {
   page?: number;
-  page_size?: number;
-  order_by_field?: string;
-  sort_direction?: string;
+  size?: number;
+  sort?: string;
+  sortBy?: string;
   spvWalletClient: SpvWalletClientExtended;
   createdRange?: {
     from: string;
@@ -18,15 +18,15 @@ export interface ContactsQueryOptions {
 }
 
 export const contactsQueryOptions = (opts: ContactsQueryOptions) => {
-  const { createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey } = opts;
+  const { createdRange, updatedRange, page, size, sortBy, sort, id, paymail, pubKey } = opts;
 
   return queryOptions({
-    queryKey: ['contacts', createdRange, updatedRange, order_by_field, sort_direction, id, paymail, pubKey],
+    queryKey: ['contacts', createdRange, updatedRange, sortBy, sort, id, paymail, pubKey, page, size],
     queryFn: async () =>
       await opts.spvWalletClient.AdminGetContacts(
         { createdRange, updatedRange, id, paymail, pubKey, includeDeleted: true },
         {},
-        { order_by_field: order_by_field ?? 'id', sort_direction: sort_direction ?? 'asc' },
+        { sortBy: sortBy ?? 'id', sort: sort ?? 'asc', page, size },
       ),
   });
 };

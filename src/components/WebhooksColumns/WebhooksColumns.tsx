@@ -19,8 +19,8 @@ export const webhookColumns: ColumnDef<WebhooksColumns>[] = [
           to={'.'}
           search={(prev) => ({
             ...prev,
-            order_by_field: 'url',
-            sort_direction: getSortDirection(column),
+            sortBy: 'url',
+            sort: getSortDirection(column),
           })}
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
