@@ -2,11 +2,10 @@ import { Tx } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
-
 import { Badge } from '@/components';
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
+import SortIcon from '../ui/sort-icon';
 
 export const columns: ColumnDef<Tx>[] = [
   {
@@ -23,7 +22,7 @@ export const columns: ColumnDef<Tx>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -43,7 +42,7 @@ export const columns: ColumnDef<Tx>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Block Height
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -55,7 +54,7 @@ export const columns: ColumnDef<Tx>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <SortIcon column={column} />
         </Button>
       );
     },
@@ -81,7 +80,7 @@ export const columns: ColumnDef<Tx>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );

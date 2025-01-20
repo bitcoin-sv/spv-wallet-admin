@@ -2,12 +2,11 @@ import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
-
 import { Badge } from '@/components';
 
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
+import SortIcon from '../ui/sort-icon';
 
 export interface AccessKeysColumns extends AccessKey {
   status: string;
@@ -28,7 +27,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -48,7 +47,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Xpub ID
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -60,7 +59,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <SortIcon column={column} />
         </Button>
       );
     },
@@ -88,7 +87,7 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );

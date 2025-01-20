@@ -2,10 +2,9 @@ import { Contact } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
-
 import { Badge, Button } from '@/components';
 import { getSortDirection } from '@/utils';
+import SortIcon from '../ui/sort-icon';
 
 export const enum ContactStatus {
   Confirmed = 'confirmed',
@@ -29,7 +28,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -49,7 +48,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Full Name
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -69,7 +68,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Paymail
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -89,7 +88,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             PubKey
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -109,7 +108,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Status
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -142,7 +141,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
