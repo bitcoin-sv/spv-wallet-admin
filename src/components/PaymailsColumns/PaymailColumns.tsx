@@ -4,8 +4,6 @@ import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
-
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -13,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
 
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
+import SortIcon from '../ui/sort-icon';
 
 export interface PaymailColumns extends PaymailAddress {
   status: string;
@@ -44,7 +43,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -102,7 +101,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Xpub ID
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -143,7 +142,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Alias
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -163,7 +162,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Domain
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -183,7 +182,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Public Name
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -195,7 +194,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <SortIcon column={column} />
         </Button>
       );
     },
@@ -223,7 +222,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );

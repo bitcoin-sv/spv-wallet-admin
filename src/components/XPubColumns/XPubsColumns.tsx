@@ -2,10 +2,9 @@ import { XPub } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
-
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
+import SortIcon from '../ui/sort-icon';
 
 export interface XpubsColumns extends XPub {
   status: string;
@@ -26,7 +25,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -46,7 +45,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Balance
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -58,7 +57,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <SortIcon column={column} />
         </Button>
       );
     },
@@ -84,7 +83,7 @@ export const xPubsColumns: ColumnDef<XpubsColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Created Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
