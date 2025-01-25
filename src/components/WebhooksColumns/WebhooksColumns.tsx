@@ -4,7 +4,7 @@ import { Webhook } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { ArrowUpDown } from 'lucide-react';
+import SortIcon from '../ui/sort-icon';
 
 export interface WebhooksColumns extends Webhook {
   status: string;
@@ -25,7 +25,7 @@ export const webhookColumns: ColumnDef<WebhooksColumns>[] = [
         >
           <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             URL
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <SortIcon column={column} />
           </Button>
         </Link>
       );
@@ -37,7 +37,7 @@ export const webhookColumns: ColumnDef<WebhooksColumns>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <SortIcon column={column} />
         </Button>
       );
     },
