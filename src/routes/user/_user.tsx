@@ -1,12 +1,11 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-
 import { ArrowLeftRight, KeySquare } from 'lucide-react';
-
 import { useEffect, useState } from 'react';
 
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
 import { UserBalance } from '@/components/UserBalance';
+import { useSpvWalletClient } from '@/contexts';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -20,15 +19,31 @@ export const Route = createFileRoute('/user/_user')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/user/_user');
   const { pathname } = useLocation();
+  const { spvWalletClient } = useSpvWalletClient();
+  const [userInfo, setUserInfo] = useState<{ paymail?: string; userId?: string } | null>(null);
 
   useEffect(() => {
     setRoute(pathname);
   }, [pathname]);
 
-  const highlightRoute = (path: string) => {
-    if (path === route) {
-      return 'bg-accent text-accent-foreground';
+  useEffect(() => {
+    async function fetchUserInfo() {
+      try {
+        if (!spvWalletClient) {
+          return;
+        }
+        const user = await spvWalletClient.GetUserInfo();
+        setUserInfo({
+          userId: user?.id,
+        });
+      } catch (error) {
+        console.error('Failed to fetch user info:', error);
+      }
     }
+    fetchUserInfo();
+  }, [spvWalletClient]);
+  const highlightRoute = (path: string) => {
+    return path === route ? 'bg-accent text-accent-foreground' : '';
   };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -70,7 +85,12 @@ function LayoutComponent() {
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
-            <h1>SPV Wallet Admin</h1>
+            <h1>SPV Wallet User</h1>
+            {userInfo && (
+              <p className="text-sm text-gray-600">
+                {userInfo.paymail ? `Paymail: ${userInfo.paymail}` : `User ID: ${userInfo.userId}`}
+              </p>
+            )}
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
             <PageRefreshButton />
