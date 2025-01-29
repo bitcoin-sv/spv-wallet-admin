@@ -28,16 +28,12 @@ function LayoutComponent() {
 
   useEffect(() => {
     async function fetchUserInfo() {
-      try {
-        if (!spvWalletClient) {
-          return;
-        }
-        const user = await spvWalletClient.GetUserInfo();
-        setUserInfo({
-          userId: user?.id,
-        });
-      } catch (error) {
-        console.error('Failed to fetch user info:', error);
+      if (!spvWalletClient){
+        return;
+      }
+      const user = await spvWalletClient.GetUserInfo();
+      if (user?.id) {
+        setUserInfo({ userId: user.id });
       }
     }
     fetchUserInfo();
