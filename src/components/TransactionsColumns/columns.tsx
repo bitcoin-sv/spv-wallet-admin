@@ -2,7 +2,7 @@ import { Tx } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Badge } from '@/components';
+import { Badge, DateCell } from '@/components';
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
@@ -85,8 +85,6 @@ export const columns: ColumnDef<Tx>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => {
-      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
-    },
+    cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
   },
 ];

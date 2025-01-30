@@ -7,6 +7,7 @@ import {
   DialogTrigger,
   DropdownMenuItem,
   RowType,
+  DateCell,
 } from '@/components';
 import { useTheme } from '@/contexts';
 import { Row } from '@tanstack/react-table';
@@ -28,7 +29,14 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       if (field === 'status') {
         return;
       }
-
+      if (field === "createdAt" || field === "updatedAt") {
+        return (
+          <div key={field} className="flex flex-1 justify-between">
+            <span className="text-gray-400 mr-2">{field}:</span>
+            <DateCell date={value as string} />
+          </div>
+        );
+      }
       if ((field === 'metadata' || field === 'outputs') && value !== null) {
         return (
           <div key={field} className="flex justify-between">
