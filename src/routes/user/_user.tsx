@@ -25,9 +25,6 @@ function LayoutComponent() {
     setRoute(pathname);
   }, [pathname]);
 
-  useEffect(() => {
-    setRoute(pathname);
-  }, [pathname]);
   const highlightRoute = (path: string) => {
     return path === route ? 'bg-accent text-accent-foreground' : '';
   };
