@@ -93,8 +93,5 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
       );
     },
     cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
-      //{
-      //return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
-    //},
   },
 ];
