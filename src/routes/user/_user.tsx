@@ -27,16 +27,9 @@ function LayoutComponent() {
   }, [pathname]);
 
   useEffect(() => {
-    async function fetchUserInfo() {
-      if (!spvWalletClient){
-        return;
-      }
-      const user = await spvWalletClient.GetUserInfo();
-      if (user?.id) {
-        setUserInfo({ userId: user.id });
-      }
+    if (spvWalletClient?.userId) {
+      setUserInfo({ userId: spvWalletClient.userId });
     }
-    fetchUserInfo();
   }, [spvWalletClient]);
   const highlightRoute = (path: string) => {
     return path === route ? 'bg-accent text-accent-foreground' : '';
