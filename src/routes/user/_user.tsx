@@ -20,17 +20,14 @@ function LayoutComponent() {
   const [route, setRoute] = useState<string>('/user/_user');
   const { pathname } = useLocation();
   const { spvWalletClient } = useSpvWalletClient();
-  const [userInfo, setUserInfo] = useState<{ paymail?: string; userId?: string } | null>(null);
 
   useEffect(() => {
     setRoute(pathname);
   }, [pathname]);
 
   useEffect(() => {
-    if (spvWalletClient?.userId) {
-      setUserInfo({ userId: spvWalletClient.userId });
-    }
-  }, [spvWalletClient]);
+    setRoute(pathname);
+  }, [pathname]);
   const highlightRoute = (path: string) => {
     return path === route ? 'bg-accent text-accent-foreground' : '';
   };
@@ -75,10 +72,8 @@ function LayoutComponent() {
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
             <h1>SPV Wallet User</h1>
-            {userInfo && (
-              <p className="text-sm text-gray-600">
-                {userInfo.paymail ? `Paymail: ${userInfo.paymail}` : `User ID: ${userInfo.userId}`}
-              </p>
+            {spvWalletClient?.userId != null && (
+              <p className="text-sm text-gray-600">{`User ID: ${spvWalletClient.userId}`}</p>
             )}
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
