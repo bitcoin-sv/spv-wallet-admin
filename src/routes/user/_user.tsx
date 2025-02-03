@@ -25,9 +25,6 @@ function LayoutComponent() {
     setRoute(pathname);
   }, [pathname]);
 
-  useEffect(() => {
-    setRoute(pathname);
-  }, [pathname]);
   const highlightRoute = (path: string) => {
     return path === route ? 'bg-accent text-accent-foreground' : '';
   };
@@ -74,7 +71,7 @@ function LayoutComponent() {
             <div className="flex items-baseline gap-2">
               <h1 className="text-lg font-semibold leading-none">SPV Wallet User</h1>
               {spvWalletClient?.userId && (
-                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5"> {`User ID: ${spvWalletClient.userId}`}</p>
+                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${spvWalletClient.userId}`}</p>
               )}
             </div>
           </Sheet>
