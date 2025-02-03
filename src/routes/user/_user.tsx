@@ -25,6 +25,9 @@ function LayoutComponent() {
     setRoute(pathname);
   }, [pathname]);
 
+  useEffect(() => {
+    setRoute(pathname);
+  }, [pathname]);
   const highlightRoute = (path: string) => {
     return path === route ? 'bg-accent text-accent-foreground' : '';
   };
@@ -68,10 +71,12 @@ function LayoutComponent() {
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
-            <h1>SPV Wallet User</h1>
-            {spvWalletClient?.userId != null && (
-              <p className="text-sm text-gray-600">{`User ID: ${spvWalletClient.userId}`}</p>
-            )}
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-lg font-semibold leading-none">SPV Wallet User</h1>
+              {spvWalletClient?.userId && (
+                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5"> {`User ID: ${spvWalletClient.userId}`}</p>
+              )}
+            </div>
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
             <PageRefreshButton />
