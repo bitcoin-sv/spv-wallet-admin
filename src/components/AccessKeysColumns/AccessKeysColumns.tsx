@@ -2,7 +2,7 @@ import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Badge } from '@/components';
+import { Badge, DateCell } from '@/components';
 
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
@@ -92,8 +92,6 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => {
-      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
-    },
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];

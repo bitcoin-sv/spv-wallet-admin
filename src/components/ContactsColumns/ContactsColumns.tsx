@@ -2,7 +2,7 @@ import { Contact } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Badge, Button } from '@/components';
+import { Badge, Button, DateCell } from '@/components';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
 
@@ -146,8 +146,6 @@ export const contactsColumns: ColumnDef<Contact>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => {
-      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
-    },
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];

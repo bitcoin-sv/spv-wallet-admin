@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
 
+import { DateCell } from '@/components';
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
@@ -227,8 +228,6 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => {
-      return row.getValue('createdAt') && new Date(row.getValue('createdAt')).toLocaleString();
-    },
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];
