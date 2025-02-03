@@ -68,7 +68,7 @@ function LayoutComponent() {
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
-            <div className="flex items-baseline gap-2">
+            <div className="flex flex-col items-start pb-2 px-2">
               <h1 className="text-lg font-semibold leading-none">SPV Wallet User</h1>
               {spvWalletClient?.userId && (
                 <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${spvWalletClient.userId}`}</p>
