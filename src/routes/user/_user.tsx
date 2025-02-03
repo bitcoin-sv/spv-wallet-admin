@@ -1,12 +1,11 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-
 import { ArrowLeftRight, KeySquare } from 'lucide-react';
-
 import { useEffect, useState } from 'react';
 
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
 import { UserBalance } from '@/components/UserBalance';
+import { useSpvWalletClient } from '@/contexts';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -20,15 +19,14 @@ export const Route = createFileRoute('/user/_user')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/user/_user');
   const { pathname } = useLocation();
+  const { spvWalletClient } = useSpvWalletClient();
 
   useEffect(() => {
     setRoute(pathname);
   }, [pathname]);
 
   const highlightRoute = (path: string) => {
-    if (path === route) {
-      return 'bg-accent text-accent-foreground';
-    }
+    return path === route ? 'bg-accent text-accent-foreground' : '';
   };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -70,7 +68,12 @@ function LayoutComponent() {
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
-            <h1>SPV Wallet Admin</h1>
+            <div className="flex flex-col items-start pb-2 px-2">
+              <h1 className="text-lg font-semibold leading-none">SPV Wallet User</h1>
+              {spvWalletClient?.userId && (
+                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${spvWalletClient.userId}`}</p>
+              )}
+            </div>
           </Sheet>
           <div className="ml-auto flex items-center gap-4">
             <PageRefreshButton />

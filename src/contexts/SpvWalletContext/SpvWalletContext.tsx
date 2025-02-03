@@ -4,6 +4,7 @@ import React, { createContext } from 'react';
 
 export interface SpvWalletClientExtended extends SpvWalletClient {
   role?: TRole;
+  userId?: string | null;
 }
 
 export interface SpvWalletContext {
