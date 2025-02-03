@@ -85,6 +85,6 @@ export const columns: ColumnDef<Tx>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];

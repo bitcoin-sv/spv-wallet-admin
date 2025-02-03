@@ -33,4 +33,4 @@ export * from './LoadingSpinner';
 export * from './WebhooksColumns/WebhooksColumns.tsx';
 export * from './WebhooksTabContent';
 export * from './UnsubscribeWebhook';
-export * from "./DateCell";
+export * from './DateCell';

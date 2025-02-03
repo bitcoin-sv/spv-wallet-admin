@@ -228,6 +228,6 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];

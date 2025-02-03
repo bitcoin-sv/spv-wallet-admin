@@ -92,6 +92,6 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => <DateCell date={row.getValue("createdAt")} />,
+    cell: ({ row }) => <DateCell date={row.getValue('createdAt')} />,
   },
 ];
