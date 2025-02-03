@@ -20,8 +20,8 @@ export interface ViewDialogProps {
 
 export const ViewDialog = ({ row }: ViewDialogProps) => {
   const { theme } = useTheme();
-
   const isDarkTheme = theme === 'dark';
+  const dateFields = ['createdAt', 'updatedAt', 'deletedAt'];
 
   const renderInfo = (obj: RowType) =>
     Object.entries(obj as NonNullable<unknown>).map((item) => {
@@ -29,7 +29,7 @@ export const ViewDialog = ({ row }: ViewDialogProps) => {
       if (field === 'status') {
         return;
       }
-      if (field === "createdAt" || field === "updatedAt") {
+      if (dateFields.includes(field)) {
         return (
           <div key={field} className="flex flex-1 justify-between">
             <span className="text-gray-400 mr-2">{field}:</span>
