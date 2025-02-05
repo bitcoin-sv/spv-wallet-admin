@@ -73,6 +73,18 @@ function LayoutComponent() {
               {spvWalletClient?.userId && (
                 <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${spvWalletClient.userId}`}</p>
               )}
+              {console.log('spvWalletClient:', spvWalletClient)}
+              {console.log('Paymails:', spvWalletClient?.paymails)}
+              {spvWalletClient?.paymails && spvWalletClient.paymails.length > 0 && (
+                <div className="mt-1">
+                  <p className="text-sm font-medium text-gray-600">Paymails:</p>
+                  <ul className="list-disc ml-4 text-sm text-gray-700">
+                    {spvWalletClient.paymails.map((paymail) => (
+                      <li key={paymail}>{paymail}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </Sheet>
           <div className="ml-auto flex items-center gap-4">

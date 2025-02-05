@@ -1,5 +1,6 @@
 import { LoginType, Role, SpvWalletClientExtended } from '@/contexts';
 import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
+import { ExtendedUser } from '@/interfaces/extendedUser';
 
 export const createClient = async (role: Role, key: string, serverUrl: string, type?: LoginType) => {
   const client = newSPVWalletClient(role, key, serverUrl, type);
@@ -13,9 +14,12 @@ export const createClient = async (role: Role, key: string, serverUrl: string, t
   }
 
   if (role === Role.User) {
-    const userInfo = await client.GetUserInfo();
+    const userInfo = await client.GetUserInfo() as ExtendedUser;
+    console.log("Fetch user info:", userInfo);
     client.role = Role.User;
     client.userId = userInfo?.id || null;
+    client.paymails = userInfo?.paymails || [];
+    console.log("Client:", client.paymails);
     return client;
   }
 
