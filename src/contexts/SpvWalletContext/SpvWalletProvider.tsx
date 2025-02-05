@@ -1,10 +1,10 @@
-import { SpvWalletClientExtended, SpvWalletContext, useServerUrl } from '@/contexts';
+import { SpvWalletUserClientExtended, SpvWalletAdminClientExtended, SpvWalletContext, useServerUrl } from '@/contexts';
 import React, { useMemo, useState } from 'react';
 
 export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { serverUrl, setServerUrl } = useServerUrl();
 
-  const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletClientExtended | null>(null);
+  const [spvWalletClient, setSpvWalletClient] = useState<SpvWalletUserClientExtended | SpvWalletAdminClientExtended | null>(null);
 
   const contextValue = useMemo(
     () => ({

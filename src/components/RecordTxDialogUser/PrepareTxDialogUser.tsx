@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog.tsx';
 import { Input } from '@/components/ui/input.tsx';
 
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletUserClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -44,7 +44,7 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
 
   const mutation = useMutation({
     mutationFn: async ({ newRecipient, metadata }: { newRecipient: TxOutput; metadata: Metadata }) =>
-      await spvWalletClient?.SendToRecipients({ outputs: [newRecipient] }, metadata),
+      await (spvWalletClient as SpvWalletUserClientExtended)?.sendToRecipients({ outputs: [newRecipient] }, metadata),
     onSuccess: () => queryClient.invalidateQueries(),
   });
 

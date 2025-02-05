@@ -1,4 +1,4 @@
-import { SpvWalletClientExtended } from '@/contexts';
+import { SpvWalletAdminClientExtended } from '@/contexts';
 import { queryOptions } from '@tanstack/react-query';
 
 export interface ContactsQueryOptions {
@@ -6,7 +6,7 @@ export interface ContactsQueryOptions {
   size?: number;
   sort?: string;
   sortBy?: string;
-  spvWalletClient: SpvWalletClientExtended;
+  spvWalletClient: SpvWalletAdminClientExtended;
   createdRange?: {
     from: string;
     to: string;
@@ -23,7 +23,7 @@ export const contactsQueryOptions = (opts: ContactsQueryOptions) => {
   return queryOptions({
     queryKey: ['contacts', createdRange, updatedRange, sortBy, sort, id, paymail, pubKey, page, size],
     queryFn: async () =>
-      await opts.spvWalletClient.AdminGetContacts(
+      await opts.spvWalletClient.contacts(
         { createdRange, updatedRange, id, paymail, pubKey, includeDeleted: true },
         {},
         { sortBy: sortBy ?? 'id', sort: sort ?? 'asc', page, size },

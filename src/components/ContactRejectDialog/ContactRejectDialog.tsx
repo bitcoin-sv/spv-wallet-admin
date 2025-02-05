@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
@@ -41,7 +41,7 @@ export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
   const rejectContactMutation = useMutation({
     mutationFn: async (id: string) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminRejectContact(id);
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.rejectInvitation(id)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

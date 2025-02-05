@@ -1,4 +1,4 @@
-import { useSpvWalletClient } from '@/contexts';
+import { SpvWalletUserClientExtended, useSpvWalletClient } from '@/contexts';
 import { userBalanceQueryOptions } from '@/utils/userBalanceQueryOptions';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Badge } from '../ui';
@@ -9,7 +9,7 @@ export const UserBalance = () => {
 
   const { data: balance } = useSuspenseQuery(
     userBalanceQueryOptions({
-      spvWalletClient: spvWalletClient!,
+      spvWalletClient: (spvWalletClient as SpvWalletUserClientExtended)!,
     }),
   );
 

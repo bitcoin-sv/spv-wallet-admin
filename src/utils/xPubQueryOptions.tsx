@@ -1,4 +1,4 @@
-import { SpvWalletClientExtended } from '@/contexts';
+import { SpvWalletAdminClientExtended } from '@/contexts';
 import { queryOptions } from '@tanstack/react-query';
 
 export interface XPubQueryOptions {
@@ -8,7 +8,7 @@ export interface XPubQueryOptions {
   size?: number;
   sort?: string;
   sortBy?: string;
-  spvWalletClient: SpvWalletClientExtended;
+  spvWalletClient: SpvWalletAdminClientExtended;
 }
 
 export const xPubQueryOptions = (opts: XPubQueryOptions) => {
@@ -17,7 +17,7 @@ export const xPubQueryOptions = (opts: XPubQueryOptions) => {
   return queryOptions({
     queryKey: ['xpubs', id, currentBalance, page, size, sort, sortBy],
     queryFn: async () =>
-      await spvWalletClient.AdminGetXPubs(
+      await spvWalletClient.xPubs(
         { id, currentBalance, includeDeleted: true },
         {},
         {

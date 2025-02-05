@@ -12,7 +12,7 @@ import {
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormProvider as Form } from 'react-hook-form';
 import { Input } from '@/components/ui/input.tsx';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { HD } from '@bsv/sdk';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -67,7 +67,7 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const mutation = useMutation({
     mutationFn: async (xpub: string) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminNewXpub(xpub, {});
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.createXPub(xpub, {})
     },
     onSuccess: () => queryClient.invalidateQueries(),
   });

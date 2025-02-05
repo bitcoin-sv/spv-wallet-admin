@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
-import { SpvWalletClientExtended } from '@/contexts';
+import { SpvWalletUserClientExtended } from '@/contexts';
 
 export interface TransactionsQueryOptions {
   blockHeight?: number;
@@ -12,7 +12,7 @@ export interface TransactionsQueryOptions {
     to: string;
   };
   updatedRange?: { from: string; to: string };
-  spvWalletClient: SpvWalletClientExtended;
+  spvWalletClient: SpvWalletUserClientExtended;
 }
 
 export const transactionsUserQueryOptions = (opts: TransactionsQueryOptions) => {
@@ -21,7 +21,7 @@ export const transactionsUserQueryOptions = (opts: TransactionsQueryOptions) => 
   return queryOptions({
     queryKey: ['transactions', sort, createdRange, blockHeight, sortBy, page, size, updatedRange],
     queryFn: async () =>
-      await spvWalletClient.GetTransactions(
+      await spvWalletClient.transactions(
         { blockHeight, createdRange, updatedRange },
         {},
         { page, size, sortBy, sort },

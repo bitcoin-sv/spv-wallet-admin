@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus } from 'lucide-react';
 
+import { SpvWalletAdminClientExtended } from '@/contexts';
 import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
@@ -69,7 +70,7 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       avatar: string;
     }) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminCreatePaymail(xPub, address, publicName, avatar, {});
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.createPaymail(xPub, address, publicName, avatar, {});
     },
     onSuccess: () => {
       queryClient.invalidateQueries();

@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
+import { SpvWalletUserClientExtended } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
 import { Metadata } from '@bsv/spv-wallet-js-client';
@@ -38,7 +39,7 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
   const mutation = useMutation({
     mutationFn: async (metadata: Metadata) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.CreateAccessKey(metadata);
+      return await (spvWalletClient as SpvWalletUserClientExtended)!.generateAccessKey(metadata);
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({

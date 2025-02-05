@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Webhook } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -32,7 +32,7 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
   const mutation = useMutation({
     mutationFn: async (url: string) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminDeleteWebhook(url);
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.unsubscribeWebhook(url)
     },
     onSuccess: () => queryClient.invalidateQueries(),
   });

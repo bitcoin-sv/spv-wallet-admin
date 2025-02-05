@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -36,7 +36,7 @@ export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminDeleteContact(id);
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.deleteContact(id)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

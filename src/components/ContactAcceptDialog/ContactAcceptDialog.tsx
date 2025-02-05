@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -34,7 +34,7 @@ export const ContactAcceptDialog = ({ row }: ContactAcceptDialogProps) => {
   const acceptContactMutation = useMutation({
     mutationFn: async (id: string) => {
       // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminAcceptContact(id);
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.acceptInvitation(id)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

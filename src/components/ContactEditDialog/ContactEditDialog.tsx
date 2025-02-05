@@ -11,7 +11,7 @@ import {
   LoadingSpinner,
   Textarea,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
+import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact, Metadata } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -39,7 +39,7 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
   const editMutation = useMutation({
     mutationFn: async ({ id, fullName, metadata }: { id: string; fullName: string; metadata: string }) => {
       const metadataParsed = JSON.parse(metadata) as Metadata;
-      return await spvWalletClient!.AdminUpdateContact(id, fullName, metadataParsed);
+      return await (spvWalletClient as SpvWalletAdminClientExtended)!.contactUpdate(id, fullName, metadataParsed)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

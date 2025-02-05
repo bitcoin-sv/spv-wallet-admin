@@ -1,12 +1,12 @@
 import { queryOptions } from '@tanstack/react-query';
-import { SpvWalletClientExtended } from '@/contexts';
+import { SpvWalletUserClientExtended } from '@/contexts';
 
 export interface AccessKeysQueryOptions {
   page?: number;
   size?: number;
   sort?: string;
   sortBy?: string;
-  spvWalletClient: SpvWalletClientExtended;
+  spvWalletClient: SpvWalletUserClientExtended;
   createdRange?: {
     from: string;
     to: string;
@@ -21,7 +21,7 @@ export const accessKeysQueryOptions = (opts: AccessKeysQueryOptions) => {
   return queryOptions({
     queryKey: ['accessKeys', page, size, sortBy, sort, createdRange, updatedRange, revokedRange],
     queryFn: async () =>
-      await opts.spvWalletClient.GetAccessKeys(
+      await opts.spvWalletClient.accessKeys(
         { createdRange, updatedRange, revokedRange },
         {
           page,
