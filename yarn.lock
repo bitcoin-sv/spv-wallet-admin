@@ -1616,48 +1616,57 @@
   dependencies:
     "@typescript-eslint/utils" "^8.15.0"
 
-"@tanstack/history@1.87.6":
-  version "1.87.6"
-  resolved "https://registry.yarnpkg.com/@tanstack/history/-/history-1.87.6.tgz#c227abd633bcfd048c6ab755f32b3e870b834e1d"
-  integrity sha512-5OPHcc20Ye5XR+RBkFk+64TtRJ83clrpaOcC/S8t4N0k+/xPDJpkPEPnoENb3sQeRI28y1dJaUuvXt/dv/ylaQ==
+"@tanstack/history@1.99.0":
+  version "1.99.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/history/-/history-1.99.0.tgz#9cec4001ca03519d8f4e8e8dbc19f8f3c04eb6af"
+  integrity sha512-MQS1Lg8D+1vpasEJKf4zs1sxhxbXcoejmVCZDbo0bq2wq+xVK+kRixj5Pae2kb2APzdXYga4u236GBbgCKTcnQ==
 
-"@tanstack/query-core@5.62.7":
-  version "5.62.7"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.62.7.tgz#c7f6d0131c08cd2f60e73ec6e7b70e2e9e335def"
-  integrity sha512-fgpfmwatsrUal6V+8EC2cxZIQVl9xvL7qYa03gsdsCy985UTUlS4N+/3hCzwR0PclYDqisca2AqR1BVgJGpUDA==
+"@tanstack/query-core@5.66.0":
+  version "5.66.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.66.0.tgz#163f670b3b4e3b3cdbff6698ad44b2edfcaed185"
+  integrity sha512-J+JeBtthiKxrpzUu7rfIPDzhscXF2p5zE/hVdrqkACBP8Yu0M96mwJ5m/8cPPYQE9aRNvXztXHlNwIh4FEeMZw==
 
-"@tanstack/react-query@^5.62.3":
-  version "5.62.7"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.62.7.tgz#8f253439a38ad6ce820bc6d42d89ca2556574d1a"
-  integrity sha512-+xCtP4UAFDTlRTYyEjLx0sRtWyr5GIk7TZjZwBu4YaNahi3Rt2oMyRqfpfVrtwsqY2sayP4iXVCwmC+ZqqFmuw==
+"@tanstack/react-query@^5.66.0":
+  version "5.66.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.66.0.tgz#9f7aa1b3e844ea6a0ad2ee61fccaed76e614b865"
+  integrity sha512-z3sYixFQJe8hndFnXgWu7C79ctL+pI0KAelYyW+khaNJ1m22lWrhJU2QrsTcRKMuVPtoZvfBYrTStIdKo+x0Xw==
   dependencies:
-    "@tanstack/query-core" "5.62.7"
+    "@tanstack/query-core" "5.66.0"
 
-"@tanstack/react-router@^1.88.0":
-  version "1.88.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-1.88.0.tgz#a60ad68cdf06dc2bc5055b17d1a9dc5e5ffa3207"
-  integrity sha512-kC5sqBlMcfAZeHSLyTtPrscmEgjmZiT2GyrfG8muGPzsLhjcMbSbnTrMETdJccPDId/b7aNyJIyseqwxX9CTbA==
+"@tanstack/react-router@^1.99.0":
+  version "1.99.6"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-router/-/react-router-1.99.6.tgz#647781c6f57649c47393a76679d805c411d0b123"
+  integrity sha512-mH4wkW2h4uILKsCB4qxJWZ8LtVlxvDzZXnXmb5FuAigdTN2qsQhgpxM1bxecII1cDQMjqq8bZvqYw/62MZ5elg==
   dependencies:
-    "@tanstack/history" "1.87.6"
-    "@tanstack/react-store" "^0.6.1"
-    jsesc "^3.0.2"
+    "@tanstack/history" "1.99.0"
+    "@tanstack/react-store" "^0.7.0"
+    "@tanstack/router-core" "^1.99.6"
+    jsesc "^3.1.0"
     tiny-invariant "^1.3.3"
     tiny-warning "^1.0.3"
 
-"@tanstack/react-store@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-store/-/react-store-0.6.1.tgz#2632409ff4257846584b7779daed7eff3e4b8de1"
-  integrity sha512-6gOopOpPp1cAXkEyTEv6tMbAywwFunvIdCKN/SpEiButUayjXU+Q5Sp5Y3hREN3VMR4OA5+RI5SPhhJoqP9e4w==
+"@tanstack/react-store@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-store/-/react-store-0.7.0.tgz#62d5d1c9b1c66ee04b06b88bc96cfbc4ee53002a"
+  integrity sha512-S/Rq17HaGOk+tQHV/yrePMnG1xbsKZIl/VsNWnNXt4XW+tTY8dTlvpJH2ZQ3GRALsusG5K6Q3unAGJ2pd9W/Ng==
   dependencies:
-    "@tanstack/store" "0.6.0"
-    use-sync-external-store "^1.2.2"
+    "@tanstack/store" "0.7.0"
+    use-sync-external-store "^1.4.0"
 
-"@tanstack/react-table@^8.20.5":
-  version "8.20.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.20.5.tgz#19987d101e1ea25ef5406dce4352cab3932449d8"
-  integrity sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==
+"@tanstack/react-table@^8.20.6":
+  version "8.20.6"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.20.6.tgz#a1f3103327aa59aa621931f4087a7604a21054d0"
+  integrity sha512-w0jluT718MrOKthRcr2xsjqzx+oEM7B7s/XXyfs19ll++hlId3fjTm+B2zrR3ijpANpkzBAr15j1XGVOMxpggQ==
   dependencies:
     "@tanstack/table-core" "8.20.5"
+
+"@tanstack/router-core@^1.99.6":
+  version "1.99.6"
+  resolved "https://registry.yarnpkg.com/@tanstack/router-core/-/router-core-1.99.6.tgz#637530dcd7c9d81252b364388acbea67aa9fe01c"
+  integrity sha512-tEfMLeONfyoyI1e/ygUeGFtTWeWQu0GR3OT8OR75EOeNXRmUEtI6H4ThrXcV8nwBd6B88wmp9LhSPLl9H2VwSA==
+  dependencies:
+    "@tanstack/history" "1.99.0"
+    "@tanstack/store" "^0.7.0"
 
 "@tanstack/router-devtools@^1.88.0":
   version "1.88.0"
@@ -1708,10 +1717,10 @@
   dependencies:
     "@tanstack/router-plugin" "^1.87.13"
 
-"@tanstack/store@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/store/-/store-0.6.0.tgz#f73d711c6e53f2f91c0f0af0771583095d449f67"
-  integrity sha512-+m2OBglsjXcLmmKOX6/9v8BDOCtyxhMmZLsRUDswOOSdIIR9mvv6i0XNKsmTh3AlYU8c1mRcodC8/Vyf+69VlQ==
+"@tanstack/store@0.7.0", "@tanstack/store@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/store/-/store-0.7.0.tgz#afef29b06c6b592e93181cee9baa62fe77454459"
+  integrity sha512-CNIhdoUsmD2NolYuaIs8VfWM467RK6oIBAW4nPEKZhg1smZ+/CwtCdpURgp7nxSqOaV9oKkzdWD80+bC66F/Jg==
 
 "@tanstack/table-core@8.20.5":
   version "8.20.5"
@@ -4180,7 +4189,7 @@ jsesc@^2.5.1:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
 
-jsesc@^3.0.2:
+jsesc@^3.0.2, jsesc@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-3.1.0.tgz#74d335a234f67ed19907fdadfac7ccf9d409825d"
   integrity sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==
@@ -5889,7 +5898,7 @@ use-sidecar@^1.1.3:
     detect-node-es "^1.1.0"
     tslib "^2.0.0"
 
-use-sync-external-store@^1.2.2:
+use-sync-external-store@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.4.0.tgz#adbc795d8eeb47029963016cefdf89dc799fcebc"
   integrity sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==
