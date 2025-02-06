@@ -21,7 +21,7 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
       const xpubId = userInfo?.id;
 
       if (!xpubId) {
-        throw new Error("User xpubId is required for fetching paymails");
+        throw new Error('User xpubId is required for fetching paymails');
       }
 
       return await spvWalletClient.GetPaymails(
