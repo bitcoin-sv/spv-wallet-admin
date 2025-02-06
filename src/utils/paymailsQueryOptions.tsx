@@ -6,23 +6,26 @@ export interface PaymailsQueryOptions {
   size?: number;
   sort?: string;
   sortBy?: string;
-  xpubId?: string;
   spvWalletClient: SpvWalletClientExtended;
-  createdRange?: {
-    from: string;
-    to: string;
-  };
+  createdRange?: { from: string; to: string };
   updatedRange?: { from: string; to: string };
 }
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
-  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange } = opts;
+  const { page, size, sortBy, sort, createdRange, updatedRange, spvWalletClient } = opts;
 
   return queryOptions({
-    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange],
-    queryFn: async () =>
-      await opts.spvWalletClient.AdminGetPaymails(
-        { xpubId, createdRange, updatedRange, includeDeleted: true },
+    queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange],
+    queryFn: async () => {
+      const userInfo = await spvWalletClient.GetUserInfo();
+      const xpubId = userInfo?.id;
+
+      if (!xpubId) {
+        throw new Error("User xpubId is required for fetching paymails");
+      }
+
+      return await spvWalletClient.GetPaymails(
+        { id: xpubId, createdRange, updatedRange },
         {},
         {
           page,
@@ -30,6 +33,7 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
           sortBy: sortBy ?? 'id',
           sort: sort ?? 'desc',
         },
-      ),
+      );
+    },
   });
 };
