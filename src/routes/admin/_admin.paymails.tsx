@@ -11,7 +11,7 @@ import {
   Toaster,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
+import { addStatusField, getDeletedElements, paymailsAdminQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -39,7 +39,7 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, xpubId, createdRange, updatedRange } }) =>
     await queryClient.ensureQueryData(
-      paymailsQueryOptions({
+      paymailsAdminQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         xpubId,
         sort,
@@ -64,7 +64,7 @@ export function Paymails() {
 
   const { data: paymails } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
-    paymailsQueryOptions({
+    paymailsAdminQueryOptions({
       spvWalletClient: spvWalletClient!,
       xpubId,
       sortBy,
