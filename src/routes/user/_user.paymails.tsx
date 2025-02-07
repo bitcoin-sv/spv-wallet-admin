@@ -27,14 +27,26 @@ export const Route = createFileRoute('/user/_user/paymails')({
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet } }) => {
+  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange } }) => ({
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+  }),
+   loader: async ({ 
+      deps: { sort, sortBy, createdRange, updatedRange },
+      context: { queryClient, spvWallet } 
+    }) => {
     return await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
+        sort,
+        sortBy,
+        createdRange,
+        updatedRange,
       }),
     );
   },
-});
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
