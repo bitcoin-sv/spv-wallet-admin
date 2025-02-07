@@ -73,7 +73,6 @@ export function Paymails() {
     navigate({
       search: (old) => ({
         ...old,
-        xpubId: filter || undefined,
       }),
       replace: true,
     });
