@@ -11,7 +11,6 @@ import {
   TooltipProvider,
 } from '@/components';
 
-import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +18,7 @@ import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
 
 import { toast } from 'sonner';
+import { useAdminApi } from '@/store/clientStore';
 
 export interface PaymailDeleteDialogProps {
   row: Row<PaymailAddress>;
@@ -26,8 +26,7 @@ export interface PaymailDeleteDialogProps {
 
 export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const { spvWalletClient } = useSpvWalletClient();
+  const adminApi = useAdminApi();
   const queryClient = useQueryClient();
 
   const { address } = row.original;
@@ -38,8 +37,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
 
   const deletePaymailMutation = useMutation({
     mutationFn: async (address: string) => {
-      // At this point, spvWalletClient is defined; using non-null assertion.
-      return await (spvWalletClient as SpvWalletAdminClientExtended)!.deletePaymail(address)
+      return await adminApi.deletePaymail(address);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

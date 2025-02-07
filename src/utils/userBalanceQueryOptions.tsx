@@ -1,15 +1,15 @@
-import { SpvWalletUserClientExtended } from '@/contexts';
 import { queryOptions } from '@tanstack/react-query';
+import { getUserApi } from '../store/clientStore';
 
-export interface UserBalanceQueryOptions {
-  spvWalletClient: SpvWalletUserClientExtended;
-}
+export interface UserBalanceQueryOptions {}
 
-export const userBalanceQueryOptions = (opts: UserBalanceQueryOptions) => {
+export const userBalanceQueryOptions = (opts: UserBalanceQueryOptions = {}) => {
+  const userApi = getUserApi();
+
   return queryOptions({
     queryKey: ['balance', opts],
     queryFn: async () => {
-      const user = await opts.spvWalletClient.xPub();
+      const user = await userApi.xPub();
       return user.currentBalance;
     },
   });

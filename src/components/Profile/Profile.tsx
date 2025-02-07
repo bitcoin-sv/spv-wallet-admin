@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu.tsx';
 
 import { useAuth, useSpvWalletClient } from '@/contexts';
+import { clearClients } from '@/store/clientStore';
 
 export const Profile = () => {
   const { loginKey, isUser } = useAuth();
@@ -20,7 +21,8 @@ export const Profile = () => {
 
   const handleLogout = async () => {
     setSpvWalletClient(null);
-    await router.invalidate();
+    clearClients();
+    await router.invalidate();   
   };
 
   return (

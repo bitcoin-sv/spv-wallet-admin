@@ -16,7 +16,9 @@ export interface SpvWalletContext {
   serverUrl: string;
   setServerUrl: React.Dispatch<React.SetStateAction<string>>;
   spvWalletClient: SpvWalletAdminClientExtended | SpvWalletUserClientExtended | null;
-  setSpvWalletClient: React.Dispatch<React.SetStateAction<SpvWalletAdminClientExtended | SpvWalletUserClientExtended | null>>;
+  setSpvWalletClient: React.Dispatch<
+    React.SetStateAction<SpvWalletAdminClientExtended | SpvWalletUserClientExtended | null>
+  >;
 }
 
 export const SpvWalletContext = createContext<SpvWalletContext | null>(null);
