@@ -79,16 +79,6 @@ export function Paymails() {
     });
   }, [debouncedFilter]);
 
-  useEffect(() => {
-    setFilter(xpubId || '');
-    navigate({
-      search: (old) => ({
-        ...old,
-        xpubId,
-      }),
-      replace: true,
-    });
-  }, [xpubId]);
 
   return (
     <>
