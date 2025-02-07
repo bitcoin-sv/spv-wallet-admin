@@ -23,30 +23,19 @@ export const Route = createFileRoute('/user/_user/paymails')({
   validateSearch: z.object({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('desc'),
+    searchTerm: z.string().optional().catch(''),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange } }) => ({
-    sortBy,
-    sort,
-    createdRange,
-    updatedRange,
-  }),
-   loader: async ({ 
-      deps: { sort, sortBy, createdRange, updatedRange },
-      context: { queryClient, spvWallet } 
-    }) => {
+  loader: async ({ context: { queryClient, spvWallet } }) => {
     return await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
-        sort,
-        sortBy,
-        createdRange,
-        updatedRange,
       }),
     );
   },
+});
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
@@ -89,7 +78,6 @@ export function Paymails() {
     });
   }, [debouncedFilter]);
 
-
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
@@ -98,7 +86,7 @@ export function Paymails() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by alias or public name" />
             <DateRangeFilter withRevokedRange />
           </div>
         </div>
