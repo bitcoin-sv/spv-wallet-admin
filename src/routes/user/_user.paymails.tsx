@@ -41,7 +41,7 @@ export function Paymails() {
   const [filter, setFilter] = useState<string>('');
 
   const { spvWalletClient } = useSpvWalletClient();
-  const { sortBy, sort, xpubId, createdRange, updatedRange } = useSearch({
+  const { sortBy, sort, createdRange, updatedRange } = useSearch({
     from: '/user/_user/paymails',
   });
 
