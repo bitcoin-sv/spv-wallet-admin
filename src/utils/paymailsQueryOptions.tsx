@@ -17,15 +17,8 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
   return queryOptions({
     queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange],
     queryFn: async () => {
-      const userInfo = await spvWalletClient.GetUserInfo();
-      const xpubId = userInfo?.id;
-
-      if (!xpubId) {
-        throw new Error('User xpubId is required for fetching paymails');
-      }
-
       return await spvWalletClient.GetPaymails(
-        { id: xpubId, createdRange, updatedRange },
+        { createdRange, updatedRange },
         {},
         {
           page,

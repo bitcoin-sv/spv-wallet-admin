@@ -1,6 +1,8 @@
 import {
   CustomErrorComponent,
   PaymailsTabContent,
+  Searchbar,
+  DateRangeFilter,
   Tabs,
   TabsContent,
   TabsList,
@@ -9,20 +11,24 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 import { paymailsQueryOptions, addStatusField } from '@/utils';
-import { useSuspenseQuery, useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
+
+import { useDebounce } from 'use-debounce';
+import { z } from 'zod';
 
 export const Route = createFileRoute('/user/_user/paymails')({
   component: Paymails,
+  validateSearch: z.object({
+    sortBy: z.string().optional().catch('id'),
+    sort: z.string().optional().catch('desc'),
+    xpubId: z.string().optional().catch(''),
+    createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({ context: { queryClient, spvWallet } }) => {
-    const userInfo = await spvWallet.spvWalletClient!.GetUserInfo();
-
-    if (!userInfo?.id) {
-      throw new Error('User xpubId is required for fetching paymails');
-    }
-
     return await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
@@ -33,41 +39,71 @@ export const Route = createFileRoute('/user/_user/paymails')({
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
-  const { spvWalletClient } = useSpvWalletClient();
+  const [filter, setFilter] = useState<string>('');
 
-  const { data: userInfo, error: userError } = useQuery({
-    queryKey: ['userInfo'],
-    queryFn: async () => await spvWalletClient?.GetUserInfo(),
+  const { spvWalletClient } = useSpvWalletClient();
+  const { sortBy, sort, xpubId, createdRange, updatedRange } = useSearch({
+    from: '/user/_user/paymails',
   });
 
-  const { data: paymails, error: paymailsError } = useSuspenseQuery(
+  const [debouncedFilter] = useDebounce(filter, 500);
+  const navigate = useNavigate({ from: Route.fullPath });
+
+  const { data: paymails } = useSuspenseQuery(
     paymailsQueryOptions({
       spvWalletClient: spvWalletClient!,
+      sortBy,
+      sort,
+      createdRange,
+      updatedRange,
     }),
   );
 
-  if (userError) {
-    return <CustomErrorComponent error={userError} />;
-  }
-
-  if (!userInfo?.id) {
-    return <CustomErrorComponent error={new Error('User xpubId is required for fetching paymails')} />;
-  }
-
-  if (paymailsError) {
-    return <CustomErrorComponent error={paymailsError} />;
-  }
-
   const mappedPaymails = addStatusField(paymails.content);
+  useEffect(() => {
+    if (tab !== 'all') {
+      navigate({
+        search: () => ({}),
+        replace: false,
+      });
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    navigate({
+      search: (old) => ({
+        ...old,
+        xpubId: filter || undefined,
+      }),
+      replace: true,
+    });
+  }, [debouncedFilter]);
+
+  useEffect(() => {
+    setFilter(xpubId || '');
+    navigate({
+      search: (old) => ({
+        ...old,
+        xpubId,
+      }),
+      replace: true,
+    });
+  }, [xpubId]);
 
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
+        <div className="flex items-center justify-between">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+          </TabsList>
+          <div className="flex">
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
+            <DateRangeFilter withRevokedRange />
+          </div>
+        </div>
         <TabsContent value="all">
-          <PaymailsTabContent paymails={mappedPaymails} />
+          <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
