@@ -23,7 +23,6 @@ export const Route = createFileRoute('/user/_user/paymails')({
   validateSearch: z.object({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('desc'),
-    xpubId: z.string().optional().catch(''),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
