@@ -23,7 +23,7 @@ export const Route = createFileRoute('/user/_user/paymails')({
   validateSearch: z.object({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('desc'),
-    searchTerm: z.string().optional().catch(''),
+    alias: z.string().optional().catch(undefined),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
@@ -42,7 +42,7 @@ export function Paymails() {
   const [filter, setFilter] = useState<string>('');
 
   const { spvWalletClient } = useSpvWalletClient();
-  const { sortBy, sort, createdRange, updatedRange } = useSearch({
+  const { sortBy, sort, alias, createdRange, updatedRange } = useSearch({
     from: '/user/_user/paymails',
   });
 
@@ -56,6 +56,7 @@ export function Paymails() {
       sort,
       createdRange,
       updatedRange,
+      alias,
     }),
   );
 
@@ -73,10 +74,15 @@ export function Paymails() {
     navigate({
       search: (old) => ({
         ...old,
+        alias: filter ? filter : undefined,
       }),
       replace: true,
     });
   }, [debouncedFilter]);
+
+  useEffect(() => {
+    setFilter(alias || '');
+  }, [alias]);
 
   return (
     <>
@@ -86,7 +92,7 @@ export function Paymails() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by alias or public name" />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by alias" />
             <DateRangeFilter withRevokedRange />
           </div>
         </div>

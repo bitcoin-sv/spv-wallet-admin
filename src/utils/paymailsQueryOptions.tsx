@@ -9,16 +9,17 @@ export interface PaymailsQueryOptions {
   spvWalletClient: SpvWalletClientExtended;
   createdRange?: { from: string; to: string };
   updatedRange?: { from: string; to: string };
+  alias?: string;
 }
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
-  const { page, size, sortBy, sort, createdRange, updatedRange, spvWalletClient } = opts;
+  const { page, size, sortBy, sort, createdRange, updatedRange, spvWalletClient, alias } = opts;
 
   return queryOptions({
-    queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange],
+    queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange, alias],
     queryFn: async () => {
       return await spvWalletClient.GetPaymails(
-        { createdRange, updatedRange },
+        { aliast: alias, createdRange, updatedRange }, // aliast is a typo, should be alias
         {},
         {
           page,
