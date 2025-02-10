@@ -19,6 +19,7 @@ import { Route as UserUserImport } from './user/_user'
 import { Route as AdminAdminImport } from './admin/_admin'
 import { Route as UserUserXpubImport } from './user/_user.xpub'
 import { Route as UserUserTransactionsImport } from './user/_user.transactions'
+import { Route as UserUserPaymailsImport } from './user/_user.paymails'
 import { Route as UserUserAccessKeysImport } from './user/_user.access-keys'
 import { Route as AdminAdminXpubImport } from './admin/_admin.xpub'
 import { Route as AdminAdminWebhooksImport } from './admin/_admin.webhooks'
@@ -84,6 +85,12 @@ const UserUserXpubRoute = UserUserXpubImport.update({
 const UserUserTransactionsRoute = UserUserTransactionsImport.update({
   id: '/transactions',
   path: '/transactions',
+  getParentRoute: () => UserUserRoute,
+} as any)
+
+const UserUserPaymailsRoute = UserUserPaymailsImport.update({
+  id: '/paymails',
+  path: '/paymails',
   getParentRoute: () => UserUserRoute,
 } as any)
 
@@ -231,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserUserAccessKeysImport
       parentRoute: typeof UserUserImport
     }
+    '/user/_user/paymails': {
+      id: '/user/_user/paymails'
+      path: '/paymails'
+      fullPath: '/user/paymails'
+      preLoaderRoute: typeof UserUserPaymailsImport
+      parentRoute: typeof UserUserImport
+    }
     '/user/_user/transactions': {
       id: '/user/_user/transactions'
       path: '/transactions'
@@ -284,12 +298,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface UserUserRouteChildren {
   UserUserAccessKeysRoute: typeof UserUserAccessKeysRoute
+  UserUserPaymailsRoute: typeof UserUserPaymailsRoute
   UserUserTransactionsRoute: typeof UserUserTransactionsRoute
   UserUserXpubRoute: typeof UserUserXpubRoute
 }
 
 const UserUserRouteChildren: UserUserRouteChildren = {
   UserUserAccessKeysRoute: UserUserAccessKeysRoute,
+  UserUserPaymailsRoute: UserUserPaymailsRoute,
   UserUserTransactionsRoute: UserUserTransactionsRoute,
   UserUserXpubRoute: UserUserXpubRoute,
 }
@@ -321,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/admin/webhooks': typeof AdminAdminWebhooksRoute
   '/admin/xpub': typeof AdminAdminXpubRoute
   '/user/access-keys': typeof UserUserAccessKeysRoute
+  '/user/paymails': typeof UserUserPaymailsRoute
   '/user/transactions': typeof UserUserTransactionsRoute
   '/user/xpub': typeof UserUserXpubRoute
 }
@@ -338,6 +355,7 @@ export interface FileRoutesByTo {
   '/admin/webhooks': typeof AdminAdminWebhooksRoute
   '/admin/xpub': typeof AdminAdminXpubRoute
   '/user/access-keys': typeof UserUserAccessKeysRoute
+  '/user/paymails': typeof UserUserPaymailsRoute
   '/user/transactions': typeof UserUserTransactionsRoute
   '/user/xpub': typeof UserUserXpubRoute
 }
@@ -358,6 +376,7 @@ export interface FileRoutesById {
   '/admin/_admin/webhooks': typeof AdminAdminWebhooksRoute
   '/admin/_admin/xpub': typeof AdminAdminXpubRoute
   '/user/_user/access-keys': typeof UserUserAccessKeysRoute
+  '/user/_user/paymails': typeof UserUserPaymailsRoute
   '/user/_user/transactions': typeof UserUserTransactionsRoute
   '/user/_user/xpub': typeof UserUserXpubRoute
 }
@@ -377,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/webhooks'
     | '/admin/xpub'
     | '/user/access-keys'
+    | '/user/paymails'
     | '/user/transactions'
     | '/user/xpub'
   fileRoutesByTo: FileRoutesByTo
@@ -393,6 +413,7 @@ export interface FileRouteTypes {
     | '/admin/webhooks'
     | '/admin/xpub'
     | '/user/access-keys'
+    | '/user/paymails'
     | '/user/transactions'
     | '/user/xpub'
   id:
@@ -411,6 +432,7 @@ export interface FileRouteTypes {
     | '/admin/_admin/webhooks'
     | '/admin/_admin/xpub'
     | '/user/_user/access-keys'
+    | '/user/_user/paymails'
     | '/user/_user/transactions'
     | '/user/_user/xpub'
   fileRoutesById: FileRoutesById
@@ -487,6 +509,7 @@ export const routeTree = rootRoute
       "parent": "/user",
       "children": [
         "/user/_user/access-keys",
+        "/user/_user/paymails",
         "/user/_user/transactions",
         "/user/_user/xpub"
       ]
@@ -517,6 +540,10 @@ export const routeTree = rootRoute
     },
     "/user/_user/access-keys": {
       "filePath": "user/_user.access-keys.tsx",
+      "parent": "/user/_user"
+    },
+    "/user/_user/paymails": {
+      "filePath": "user/_user.paymails.tsx",
       "parent": "/user/_user"
     },
     "/user/_user/transactions": {
