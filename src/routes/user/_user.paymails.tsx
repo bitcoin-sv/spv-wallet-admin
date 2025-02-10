@@ -27,14 +27,25 @@ export const Route = createFileRoute('/user/_user/paymails')({
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
+  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, alias } }) => ({
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    alias,
+  }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet } }) => {
-    return await queryClient.ensureQueryData(
+  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, xpubId, createdRange, updatedRange, alias } }) =>
+    await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
+        sort,
+        sortBy,
+        createdRange,
+        updatedRange,
+        alias,
       }),
-    );
-  },
+    ),
 });
 
 export function Paymails() {
@@ -42,7 +53,7 @@ export function Paymails() {
   const [filter, setFilter] = useState<string>('');
 
   const { spvWalletClient } = useSpvWalletClient();
-  const { sortBy, sort, alias, createdRange, updatedRange } = useSearch({
+  const { sortBy, sort, createdRange, updatedRange, alias } = useSearch({
     from: '/user/_user/paymails',
   });
 
@@ -52,11 +63,11 @@ export function Paymails() {
   const { data: paymails } = useSuspenseQuery(
     paymailsQueryOptions({
       spvWalletClient: spvWalletClient!,
+      alias,
       sortBy,
       sort,
       createdRange,
       updatedRange,
-      alias,
     }),
   );
 
@@ -74,7 +85,7 @@ export function Paymails() {
     navigate({
       search: (old) => ({
         ...old,
-        alias: filter ? filter : undefined,
+        alias: filter || undefined,
       }),
       replace: true,
     });
@@ -82,6 +93,13 @@ export function Paymails() {
 
   useEffect(() => {
     setFilter(alias || '');
+    navigate({
+      search: (old) => ({
+        ...old,
+        alias,
+      }),
+      replace: true,
+    });
   }, [alias]);
 
   return (
