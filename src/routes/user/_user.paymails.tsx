@@ -35,10 +35,7 @@ export const Route = createFileRoute('/user/_user/paymails')({
     alias,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({
-    context: { queryClient, spvWallet },
-    deps: { sort, sortBy, xpubId, createdRange, updatedRange, alias },
-  }) =>
+  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, createdRange, updatedRange, alias } }) =>
     await queryClient.ensureQueryData(
       paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
