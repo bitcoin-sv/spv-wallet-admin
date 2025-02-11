@@ -19,7 +19,7 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
     queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange, alias],
     queryFn: async () => {
       return await spvWalletClient.GetPaymails(
-        { aliast: alias, createdRange, updatedRange }, // aliast is a typo in PaymailFilters, should be alias
+        { aliast: alias, createdRange, updatedRange }, // aliast is a typo in PaymailFilters, should be alias #fixme after bumping spv-wallet-js-client@1.0.0-beta.32 over this version
         {},
         {
           page,
