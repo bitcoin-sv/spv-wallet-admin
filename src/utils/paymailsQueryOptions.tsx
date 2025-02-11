@@ -6,23 +6,20 @@ export interface PaymailsQueryOptions {
   size?: number;
   sort?: string;
   sortBy?: string;
-  xpubId?: string;
   spvWalletClient: SpvWalletClientExtended;
-  createdRange?: {
-    from: string;
-    to: string;
-  };
+  createdRange?: { from: string; to: string };
   updatedRange?: { from: string; to: string };
+  alias?: string;
 }
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
-  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange } = opts;
+  const { page, size, sortBy, sort, createdRange, updatedRange, spvWalletClient, alias } = opts;
 
   return queryOptions({
-    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange],
-    queryFn: async () =>
-      await opts.spvWalletClient.AdminGetPaymails(
-        { xpubId, createdRange, updatedRange, includeDeleted: true },
+    queryKey: ['paymails', page, size, sortBy, sort, createdRange, updatedRange, alias],
+    queryFn: async () => {
+      return await spvWalletClient.GetPaymails(
+        { aliast: alias, createdRange, updatedRange }, // aliast is a typo in PaymailFilters, should be alias #fixme after bumping spv-wallet-js-client@1.0.0-beta.32 over this version
         {},
         {
           page,
@@ -30,6 +27,7 @@ export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
           sortBy: sortBy ?? 'id',
           sort: sort ?? 'desc',
         },
-      ),
+      );
+    },
   });
 };

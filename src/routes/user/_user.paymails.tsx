@@ -1,9 +1,8 @@
 import {
-  AddPaymailDialog,
   CustomErrorComponent,
-  DateRangeFilter,
   PaymailsTabContent,
   Searchbar,
+  DateRangeFilter,
   Tabs,
   TabsContent,
   TabsList,
@@ -11,41 +10,40 @@ import {
   Toaster,
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
-import { addStatusField, getDeletedElements, paymailsAdminQueryOptions } from '@/utils';
+import { paymailsQueryOptions, addStatusField } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/admin/_admin/paymails')({
+export const Route = createFileRoute('/user/_user/paymails')({
   component: Paymails,
   validateSearch: z.object({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('desc'),
-    xpubId: z.string().optional().catch(''),
+    alias: z.string().optional().catch(undefined),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   }),
-  loaderDeps: ({ search: { sortBy, sort, xpubId, createdRange, updatedRange } }) => ({
+  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, alias } }) => ({
     sortBy,
     sort,
-    xpubId,
     createdRange,
     updatedRange,
+    alias,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, xpubId, createdRange, updatedRange } }) =>
+  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, createdRange, updatedRange, alias } }) =>
     await queryClient.ensureQueryData(
-      paymailsAdminQueryOptions({
+      paymailsQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
-        xpubId,
         sort,
         sortBy,
         createdRange,
         updatedRange,
+        alias,
       }),
     ),
 });
@@ -55,18 +53,17 @@ export function Paymails() {
   const [filter, setFilter] = useState<string>('');
 
   const { spvWalletClient } = useSpvWalletClient();
-  const { sortBy, sort, xpubId, createdRange, updatedRange } = useSearch({
-    from: '/admin/_admin/paymails',
+  const { sortBy, sort, createdRange, updatedRange, alias } = useSearch({
+    from: '/user/_user/paymails',
   });
 
-  const [debouncedFilter] = useDebounce(filter, 200);
+  const [debouncedFilter] = useDebounce(filter, 500);
   const navigate = useNavigate({ from: Route.fullPath });
 
   const { data: paymails } = useSuspenseQuery(
-    // At this point, spvWalletClient is defined; using non-null assertion.
-    paymailsAdminQueryOptions({
+    paymailsQueryOptions({
       spvWalletClient: spvWalletClient!,
-      xpubId,
+      alias,
       sortBy,
       sort,
       createdRange,
@@ -75,8 +72,6 @@ export function Paymails() {
   );
 
   const mappedPaymails = addStatusField(paymails.content);
-  const deletedPaymails = getDeletedElements(mappedPaymails);
-
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
@@ -90,22 +85,22 @@ export function Paymails() {
     navigate({
       search: (old) => ({
         ...old,
-        xpubId: filter || undefined,
+        alias: filter || undefined,
       }),
       replace: true,
     });
   }, [debouncedFilter]);
 
   useEffect(() => {
-    setFilter(xpubId || '');
+    setFilter(alias || '');
     navigate({
       search: (old) => ({
         ...old,
-        xpubId,
+        alias,
       }),
       replace: true,
     });
-  }, [xpubId]);
+  }, [alias]);
 
   return (
     <>
@@ -113,19 +108,14 @@ export function Paymails() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="deleted">Deleted</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <AddPaymailDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
-            <DateRangeFilter />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by alias" />
+            <DateRangeFilter withRevokedRange />
           </div>
         </div>
         <TabsContent value="all">
           <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
-        </TabsContent>
-        <TabsContent value="deleted">
-          <PaymailsTabContent paymails={deletedPaymails} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
