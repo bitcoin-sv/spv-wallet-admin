@@ -27,21 +27,18 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('asc'),
     id: z.string().optional(),
-    currentBalance: z.number().optional(),
   }),
-  loaderDeps: ({ search: { sortBy, sort, id, currentBalance } }) => ({
+  loaderDeps: ({ search: { sortBy, sort, id } }) => ({
     sortBy,
     sort,
     id,
-    currentBalance,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet }, deps: { sortBy, sort, id, currentBalance } }) =>
+  loader: async ({ context: { queryClient, spvWallet }, deps: { sortBy, sort, id } }) =>
     await queryClient.ensureQueryData(
       xPubQueryOptions({
         spvWalletClient: spvWallet.spvWalletClient!,
         id,
-        currentBalance,
         sort,
         sortBy,
       }),
