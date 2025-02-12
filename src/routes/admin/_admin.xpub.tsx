@@ -56,22 +56,21 @@ export function Xpub() {
   const [debouncedFilter] = useDebounce(filter, 200);
 
   const navigate = useNavigate({ from: Route.fullPath });
-  const { sortBy, sort, id, currentBalance } = useSearch({ from: '/admin/_admin/xpub' });
+  const { sortBy, sort, id } = useSearch({ from: '/admin/_admin/xpub' });
 
   const { data: xpubs } = useSuspenseQuery(
     // At this point, spvWalletClient is defined; using non-null assertion.
-    xPubQueryOptions({ spvWalletClient: spvWalletClient!, id, currentBalance, sortBy, sort }),
+    xPubQueryOptions({ spvWalletClient: spvWalletClient!, id, sortBy, sort }),
   );
 
   const mappedXpubs = addStatusField(xpubs.content);
 
   useEffect(() => {
-    const { id, currentBalance } = prepareXPubFilters(debouncedFilter);
+    const { id } = prepareXPubFilters(debouncedFilter);
     navigate({
       search: (old) => ({
         ...old,
         id,
-        currentBalance,
       }),
       replace: true,
     });
@@ -86,7 +85,7 @@ export function Xpub() {
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID or current balance" />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID" />
           </div>
         </div>
         <TabsContent value="all">
