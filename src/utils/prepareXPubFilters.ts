@@ -3,7 +3,7 @@ export const prepareXPubFilters = (str: string) => {
 
   if (isNaN(+str)) {
     id = str.length > 0 ? str : undefined;
-  } 
+  }
 
   return { id };
 };
