@@ -162,20 +162,20 @@ export function LoginForm() {
   };
 
   return (
-    <div className="relative">
-      <div className="absolute top-8 right-8">
+    <div className="relative min-h-screen">
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
         <ModeToggle />
       </div>
-      <div className="grid grid-cols-2 h-screen">
-        <div className="flex flex-col items-center justify-center border-r">
-          <h1 className="text-2xl font-bold mb-16">SPV Wallet Admin</h1>
-          <Card className="w-full max-w-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+        <div className="flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r p-4">
+          <h1 className="text-xl sm:text-2xl font-bold mb-8 sm:mb-16">SPV Wallet Admin</h1>
+          <Card className="w-full max-w-sm mx-4">
             <Form {...form}>
               <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Login</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
                 </CardHeader>
-                <CardContent className="grid">
+                <CardContent className="grid gap-4">
                   <FormField
                     control={form.control}
                     name="role"
@@ -238,7 +238,7 @@ export function LoginForm() {
                             <Input
                               {...field}
                               ref={inputRef}
-                              className="pr-12"
+                              className="pr-12 w-full"
                               type={isPasswordVisible ? 'text' : 'password'}
                               placeholder={
                                 currentRole === Role.Admin
@@ -249,10 +249,13 @@ export function LoginForm() {
                               }
                             />
                           </FormControl>
-                          <ShowPasswordIcon
-                            className="size-5 absolute top-2.5 right-3.5 cursor-pointer"
+                          <button
+                            type="button"
                             onClick={handleTogglePasswordVisibility}
-                          />
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          >
+                            <ShowPasswordIcon className="h-5 w-5" />
+                          </button>
                         </div>
                       </FormItem>
                     )}
@@ -263,35 +266,34 @@ export function LoginForm() {
                       name="serverUrl"
                       render={({ field }) => (
                         <FormItem className="mt-2">
-                          <FormLabel>Server Url</FormLabel>
-                          <div className="relative">
-                            <FormControl>
-                              <Input
-                                {...field}
-                                onChange={(e) => onServerUrlChange(e, field.onChange)}
-                                placeholder="Server Url"
-                              />
-                            </FormControl>
-                          </div>
+                          <FormLabel>Server URL</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              className="w-full"
+                              placeholder="Server URL"
+                              onChange={(e) => onServerUrlChange(e, field.onChange)}
+                            />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
                   )}
                 </CardContent>
-                <CardFooter>
-                  <Button type="submit" className="w-full">
+                <CardFooter className="flex justify-end pt-4">
+                  <Button type="submit" className="w-full sm:w-auto">
                     Sign in
                   </Button>
                 </CardFooter>
-                <Toaster position="bottom-center" />
               </form>
             </Form>
           </Card>
         </div>
-        <div className="flex justify-center">
-          <img className="object-contain max-w-[765px]" src="/bsv-login.png" alt="login" />
+        <div className="hidden lg:flex items-center justify-center">
+          <img className="object-contain w-full max-w-[765px] p-4" src="/bsv-login.png" alt="login" />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }
