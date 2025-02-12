@@ -126,14 +126,14 @@ function LayoutComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/user/paymails"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/paymails')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
+                to="/user/xpub"
+                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/xpub')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
               >
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Paymails</span>
+                <FileText className="h-5 w-5" />
+                <span className="sr-only">XPub</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right">Paymails</TooltipContent>
+            <TooltipContent side="right">XPub</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
