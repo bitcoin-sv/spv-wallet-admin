@@ -27,8 +27,12 @@ export const Profile = () => {
   };
 
   const shortenId = (id: string) => {
-    if (!id) return '';
-    if (id.length <= 12) return id;
+    if (!id) {
+      return '';
+    }
+    if (id.length <= 12) {
+      return id;
+    }
     return `${id.slice(0, 6)}...${id.slice(-6)}`;
   };
 
@@ -39,7 +43,7 @@ export const Profile = () => {
       toast.success('Copied to clipboard');
       setTimeout(() => setCopiedItem(null), 2000);
     } catch (err) {
-      toast.error('Failed to copy');
+      toast.error(`Failed to copy ${err}`);
     }
   };
 
