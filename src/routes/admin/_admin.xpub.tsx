@@ -12,7 +12,7 @@ import {
 } from '@/components';
 import { useSpvWalletClient } from '@/contexts';
 
-import { addStatusField, prepareXPubFilters, xPubQueryOptions } from '@/utils';
+import { addStatusField, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -63,11 +63,10 @@ export function Xpub() {
   const mappedXpubs = addStatusField(xpubs.content);
 
   useEffect(() => {
-    const { id } = prepareXPubFilters(debouncedFilter);
     navigate({
       search: (old) => ({
         ...old,
-        id,
+        id: debouncedFilter || undefined,
       }),
       replace: true,
     });
