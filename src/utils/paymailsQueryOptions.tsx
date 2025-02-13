@@ -12,17 +12,18 @@ export interface PaymailsQueryOptions {
     to: string;
   };
   updatedRange?: { from: string; to: string };
+  alias?: string;
 }
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
-  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange } = opts;
+  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias } = opts;
   const adminApi = getAdminApi();
 
   return queryOptions({
-    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange],
+    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias],
     queryFn: async () =>
       await adminApi.paymails(
-        { xpubId, createdRange, updatedRange, includeDeleted: true },
+        { alias, xpubId, createdRange, updatedRange, includeDeleted: true },
         {},
         {
           page,

@@ -72,7 +72,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     accessorKey: 'avatar',
     header: () => {
       return (
-        <Link>
+        <Link to={'.'}>
           <Button variant="ghost">Avatar</Button>
         </Link>
       );

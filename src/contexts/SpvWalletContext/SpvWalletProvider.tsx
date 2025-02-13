@@ -1,17 +1,7 @@
 import { SpvWalletContext, SpvWalletAdminClientExtended, SpvWalletUserClientExtended, useServerUrl } from '@/contexts';
-import { Store, useStore } from '@tanstack/react-store';
+import { useStore } from '@tanstack/react-store';
 import React, { useState, useMemo, useEffect } from 'react';
 import { clientStore } from '@/store/clientStore';
-
-interface ServerUrlState {
-  serverUrl: string;
-}
-
-const defaultState: ServerUrlState = {
-  serverUrl: '',
-};
-
-export const serverUrlStore = new Store(defaultState);
 
 export const SpvWalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { serverUrl, setServerUrl } = useServerUrl();
