@@ -1,12 +1,12 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getAdminApi } from '../store/clientStore';
+import { getUserApi } from '../store/clientStore';
 
 export interface PaymailsQueryOptions {
   page?: number;
   size?: number;
   sort?: string;
   sortBy?: string;
-  xpubId?: string;
+  id?: string;
   createdRange?: {
     from: string;
     to: string;
@@ -16,14 +16,14 @@ export interface PaymailsQueryOptions {
 }
 
 export const paymailsQueryOptions = (opts: PaymailsQueryOptions) => {
-  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias } = opts;
-  const adminApi = getAdminApi();
+  const { id, page, size, sortBy, sort, createdRange, updatedRange, alias } = opts;
+  const userApi = getUserApi();
 
   return queryOptions({
-    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias],
+    queryKey: ['paymails', id, page, size, sortBy, sort, createdRange, updatedRange, alias],
     queryFn: async () =>
-      await adminApi.paymails(
-        { alias, xpubId, createdRange, updatedRange, includeDeleted: true },
+      await userApi.paymails(
+        { alias, id, createdRange, updatedRange, includeDeleted: true },
         {},
         {
           page,

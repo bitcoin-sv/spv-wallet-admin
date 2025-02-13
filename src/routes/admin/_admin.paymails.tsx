@@ -10,7 +10,7 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
-import { addStatusField, getDeletedElements, paymailsQueryOptions } from '@/utils';
+import { addStatusField, getDeletedElements, paymailsAdminQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -38,7 +38,7 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({ context: { queryClient }, deps: { sort, sortBy, xpubId, createdRange, updatedRange } }) =>
     await queryClient.ensureQueryData(
-      paymailsQueryOptions({
+      paymailsAdminQueryOptions({
         xpubId,
         sort,
         sortBy,
@@ -60,7 +60,7 @@ export function Paymails() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const { data: paymails } = useSuspenseQuery(
-    paymailsQueryOptions({
+    paymailsAdminQueryOptions({
       xpubId,
       sortBy,
       sort,
