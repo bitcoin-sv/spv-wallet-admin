@@ -4,7 +4,6 @@ import React, { createContext } from 'react';
 
 export interface SpvWalletAdminClientExtended extends SPVWalletAdminAPI {
   role?: TRole;
-  userId?: string | null;
 }
 
 export interface SpvWalletUserClientExtended extends SPVWalletUserAPI {

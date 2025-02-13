@@ -1,12 +1,12 @@
 import { Store, useStore } from '@tanstack/react-store';
 import { SpvWalletAdminClientExtended, SpvWalletUserClientExtended } from '@/contexts';
 
-interface ClientState {
+interface ClientStore {
   adminClient: SpvWalletAdminClientExtended | null;
   userClient: SpvWalletUserClientExtended | null;
 }
 
-const defaultState: ClientState = {
+const defaultState: ClientStore = {
   adminClient: null,
   userClient: null,
 };
@@ -17,26 +17,34 @@ export const clientStore = new Store(defaultState);
 // Direct store access functions
 export const getAdminApi = () => {
   const adminClient = clientStore.state.adminClient;
-  if (!adminClient) throw new Error('Admin client not initialized');
+  if (!adminClient) {
+    throw new Error('Admin client not initialized');
+  }
   return adminClient;
 };
 
 export const getUserApi = () => {
   const userClient = clientStore.state.userClient;
-  if (!userClient) throw new Error('User client not initialized');
+  if (!userClient) {
+    throw new Error('User client not initialized');
+  }
   return userClient;
 };
 
 // React hooks for accessing clients
 export const useAdminApi = () => {
   const adminClient = useStore(clientStore, (state) => state.adminClient);
-  if (!adminClient) throw new Error('Admin client not initialized');
+  if (!adminClient) {
+    throw new Error('Admin client not initialized');
+  }
   return adminClient;
 };
 
 export const useUserApi = () => {
   const userClient = useStore(clientStore, (state) => state.userClient);
-  if (!userClient) throw new Error('User client not initialized');
+  if (!userClient) {
+    throw new Error('User client not initialized');
+  }
   return userClient;
 };
 
@@ -58,20 +66,3 @@ export const clearClients = () => {
     userClient: null,
   }));
 };
-
-export const clearAdminClient = () => {
-  clientStore.setState((state) => ({
-    ...state,
-    adminClient: null,
-  }));
-};
-
-export const clearUserClient = () => {
-  clientStore.setState((state) => ({
-    ...state,
-    userClient: null,
-  }));
-};
-
-export const disconnectAdmin = () => clearAdminClient();
-export const disconnectUser = () => clearUserClient();

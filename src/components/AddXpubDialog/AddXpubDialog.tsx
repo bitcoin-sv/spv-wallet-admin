@@ -12,12 +12,12 @@ import {
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormProvider as Form } from 'react-hook-form';
 import { Input } from '@/components/ui/input.tsx';
-import { useSpvWalletClient, SpvWalletAdminClientExtended } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { HD } from '@bsv/sdk';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus, CircleX } from 'lucide-react';
+import { useAdminApi } from '@/store/clientStore';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -50,6 +50,7 @@ const xPrivSchema = formSchema.pick({ xPriv: true });
 export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
+  const adminApi = useAdminApi();
 
   const xPrivRef = useRef<HTMLInputElement>(null);
   const xPubRef = useRef<HTMLInputElement>(null);
@@ -62,12 +63,9 @@ export const AddXpubDialog = ({ className }: AddXpubDialogProps) => {
     },
   });
 
-  const { spvWalletClient } = useSpvWalletClient();
-
   const mutation = useMutation({
     mutationFn: async (xpub: string) => {
-      // At this point, spvWalletClient is defined; using non-null assertion.
-      return await (spvWalletClient as SpvWalletAdminClientExtended)!.createXPub(xpub, {})
+      return await adminApi.createXPub(xpub, {});
     },
     onSuccess: () => queryClient.invalidateQueries(),
   });

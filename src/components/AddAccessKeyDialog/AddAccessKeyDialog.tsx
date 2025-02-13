@@ -13,17 +13,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
-import { SpvWalletUserClientExtended } from '@/contexts';
-
 import { errorWrapper } from '@/utils';
 import { Metadata } from '@bsv/spv-wallet-js-client';
 import { QuestionMarkCircleIcon as Question } from '@heroicons/react/24/outline';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus } from 'lucide-react';
 import React, { useState } from 'react';
-
 import { toast } from 'sonner';
+import { useUserApi } from '@/store/clientStore';
 
 export interface AddAccessKeyDialogProps {
   className?: string;
@@ -33,13 +30,12 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [metadata, setMetadata] = useState(JSON.stringify({}));
 
-  const { spvWalletClient } = useSpvWalletClient();
+  const userApi = useUserApi();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (metadata: Metadata) => {
-      // At this point, spvWalletClient is defined; using non-null assertion.
-      return await (spvWalletClient as SpvWalletUserClientExtended)!.generateAccessKey(metadata);
+      return await userApi.generateAccessKey(metadata);
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({

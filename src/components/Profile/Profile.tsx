@@ -22,7 +22,7 @@ export const Profile = () => {
   const handleLogout = async () => {
     setSpvWalletClient(null);
     clearClients();
-    await router.invalidate();   
+    await router.invalidate();
   };
 
   return (
