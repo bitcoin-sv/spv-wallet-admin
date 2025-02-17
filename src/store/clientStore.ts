@@ -48,6 +48,12 @@ export const useUserApi = () => {
   return userClient;
 };
 
+// Helper function to check admin status
+export const isAdmin = () => {
+  const adminClient = useStore(clientStore, (state) => state.adminClient);
+  return !!adminClient;
+};
+
 // Action to update clients
 export const updateClient = (
   role: 'adminClient' | 'userClient',
