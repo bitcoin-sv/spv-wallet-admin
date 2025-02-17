@@ -29,15 +29,15 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   const adminApi = useAdminApi();
   const queryClient = useQueryClient();
 
-  const { address } = row.original;
+  const { id } = row.original;
 
   const handleDeleteDialogOpen = () => {
     setIsDeleteDialogOpen((prev) => !prev);
   };
 
   const deletePaymailMutation = useMutation({
-    mutationFn: async (address: string) => {
-      return await adminApi.deletePaymail(address);
+    mutationFn: async (id: string) => {
+      return await adminApi.deletePaymail(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();
@@ -51,7 +51,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   });
 
   const handleDelete = () => {
-    deletePaymailMutation.mutate(address);
+    deletePaymailMutation.mutate(id);
   };
 
   const { isPending } = deletePaymailMutation;
@@ -68,7 +68,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
               Are you sure you want to delete the paymail?
               <br />
             </DialogTitle>
-            <DialogDescription className="break-all font-bold">{address}</DialogDescription>
+            <DialogDescription className="break-all font-bold">{id}</DialogDescription>
             <DialogDescription>
               This action cannot be undone. Please confirm your decision to proceed.
             </DialogDescription>

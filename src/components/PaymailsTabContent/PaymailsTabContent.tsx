@@ -10,6 +10,8 @@ import {
   ViewDialog,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
+import { useStore } from '@tanstack/react-store';
+import { clientStore } from '@/store/clientStore';
 
 export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
@@ -17,6 +19,7 @@ export interface PaymailsTabContentProps {
 }
 
 export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: PaymailsTabContentProps) => {
+  const adminClient = useStore(clientStore, (state) => state.adminClient);
   return (
     <Card>
       <CardHeader>
@@ -31,7 +34,7 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: Paymail
               return (
                 <>
                   <ViewDialog row={row} />
-                  {hasPaymailDeleteDialog && row.original.deletedAt == null && <PaymailDeleteDialog row={row} />}
+                  {adminClient && hasPaymailDeleteDialog && row.original.deletedAt == null && <PaymailDeleteDialog row={row} />}
                 </>
               );
             }}
