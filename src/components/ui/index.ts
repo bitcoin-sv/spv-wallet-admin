@@ -19,3 +19,4 @@ export * from './table.tsx';
 export * from './tabs.tsx';
 export * from './textarea.tsx';
 export * from './tooltip.tsx';
+export * from './transaction-status-badge.tsx';
