@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router';
-import { ArrowLeftRight, KeySquare, X, FileText, Menu } from 'lucide-react';
+import { ArrowLeftRight, KeySquare, X, FileText, Mail, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -80,6 +80,14 @@ function LayoutComponent() {
             <span>Transactions</span>
           </Link>
           <Link
+            to="/user/paymails"
+            className={`flex items-center gap-3 rounded-lg px-2 py-2 ${highlightRoute('/user/paymails')} text-muted-foreground transition-colors hover:text-foreground`}
+            onClick={() => setIsOpen(false)}
+          >
+            <Mail className="h-5 w-5" />
+            <span>Paymails</span>
+          </Link>
+          <Link
             to="/user/xpub"
             className={`flex items-center gap-3 rounded-lg px-2 py-2 ${highlightRoute('/user/xpub')} text-muted-foreground transition-colors hover:text-foreground`}
             onClick={() => setIsOpen(false)}
@@ -114,6 +122,18 @@ function LayoutComponent() {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Transactions</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/user/paymails"
+                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/paymails')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
+              >
+                <Mail className="h-5 w-5" />
+                <span className="sr-only">Paymails</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Paymails</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
