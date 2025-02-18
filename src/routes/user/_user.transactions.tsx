@@ -1,5 +1,4 @@
 import { CustomErrorComponent, PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
 import { transactionSearchSchema } from '@/searchSchemas';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -20,13 +19,9 @@ export const Route = createFileRoute('/user/_user/transactions')({
     updatedRange,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({
-    context: { queryClient, spvWallet },
-    deps: { sort, sortBy, blockHeight, createdRange, updatedRange },
-  }) =>
+  loader: async ({ context: { queryClient }, deps: { sort, sortBy, blockHeight, createdRange, updatedRange } }) =>
     await queryClient.ensureQueryData(
       transactionsUserQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
         sort,
         sortBy,
         blockHeight,
@@ -39,14 +34,10 @@ export const Route = createFileRoute('/user/_user/transactions')({
 function Transactions() {
   const [blockHeight, setBlockHeight] = useState<string>('');
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
-
-  const { spvWalletClient } = useSpvWalletClient();
   const { sortBy, sort } = useSearch({ from: '/user/_user/transactions' });
 
   const { data: transactions } = useSuspenseQuery(
-    // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsUserQueryOptions({
-      spvWalletClient: spvWalletClient!,
       blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       sortBy,
       sort,

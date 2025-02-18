@@ -1,6 +1,4 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger, Toaster, WebhooksTabContent } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
-
 import { addStatusField, webhooksQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -10,24 +8,13 @@ import { WebhookErrorComponent } from '@/components/WebhookErrorComponent';
 export const Route = createFileRoute('/admin/_admin/webhooks')({
   component: Webhooks,
   errorComponent: WebhookErrorComponent,
-  loader: async ({ context: { queryClient, spvWallet } }) =>
-    await queryClient.ensureQueryData(
-      webhooksQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
-      }),
-    ),
+  loader: async ({ context: { queryClient } }) => await queryClient.ensureQueryData(webhooksQueryOptions()),
 });
 
 export function Webhooks() {
-  const { spvWalletClient } = useSpvWalletClient();
   const [tab, setTab] = useState('all');
 
-  const { data: webhooks } = useSuspenseQuery(
-    // At this point, spvWalletClient is defined; using non-null assertion.
-    webhooksQueryOptions({
-      spvWalletClient: spvWalletClient!,
-    }),
-  );
+  const { data: webhooks } = useSuspenseQuery(webhooksQueryOptions());
 
   const mappedWebhooks = addStatusField(webhooks);
 

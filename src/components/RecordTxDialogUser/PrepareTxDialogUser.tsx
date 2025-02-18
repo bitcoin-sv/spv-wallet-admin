@@ -16,8 +16,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import { Input } from '@/components/ui/input.tsx';
-
-import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -25,6 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FormProvider as Form } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useUserApi } from '@/store/clientStore';
 
 export interface RecordTxDialogProps {
   className?: string;
@@ -32,9 +31,7 @@ export interface RecordTxDialogProps {
 
 export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
   const [isPrepareDialogOpen, setIsPrepareDialogOpen] = useState(false);
-
-  const { spvWalletClient } = useSpvWalletClient();
-
+  const userApi = useUserApi();
   const queryClient = useQueryClient();
 
   const handleDialogToggle = () => {
@@ -44,7 +41,7 @@ export const PrepareTxDialogUser = ({ className }: RecordTxDialogProps) => {
 
   const mutation = useMutation({
     mutationFn: async ({ newRecipient, metadata }: { newRecipient: TxOutput; metadata: Metadata }) =>
-      await spvWalletClient?.SendToRecipients({ outputs: [newRecipient] }, metadata),
+      await userApi.sendToRecipients({ outputs: [newRecipient] }, metadata),
     onSuccess: () => queryClient.invalidateQueries(),
   });
 

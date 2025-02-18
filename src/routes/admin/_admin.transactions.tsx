@@ -8,7 +8,6 @@ import {
   Toaster,
   TransactionsTabContent,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
 
 import { transactionSearchSchema } from '@/searchSchemas';
 import { transactionsQueryOptions } from '@/utils';
@@ -29,16 +28,12 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
     updatedRange,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({
-    context: { queryClient, spvWallet },
-    deps: { sort, sortBy, blockHeight, createdRange, updatedRange },
-  }) =>
+  loader: async ({ context: { queryClient }, deps: { sort, sortBy, blockHeight, createdRange, updatedRange } }) =>
     await queryClient.ensureQueryData(
       transactionsQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
+        blockHeight,
         sort,
         sortBy,
-        blockHeight,
         createdRange,
         updatedRange,
       }),
@@ -46,16 +41,13 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
 });
 
 export function Transactions() {
-  const { spvWalletClient } = useSpvWalletClient();
   const [tab, setTab] = useState<string>('all');
   const [blockHeight, setBlockHeight] = useState<string>('');
   const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort } = useSearch({ from: '/admin/_admin/transactions' });
 
   const { data: transactions } = useSuspenseQuery(
-    // At this point, spvWalletClient is defined; using non-null assertion.
     transactionsQueryOptions({
-      spvWalletClient: spvWalletClient!,
       blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
       sortBy,
       sort,
