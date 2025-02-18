@@ -11,6 +11,7 @@ import {
   LoadingSpinner,
   Textarea,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact, Metadata } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,7 +19,6 @@ import { Row } from '@tanstack/react-table';
 import React, { useState } from 'react';
 
 import { toast } from 'sonner';
-import { useAdminApi } from '@/store/clientStore';
 
 export interface ContactEditDialogProps {
   row: Row<Contact>;
@@ -29,7 +29,7 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
   const [fullName, setFullName] = useState(row.original.fullName);
   const [metadata, setMetadata] = useState(JSON.stringify(row.original.metadata || {}));
 
-  const adminApi = useAdminApi();
+  const { spvWalletClient } = useSpvWalletClient();
   const queryClient = useQueryClient();
 
   const handleEditDialogOpen = () => {
@@ -39,7 +39,7 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
   const editMutation = useMutation({
     mutationFn: async ({ id, fullName, metadata }: { id: string; fullName: string; metadata: string }) => {
       const metadataParsed = JSON.parse(metadata) as Metadata;
-      return await adminApi.contactUpdate(id, fullName, metadataParsed);
+      return await spvWalletClient!.AdminUpdateContact(id, fullName, metadataParsed);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

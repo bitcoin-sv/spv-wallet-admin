@@ -1,10 +1,17 @@
+import { useSpvWalletClient } from '@/contexts';
 import { userBalanceQueryOptions } from '@/utils/userBalanceQueryOptions';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Badge } from '../ui';
 import { WalletIcon } from 'lucide-react';
 
 export const UserBalance = () => {
-  const { data: balance } = useSuspenseQuery(userBalanceQueryOptions());
+  const { spvWalletClient } = useSpvWalletClient();
+
+  const { data: balance } = useSuspenseQuery(
+    userBalanceQueryOptions({
+      spvWalletClient: spvWalletClient!,
+    }),
+  );
 
   return (
     <>

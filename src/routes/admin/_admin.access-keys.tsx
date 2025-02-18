@@ -9,6 +9,7 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 
 import { accessKeysAdminQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -40,11 +41,15 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
     revokedRange,
   }),
   loader: async ({
-    context: { queryClient },
+    context: {
+      spvWallet: { spvWalletClient },
+      queryClient,
+    },
     deps: { sortBy, sort, xpubId, createdRange, revokedRange, updatedRange },
   }) => {
     await queryClient.ensureQueryData(
       accessKeysAdminQueryOptions({
+        spvWalletClient: spvWalletClient!,
         xpubId,
         createdRange,
         updatedRange,
@@ -67,8 +72,11 @@ export function AccessKeys() {
   const [debouncedFilter] = useDebounce(filter, 500);
   const navigate = useNavigate({ from: Route.fullPath });
 
+  const { spvWalletClient } = useSpvWalletClient();
+
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysAdminQueryOptions({
+      spvWalletClient: spvWalletClient!,
       xpubId,
       sortBy,
       sort,

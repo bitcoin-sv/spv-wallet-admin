@@ -11,6 +11,7 @@ import {
   Toaster,
 } from '@/components';
 
+import { useSpvWalletClient } from '@/contexts';
 import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
@@ -42,11 +43,12 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     pubKey,
   }),
   loader: async ({
-    context: { queryClient },
+    context: { spvWallet, queryClient },
     deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
   }) =>
     await queryClient.ensureQueryData(
       contactsQueryOptions({
+        spvWalletClient: spvWallet.spvWalletClient!,
         updatedRange,
         createdRange,
         sort,
@@ -62,6 +64,8 @@ export function Contacts() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
+  const { spvWalletClient } = useSpvWalletClient();
+
   const { id, paymail, pubKey, createdRange, updatedRange, sortBy, sort } = useSearch({
     from: '/admin/_admin/contacts',
   });
@@ -70,6 +74,7 @@ export function Contacts() {
     data: { content: contacts },
   } = useSuspenseQuery(
     contactsQueryOptions({
+      spvWalletClient: spvWalletClient!,
       updatedRange,
       createdRange,
       sort,

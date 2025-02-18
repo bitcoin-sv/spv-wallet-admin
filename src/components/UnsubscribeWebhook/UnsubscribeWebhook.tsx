@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Webhook } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,14 +15,13 @@ import { Row } from '@tanstack/react-table';
 import { CircleMinus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useAdminApi } from '@/store/clientStore';
 
 interface UnsubscribeWebhookProps {
   row: Row<Webhook>;
 }
 
 export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
-  const adminApi = useAdminApi();
+  const { spvWalletClient } = useSpvWalletClient();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +31,8 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
 
   const mutation = useMutation({
     mutationFn: async (url: string) => {
-      return await adminApi.unsubscribeWebhook(url);
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminDeleteWebhook(url);
     },
     onSuccess: () => queryClient.invalidateQueries(),
   });

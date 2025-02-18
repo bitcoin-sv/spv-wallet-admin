@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
@@ -22,7 +23,6 @@ import { UserRoundX } from 'lucide-react';
 import { useState } from 'react';
 
 import { toast } from 'sonner';
-import { useAdminApi } from '@/store/clientStore';
 
 export interface ContactRejectDialogProps {
   row: Row<Contact>;
@@ -30,7 +30,8 @@ export interface ContactRejectDialogProps {
 
 export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
-  const adminApi = useAdminApi();
+
+  const { spvWalletClient } = useSpvWalletClient();
   const queryClient = useQueryClient();
 
   const handleRejectDialogOpen = () => {
@@ -39,7 +40,8 @@ export const ContactRejectDialog = ({ row }: ContactRejectDialogProps) => {
 
   const rejectContactMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await adminApi.rejectInvitation(id);
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminRejectContact(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();

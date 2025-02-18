@@ -9,13 +9,13 @@ import {
   DropdownMenuItem,
   LoadingSpinner,
 } from '@/components';
+import { useSpvWalletClient } from '@/contexts';
 import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
 
 import { toast } from 'sonner';
-import { useUserApi } from '@/store/clientStore';
 
 export interface RevokeKeyDialogProps {
   row: Row<AccessKey>;
@@ -23,16 +23,17 @@ export interface RevokeKeyDialogProps {
 
 export const RevokeKeyDialog = ({ row }: RevokeKeyDialogProps) => {
   const [isRevokeDialogOpen, setIsRevokeDialogOpen] = useState(false);
-  const userApi = useUserApi();
-  const queryClient = useQueryClient();
 
+  const { spvWalletClient } = useSpvWalletClient();
+  const queryClient = useQueryClient();
   const handleRevokeDialogOpen = () => {
     setIsRevokeDialogOpen((prev) => !prev);
   };
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return await userApi.revokeAccessKey(row.original.id);
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.RevokeAccessKey(row.original.id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

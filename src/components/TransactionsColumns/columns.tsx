@@ -2,11 +2,10 @@ import { Tx } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { DateCell } from '@/components';
+import { Badge, DateCell } from '@/components';
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
-import TransactionStatusBadge from '@/components/ui/transaction-status-badge';
 
 export const columns: ColumnDef<Tx>[] = [
   {
@@ -14,7 +13,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to="."
+          to={'.'}
           search={(prev) => ({
             ...prev,
             sortBy: 'id',
@@ -34,7 +33,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to="."
+          to={'.'}
           search={(prev) => ({
             ...prev,
             sortBy: 'block_height',
@@ -60,7 +59,11 @@ export const columns: ColumnDef<Tx>[] = [
       );
     },
     cell: ({ row }) => {
-      return <TransactionStatusBadge status={row.getValue('status')} />;
+      return row.getValue('status') ? (
+        <Badge variant="secondary">Prepared</Badge>
+      ) : (
+        <Badge variant="outline">Recorded</Badge>
+      );
     },
   },
   {
@@ -68,7 +71,7 @@ export const columns: ColumnDef<Tx>[] = [
     header: ({ column }) => {
       return (
         <Link
-          to="."
+          to={'.'}
           search={(prev) => ({
             ...prev,
             sortBy: 'created_at',

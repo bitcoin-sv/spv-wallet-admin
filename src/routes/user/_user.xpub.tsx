@@ -1,15 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent } from '@/components';
 import { Metadata } from '@bsv/spv-wallet-js-client';
 import { ReactNode, createFileRoute, useLoaderData } from '@tanstack/react-router';
-import { getUserApi } from '@/store/clientStore';
 
 export const Route = createFileRoute('/user/_user/xpub')({
   component: XPub,
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async () => {
-    const userApi = getUserApi();
-    return await userApi.xPub();
-  },
+  loader: async ({ context: { spvWallet } }) => await spvWallet.spvWalletClient!.GetUserInfo(),
 });
 
 function XPub() {

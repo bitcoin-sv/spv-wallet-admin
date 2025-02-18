@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog.tsx';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu.tsx';
+import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Contact } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -17,7 +18,6 @@ import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
 
 import { toast } from 'sonner';
-import { useAdminApi } from '@/store/clientStore';
 
 export interface ContactDeleteDialogProps {
   row: Row<Contact>;
@@ -25,7 +25,8 @@ export interface ContactDeleteDialogProps {
 
 export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const adminApi = useAdminApi();
+
+  const { spvWalletClient } = useSpvWalletClient();
   const queryClient = useQueryClient();
 
   const handleDeleteDialogOpen = () => {
@@ -34,7 +35,8 @@ export const ContactDeleteDialog = ({ row }: ContactDeleteDialogProps) => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await adminApi.deleteContact(id);
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.AdminDeleteContact(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();
