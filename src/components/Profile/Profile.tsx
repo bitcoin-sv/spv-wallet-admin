@@ -14,15 +14,17 @@ import {
 
 import { useAuth, useSpvWalletClient } from '@/contexts';
 import { toast } from 'sonner';
+import { clearClients, isUser, useUserApi } from '@/store/clientStore';
 
 export const Profile = () => {
   const { loginKey } = useAuth();
-  const { serverUrl, setSpvWalletClient, spvWalletClient } = useSpvWalletClient();
+  const { serverUrl, setSpvWalletClient } = useSpvWalletClient();
   const router = useRouter();
   const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
   const handleLogout = async () => {
     setSpvWalletClient(null);
+    clearClients();
     await router.invalidate();
   };
 
@@ -48,7 +50,9 @@ export const Profile = () => {
   };
 
   const shortLoginKey = shortenId(loginKey);
-  const shortUserId = spvWalletClient?.userId ? shortenId(spvWalletClient.userId) : null;
+  const isUserClient = isUser();
+  const userId = isUserClient ? useUserApi().userId : null;
+  const shortUserId = userId ? shortenId(userId) : null;
 
   return (
     <DropdownMenu>
@@ -79,7 +83,7 @@ export const Profile = () => {
         {shortUserId && (
           <DropdownMenuItem
             className="flex justify-between items-center cursor-pointer"
-            onClick={() => copyToClipboard(spvWalletClient!.userId!, 'userId')}
+            onClick={() => userId && copyToClipboard(userId, 'userId')}
           >
             <span className="mr-4">User ID: {shortUserId}</span>
             {copiedItem === 'userId' ? (

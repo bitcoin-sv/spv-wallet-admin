@@ -1,8 +1,12 @@
 import { TRole } from '@/contexts';
-import { SpvWalletClient } from '@bsv/spv-wallet-js-client';
+import { SPVWalletAdminAPI, SPVWalletUserAPI } from '@bsv/spv-wallet-js-client';
 import React, { createContext } from 'react';
 
-export interface SpvWalletClientExtended extends SpvWalletClient {
+export interface SpvWalletAdminClientExtended extends SPVWalletAdminAPI {
+  role?: TRole;
+}
+
+export interface SpvWalletUserClientExtended extends SPVWalletUserAPI {
   role?: TRole;
   userId?: string | null;
 }
@@ -10,8 +14,10 @@ export interface SpvWalletClientExtended extends SpvWalletClient {
 export interface SpvWalletContext {
   serverUrl: string;
   setServerUrl: React.Dispatch<React.SetStateAction<string>>;
-  spvWalletClient: SpvWalletClientExtended | null;
-  setSpvWalletClient: React.Dispatch<React.SetStateAction<SpvWalletClientExtended | null>>;
+  spvWalletClient: SpvWalletAdminClientExtended | SpvWalletUserClientExtended | null;
+  setSpvWalletClient: React.Dispatch<
+    React.SetStateAction<SpvWalletAdminClientExtended | SpvWalletUserClientExtended | null>
+  >;
 }
 
 export const SpvWalletContext = createContext<SpvWalletContext | null>(null);

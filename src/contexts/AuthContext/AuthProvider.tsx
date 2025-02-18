@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { AuthContext, Role, useSpvWalletClient } from '@/contexts';
+import { AuthContext, Role } from '@/contexts';
+import { useStore } from '@tanstack/react-store';
+import { clientStore } from '@/store/clientStore';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { spvWalletClient } = useSpvWalletClient();
-
+  const adminClient = useStore(clientStore, (state) => state.adminClient);
+  const userClient = useStore(clientStore, (state) => state.userClient);
   const [loginKey, setLoginKey] = useState<string>('');
-  const isAuthenticated = !!spvWalletClient;
 
-  const isAdmin = isAuthenticated && spvWalletClient?.role === Role.Admin;
-  const isUser = isAuthenticated && spvWalletClient?.role === Role.User;
+  const isAuthenticated = !!(adminClient || userClient);
+  const isAdmin = isAuthenticated && adminClient?.role === Role.Admin;
+  const isUser = isAuthenticated && userClient?.role === Role.User;
 
   return (
     <AuthContext.Provider value={{ isAdmin, isAuthenticated, loginKey, setLoginKey, isUser }}>

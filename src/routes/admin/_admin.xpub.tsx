@@ -10,7 +10,6 @@ import {
   XpubsSkeleton,
   XpubsTabContent,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
 
 import { addStatusField, prepareXPubFilters, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -36,10 +35,9 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     currentBalance,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet }, deps: { sortBy, sort, id, currentBalance } }) =>
+  loader: async ({ context: { queryClient }, deps: { sortBy, sort, id, currentBalance } }) =>
     await queryClient.ensureQueryData(
       xPubQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
         id,
         currentBalance,
         sort,
@@ -50,7 +48,6 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
 });
 
 export function Xpub() {
-  const { spvWalletClient } = useSpvWalletClient();
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
   const [debouncedFilter] = useDebounce(filter, 200);
@@ -58,10 +55,7 @@ export function Xpub() {
   const navigate = useNavigate({ from: Route.fullPath });
   const { sortBy, sort, id, currentBalance } = useSearch({ from: '/admin/_admin/xpub' });
 
-  const { data: xpubs } = useSuspenseQuery(
-    // At this point, spvWalletClient is defined; using non-null assertion.
-    xPubQueryOptions({ spvWalletClient: spvWalletClient!, id, currentBalance, sortBy, sort }),
-  );
+  const { data: xpubs } = useSuspenseQuery(xPubQueryOptions({ id, currentBalance, sortBy, sort }));
 
   const mappedXpubs = addStatusField(xpubs.content);
 

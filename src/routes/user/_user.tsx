@@ -15,7 +15,7 @@ import {
 } from '@/components';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
 import { UserBalance } from '@/components/UserBalance';
-import { useSpvWalletClient } from '@/contexts';
+import { useUserApi } from '@/store/clientStore';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -30,7 +30,7 @@ function LayoutComponent() {
   const [route, setRoute] = useState<string>('/user/access-keys');
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
-  const { spvWalletClient } = useSpvWalletClient();
+  const userClient = useUserApi();
 
   useEffect(() => {
     setRoute(pathname);
@@ -145,9 +145,7 @@ function LayoutComponent() {
             <Logo className="h-8 w-8 sm:hidden" />
             <div className="flex items-center gap-2">
               <h1 className="sm:ml-0">User</h1>
-              {spvWalletClient?.userId && (
-                <span className="hidden sm:inline text-sm text-muted-foreground">(ID: {spvWalletClient.userId})</span>
-              )}
+              <span className="hidden sm:inline text-sm text-muted-foreground">(ID: {userClient.userId})</span>
             </div>
           </div>
 
