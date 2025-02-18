@@ -1,11 +1,15 @@
+import { SpvWalletClientExtended } from '@/contexts';
 import { queryOptions } from '@tanstack/react-query';
-import { getAdminApi } from '../store/clientStore';
 
-export const webhooksQueryOptions = () => {
-  const adminApi = getAdminApi();
+export interface WebhooksQueryOptions {
+  spvWalletClient: SpvWalletClientExtended;
+}
+
+export const webhooksQueryOptions = (opts: WebhooksQueryOptions) => {
+  const { spvWalletClient } = opts;
 
   return queryOptions({
-    queryKey: ['webhooks'],
-    queryFn: async () => adminApi.webhooks(),
+    queryKey: ['webhooks', opts],
+    queryFn: async () => spvWalletClient.AdminGetWebhooks(),
   });
 };

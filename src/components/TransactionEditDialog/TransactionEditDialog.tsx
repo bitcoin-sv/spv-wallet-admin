@@ -11,6 +11,7 @@ import {
   Textarea,
 } from '@/components';
 
+import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { Metadata, Tx } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,7 +19,6 @@ import { Row } from '@tanstack/react-table';
 import React, { useState } from 'react';
 
 import { toast } from 'sonner';
-import { useUserApi } from '@/store/clientStore';
 
 export interface TransactionEditDialogProps {
   row: Row<Tx>;
@@ -27,7 +27,9 @@ export interface TransactionEditDialogProps {
 export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [metadata, setMetadata] = useState(JSON.stringify(row.original.metadata || {}));
-  const userApi = useUserApi();
+
+  const { spvWalletClient } = useSpvWalletClient();
+
   const queryClient = useQueryClient();
 
   const handleMetadataChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,7 +38,8 @@ export const TransactionEditDialog = ({ row }: TransactionEditDialogProps) => {
 
   const mutation = useMutation({
     mutationFn: async (metadata: Metadata) => {
-      return await userApi.updateTransactionMetadata(row.original.id, metadata);
+      // At this point, spvWalletClient is defined; using non-null assertion.
+      return await spvWalletClient!.UpdateTransactionMetadata(row.original.id, metadata);
     },
     onSuccess: () => {
       toast.success('Transaction edited');
