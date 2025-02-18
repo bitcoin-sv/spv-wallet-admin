@@ -10,7 +10,6 @@ import {
   Toaster,
 } from '@/components';
 
-import { useSpvWalletClient } from '@/contexts';
 import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
@@ -42,12 +41,11 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     };
   },
   loader: async ({
-    context: { queryClient, spvWallet },
+    context: { queryClient },
     deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
   }) =>
     await queryClient.ensureQueryData(
       accessKeysQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
         sortBy,
         sort,
         createdRange,
@@ -63,17 +61,14 @@ export const Route = createFileRoute('/user/_user/access-keys')({
 export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
 
-  const navigate = useNavigate({ from: Route.fullPath });
-
-  const { spvWalletClient } = useSpvWalletClient();
-
   const { sortBy, sort, createdRange, updatedRange, revokedRange, page, size } = useSearch({
     from: '/user/_user/access-keys',
   });
 
+  const navigate = useNavigate({ from: Route.fullPath });
+
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysQueryOptions({
-      spvWalletClient: spvWalletClient!,
       sortBy,
       sort,
       createdRange,
