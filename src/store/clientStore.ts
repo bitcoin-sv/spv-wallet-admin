@@ -54,6 +54,12 @@ export const isAdmin = () => {
   return !!adminClient;
 };
 
+// Helper function to check user status
+export const isUser = () => {
+  const userClient = useStore(clientStore, (state) => state.userClient);
+  return !!userClient;
+};
+
 // Action to update clients
 export const updateClient = (
   role: 'adminClient' | 'userClient',
