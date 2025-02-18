@@ -9,7 +9,6 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
-import { useSpvWalletClient } from '@/contexts';
 import { paymailsQueryOptions, addStatusField } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
@@ -35,10 +34,9 @@ export const Route = createFileRoute('/user/_user/paymails')({
     alias,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient, spvWallet }, deps: { sort, sortBy, createdRange, updatedRange, alias } }) =>
+  loader: async ({ context: { queryClient }, deps: { sort, sortBy, createdRange, updatedRange, alias } }) =>
     await queryClient.ensureQueryData(
       paymailsQueryOptions({
-        spvWalletClient: spvWallet.spvWalletClient!,
         sort,
         sortBy,
         createdRange,
@@ -52,7 +50,6 @@ export function Paymails() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { spvWalletClient } = useSpvWalletClient();
   const { sortBy, sort, createdRange, updatedRange, alias } = useSearch({
     from: '/user/_user/paymails',
   });
@@ -62,7 +59,6 @@ export function Paymails() {
 
   const { data: paymails } = useSuspenseQuery(
     paymailsQueryOptions({
-      spvWalletClient: spvWalletClient!,
       alias,
       sortBy,
       sort,

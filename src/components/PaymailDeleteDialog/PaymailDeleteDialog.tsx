@@ -11,7 +11,6 @@ import {
   TooltipProvider,
 } from '@/components';
 
-import { useSpvWalletClient } from '@/contexts';
 import { errorWrapper } from '@/utils';
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +18,7 @@ import { Row } from '@tanstack/react-table';
 import { useState } from 'react';
 
 import { toast } from 'sonner';
+import { useAdminApi } from '@/store/clientStore';
 
 export interface PaymailDeleteDialogProps {
   row: Row<PaymailAddress>;
@@ -26,20 +26,18 @@ export interface PaymailDeleteDialogProps {
 
 export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
-  const { spvWalletClient } = useSpvWalletClient();
+  const adminApi = useAdminApi();
   const queryClient = useQueryClient();
 
-  const { address } = row.original;
+  const { id } = row.original;
 
   const handleDeleteDialogOpen = () => {
     setIsDeleteDialogOpen((prev) => !prev);
   };
 
   const deletePaymailMutation = useMutation({
-    mutationFn: async (address: string) => {
-      // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminDeletePaymail(address, address);
+    mutationFn: async (id: string) => {
+      return await adminApi.deletePaymail(id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries();
@@ -53,7 +51,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
   });
 
   const handleDelete = () => {
-    deletePaymailMutation.mutate(address);
+    deletePaymailMutation.mutate(id);
   };
 
   const { isPending } = deletePaymailMutation;
@@ -70,7 +68,7 @@ export const PaymailDeleteDialog = ({ row }: PaymailDeleteDialogProps) => {
               Are you sure you want to delete the paymail?
               <br />
             </DialogTitle>
-            <DialogDescription className="break-all font-bold">{address}</DialogDescription>
+            <DialogDescription className="break-all font-bold">{id}</DialogDescription>
             <DialogDescription>
               This action cannot be undone. Please confirm your decision to proceed.
             </DialogDescription>

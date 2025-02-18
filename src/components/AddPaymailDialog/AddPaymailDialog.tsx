@@ -12,12 +12,11 @@ import {
 } from '@/components/ui/dialog.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { Label } from '@/components/ui/label.tsx';
-import { useSpvWalletClient } from '@/contexts';
 import { HD } from '@bsv/sdk';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CirclePlus } from 'lucide-react';
-
+import { useAdminApi } from '@/store/clientStore';
 import { useForm } from 'react-hook-form';
 
 import { z } from 'zod';
@@ -44,8 +43,7 @@ const addPaymailFormSchema = z.object({
 
 export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   const queryClient = useQueryClient();
-
-  const { spvWalletClient } = useSpvWalletClient();
+  const adminApi = useAdminApi();
 
   const {
     register,
@@ -68,8 +66,7 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       publicName: string;
       avatar: string;
     }) => {
-      // At this point, spvWalletClient is defined; using non-null assertion.
-      return await spvWalletClient!.AdminCreatePaymail(xPub, address, publicName, avatar, {});
+      return await adminApi.createPaymail(xPub, address, publicName, avatar, {});
     },
     onSuccess: () => {
       queryClient.invalidateQueries();
