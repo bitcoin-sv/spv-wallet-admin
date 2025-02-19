@@ -11,7 +11,7 @@ import {
   XpubsTabContent,
 } from '@/components';
 
-import { addStatusField, prepareXPubFilters, xPubQueryOptions } from '@/utils';
+import { addStatusField, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -26,20 +26,17 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('asc'),
     id: z.string().optional(),
-    currentBalance: z.number().optional(),
   }),
-  loaderDeps: ({ search: { sortBy, sort, id, currentBalance } }) => ({
+  loaderDeps: ({ search: { sortBy, sort, id } }) => ({
     sortBy,
     sort,
     id,
-    currentBalance,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient }, deps: { sortBy, sort, id, currentBalance } }) =>
+  loader: async ({ context: { queryClient }, deps: { sortBy, sort, id } }) =>
     await queryClient.ensureQueryData(
       xPubQueryOptions({
         id,
-        currentBalance,
         sort,
         sortBy,
       }),
@@ -53,19 +50,17 @@ export function Xpub() {
   const [debouncedFilter] = useDebounce(filter, 200);
 
   const navigate = useNavigate({ from: Route.fullPath });
-  const { sortBy, sort, id, currentBalance } = useSearch({ from: '/admin/_admin/xpub' });
+  const { sortBy, sort, id } = useSearch({ from: '/admin/_admin/xpub' });
 
-  const { data: xpubs } = useSuspenseQuery(xPubQueryOptions({ id, currentBalance, sortBy, sort }));
+  const { data: xpubs } = useSuspenseQuery(xPubQueryOptions({ id, sortBy, sort }));
 
   const mappedXpubs = addStatusField(xpubs.content);
 
   useEffect(() => {
-    const { id, currentBalance } = prepareXPubFilters(debouncedFilter);
     navigate({
       search: (old) => ({
         ...old,
-        id,
-        currentBalance,
+        id: debouncedFilter || undefined,
       }),
       replace: true,
     });
@@ -80,7 +75,7 @@ export function Xpub() {
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID or current balance" />
+            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID" />
           </div>
         </div>
         <TabsContent value="all">

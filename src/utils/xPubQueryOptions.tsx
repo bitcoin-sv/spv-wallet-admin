@@ -3,7 +3,6 @@ import { getAdminApi } from '../store/clientStore';
 
 export interface XPubQueryOptions {
   id?: string;
-  currentBalance?: number;
   page?: number;
   size?: number;
   sort?: string;
@@ -11,14 +10,14 @@ export interface XPubQueryOptions {
 }
 
 export const xPubQueryOptions = (opts: XPubQueryOptions) => {
-  const { id, currentBalance = undefined, page, size, sort, sortBy } = opts;
+  const { id, page, size, sort, sortBy } = opts;
   const adminApi = getAdminApi();
 
   return queryOptions({
-    queryKey: ['xpubs', id, currentBalance, page, size, sort, sortBy],
+    queryKey: ['xpubs', id, page, size, sort, sortBy],
     queryFn: async () =>
       await adminApi.xPubs(
-        { id, currentBalance, includeDeleted: true },
+        { id, includeDeleted: true },
         {},
         {
           page,
