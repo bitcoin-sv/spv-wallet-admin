@@ -224,7 +224,7 @@ function LayoutComponent() {
                   </div>
                 </div>
               </SheetTrigger>
-              <SheetContent side="top" className="w-full sm:hidden">
+              <SheetContent side="top" className="w-full sm:hidden [&>button]:!hidden">
                 <NavigationLinks isMobile={true} />
               </SheetContent>
             </Sheet>
