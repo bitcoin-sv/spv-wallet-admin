@@ -23,7 +23,7 @@
   "dependencies": {
     "@4chain-ag/react-configuration": "^1.0.4",
     "@bsv/sdk": "^1.3.12",
-    "@bsv/spv-wallet-js-client": "^1.0.0-beta.33",
+    "@bsv/spv-wallet-js-client": "^1.0.0-beta.36",
     "@estruyf/github-actions-reporter": "^1.10.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
