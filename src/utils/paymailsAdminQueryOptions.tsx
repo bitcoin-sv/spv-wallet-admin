@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
-import { SpvWalletClientExtended } from '@/contexts';
+import { getAdminApi } from '../store/clientStore';
 
 export interface PaymailsAdminQueryOptions {
   page?: number;
@@ -7,22 +7,23 @@ export interface PaymailsAdminQueryOptions {
   sort?: string;
   sortBy?: string;
   xpubId?: string;
-  spvWalletClient: SpvWalletClientExtended;
   createdRange?: {
     from: string;
     to: string;
   };
   updatedRange?: { from: string; to: string };
+  alias?: string;
 }
 
 export const paymailsAdminQueryOptions = (opts: PaymailsAdminQueryOptions) => {
-  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange } = opts;
+  const { xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias } = opts;
+  const adminApi = getAdminApi();
 
   return queryOptions({
-    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange],
+    queryKey: ['paymails', xpubId, page, size, sortBy, sort, createdRange, updatedRange, alias],
     queryFn: async () =>
-      await opts.spvWalletClient.AdminGetPaymails(
-        { xpubId, createdRange, updatedRange, includeDeleted: true },
+      await adminApi.paymails(
+        { alias, xpubId, createdRange, updatedRange, includeDeleted: true },
         {},
         {
           page,

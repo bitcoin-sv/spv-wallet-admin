@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Logo, ModeToggle, Profile, Sheet, Tooltip, TooltipContent, TooltipTrigger } from '@/components';
 import { PageRefreshButton } from '@/components/PageRefreshButton';
 import { UserBalance } from '@/components/UserBalance';
-import { useSpvWalletClient } from '@/contexts';
+import { useUserApi } from '@/store/clientStore';
 
 export const Route = createFileRoute('/user/_user')({
   beforeLoad: ({ context, location }) => {
@@ -19,7 +19,7 @@ export const Route = createFileRoute('/user/_user')({
 function LayoutComponent() {
   const [route, setRoute] = useState<string>('/user/_user');
   const { pathname } = useLocation();
-  const { spvWalletClient } = useSpvWalletClient();
+  const userClient = useUserApi();
 
   useEffect(() => {
     setRoute(pathname);
@@ -82,8 +82,8 @@ function LayoutComponent() {
           <Sheet>
             <div className="flex flex-col items-start pb-2 px-2">
               <h1 className="text-lg font-semibold leading-none">SPV Wallet User</h1>
-              {spvWalletClient?.userId && (
-                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${spvWalletClient.userId}`}</p>
+              {userClient.userId && (
+                <p className="text-sm font-medium text-gray-600 leading-none translate-y-0.5">{`User ID: ${userClient.userId}`}</p>
               )}
             </div>
           </Sheet>
