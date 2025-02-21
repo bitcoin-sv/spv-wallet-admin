@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent } from '@/components';
+import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent, Toaster } from '@/components';
 import { Metadata } from '@bsv/spv-wallet-js-client';
 import { ReactNode, createFileRoute, useLoaderData } from '@tanstack/react-router';
 import { getUserApi } from '@/store/clientStore';
@@ -45,11 +45,17 @@ function XPub() {
   };
 
   return (
-    <Card className="max-w-3xl">
-      <CardHeader>
-        <CardTitle>XPub</CardTitle>
-      </CardHeader>
-      <CardContent>{renderXpub()}</CardContent>
-    </Card>
+    <div className="grid w-full gap-4">
+      <div className="flex justify-end">
+        <div className="flex gap-2" />
+      </div>
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle>XPub</CardTitle>
+        </CardHeader>
+        <CardContent>{renderXpub()}</CardContent>
+      </Card>
+      <Toaster position="bottom-center" />
+    </div>
   );
 }
