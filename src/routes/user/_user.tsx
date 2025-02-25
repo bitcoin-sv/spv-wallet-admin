@@ -147,18 +147,6 @@ function LayoutComponent() {
             </TooltipTrigger>
             <TooltipContent side="right">XPub</TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/user/xpub"
-                className={`flex h-9 w-9 items-center justify-center ${highlightRoute('/user/xpub')} text-muted-foreground rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                <FileText className="h-5 w-5" />
-                <span className="sr-only">XPub</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">XPub</TooltipContent>
-          </Tooltip>
         </>
       )}
     </nav>

@@ -95,7 +95,7 @@ export function AccessKeys() {
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mt-1">
           <TabsList className="w-full sm:w-auto grid grid-cols-3 gap-2">
             <TabsTrigger
               value="all"

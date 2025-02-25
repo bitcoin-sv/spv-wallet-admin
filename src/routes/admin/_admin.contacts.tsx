@@ -135,7 +135,7 @@ export function Contacts() {
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-1">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex flex-col gap-2">
               {/* Desktop version - single row */}
