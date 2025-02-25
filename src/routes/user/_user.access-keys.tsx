@@ -95,19 +95,38 @@ export function AccessKeys() {
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="revoked">Revoked</TabsTrigger>
-            <TabsTrigger value="deleted">Deleted</TabsTrigger>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
+          <TabsList className="w-full sm:w-auto grid grid-cols-3 gap-2">
+            <TabsTrigger
+              value="all"
+              className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-8"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger
+              value="revoked"
+              className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-8"
+            >
+              Revoked
+            </TabsTrigger>
+            <TabsTrigger
+              value="deleted"
+              className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-8"
+            >
+              Deleted
+            </TabsTrigger>
           </TabsList>
-          <div className="flex">
-            <AddAccessKeyDialog className="mr-3" />
-            <DateRangeFilter withRevokedRange />
+          <div className="flex items-center justify-between px-4 sm:px-1 w-full sm:w-auto gap-4 sm:gap-2">
+            <div className="flex-1 sm:flex-initial">
+              <AddAccessKeyDialog className="w-full" />
+            </div>
+            <div className="flex-1 sm:flex-initial">
+              <DateRangeFilter withRevokedRange className="w-full" />
+            </div>
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} hasRevokeKeyDialog />
+          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />
