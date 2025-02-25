@@ -22,7 +22,9 @@ export interface PaymailColumnsMobile extends Omit<PaymailAddress, 'id'> {
 }
 
 const onClickCopy = (value: string, label: string) => async () => {
-  if (!value) {return};
+  if (!value) {
+    return;
+  }
   await navigator.clipboard.writeText(value);
   toast.success(`${label} Copied to clipboard`);
 };
@@ -43,7 +45,9 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
 
   const truncatePaymail = (alias: string, domain: string) => {
     const fullPaymail = `${alias}@${domain}`;
-    if (fullPaymail.length <= 20) {return fullPaymail};
+    if (fullPaymail.length <= 20) {
+      return fullPaymail;
+    }
 
     if (alias.length > 16) {
       return `${alias.slice(0, 14)}...@${domain}`;

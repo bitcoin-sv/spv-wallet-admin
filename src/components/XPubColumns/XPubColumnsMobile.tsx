@@ -10,7 +10,9 @@ export interface XPubColumnsMobile extends XPub {
 }
 
 const onClickCopy = (value: string, label: string) => async () => {
-  if (!value){return};
+  if (!value) {
+    return;
+  }
   await navigator.clipboard.writeText(value);
   toast.success(`${label} Copied to clipboard`);
 };

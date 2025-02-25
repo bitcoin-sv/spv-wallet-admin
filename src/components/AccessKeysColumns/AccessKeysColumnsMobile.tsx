@@ -21,7 +21,9 @@ import { isUser } from '@/store/clientStore';
 import { truncateId } from '@/utils/string';
 
 const onClickCopy = (value: string, label: string) => async () => {
-  if (!value) {return};
+  if (!value) {
+    return;
+  }
   await navigator.clipboard.writeText(value);
   toast.success(`${label} Copied to clipboard`);
 };
@@ -52,7 +54,9 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
   const mobileRow: Row<AccessKeysColumns> = {
     original: accessKey,
     getValue: (key: string) => {
-      if (key === 'status') {return accessKey.status};
+      if (key === 'status') {
+        return accessKey.status;
+      }
       return undefined;
     },
   } as Row<AccessKeysColumns>;

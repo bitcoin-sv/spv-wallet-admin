@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, DataTable, MobileDataTable, webhookColumns } from '@/components';
 import { UnsubscribeWebhook } from '@/components/UnsubscribeWebhook/UnsubscribeWebhook.tsx';
-import { WebhooksMobileList, webhookMobileColumns } from '@/components/WebhooksColumns/WebhooksColumnsMobile';
+import { WebhooksMobileList } from '@/components/WebhooksColumns/WebhooksColumnsMobile';
 import { WebhooksColumnsMobile } from '@/components/WebhooksColumns/WebhooksColumnsMobile';
 import { ColumnSort } from '@tanstack/react-table';
 
@@ -33,7 +33,7 @@ export const WebhooksTabContent = ({ webhooks }: WebhooksTabContentProps) => {
             </div>
             <div className="sm:hidden">
               <MobileDataTable
-                columns={webhookMobileColumns}
+                columns={webhookColumns}
                 data={webhooks}
                 initialSorting={initalSorting}
                 renderMobileItem={(item: WebhooksColumnsMobile, { expandedItems, setExpandedItems }) => (

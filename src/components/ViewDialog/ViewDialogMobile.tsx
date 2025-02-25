@@ -32,7 +32,7 @@ export const ViewDialogMobile = ({ data }: ViewDialogMobileProps) => {
         return (
           <div key={field} className="grid grid-cols-2 gap-2 py-2 border-b last:border-0">
             <span className="text-sm font-medium">{field}:</span>
-            <DateCell date={value as string}/>
+            <DateCell date={value as string} />
           </div>
         );
       }

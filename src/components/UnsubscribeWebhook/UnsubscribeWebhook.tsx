@@ -27,7 +27,9 @@ export const UnsubscribeWebhook = ({ row, webhook }: UnsubscribeWebhookProps) =>
   const [isOpen, setIsOpen] = useState(false);
 
   const webhookData = webhook || row?.original;
-  if (!webhookData) {return null};
+  if (!webhookData) {
+    return null;
+  }
 
   const handleIsOpenToggle = () => {
     setIsOpen((prev) => !prev);

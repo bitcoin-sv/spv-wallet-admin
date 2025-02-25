@@ -1,63 +1,19 @@
 import { Webhook } from '@bsv/spv-wallet-js-client';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge, Button } from '@/components/ui';
+import { Badge } from '@/components/ui';
 import { toast } from 'sonner';
 import { UnsubscribeWebhook } from '@/components/UnsubscribeWebhook/UnsubscribeWebhook';
 import { ColumnDef } from '@tanstack/react-table';
-import { getSortDirection } from '@/utils';
-import { Link } from '@tanstack/react-router';
-import SortIcon from '../ui/sort-icon';
 
 export interface WebhooksColumnsMobile extends Webhook {
   status: string;
   id?: string;
-  created: string;
-  updated: string;
 }
 
-export const webhookMobileColumns: ColumnDef<WebhooksColumnsMobile>[] = [
-  {
-    accessorKey: 'url',
-    header: ({ column }) => {
-      return (
-        <Link
-          to={'.'}
-          search={(prev) => ({
-            ...prev,
-            sortBy: 'url',
-            sort: getSortDirection(column),
-          })}
-        >
-          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            URL
-            <SortIcon column={column} />
-          </Button>
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Status
-          <SortIcon column={column} />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return row.getValue('status') === 'banned' ? (
-        <Badge variant="secondary">Banned</Badge>
-      ) : (
-        <Badge variant="outline">Active</Badge>
-      );
-    },
-  },
-];
-
 const onClickCopy = (value: string, label: string) => async () => {
-  if (!value) {return};
+  if (!value) {
+    return;
+  }
   await navigator.clipboard.writeText(value);
   toast.success(`${label} Copied to clipboard`);
 };
@@ -70,12 +26,16 @@ export interface WebhooksMobileListProps {
 
 export const WebhooksMobileList = ({ webhooks, value, onValueChange }: WebhooksMobileListProps) => {
   const truncateUrl = (url: string) => {
-    if (url.length <= 30) {return url};
+    if (url.length <= 30) {
+      return url;
+    }
     return `${url.slice(0, 20)}...${url.slice(-10)}`;
   };
 
   const getWebhookId = (webhook: WebhooksColumnsMobile) => {
-    if (webhook.id) {return webhook.id};
+    if (webhook.id) {
+      return webhook.id;
+    }
     return `webhook-${webhook.url}`;
   };
 
@@ -119,3 +79,5 @@ export const WebhooksMobileList = ({ webhooks, value, onValueChange }: WebhooksM
     </Accordion>
   );
 };
+
+export { type ColumnDef };

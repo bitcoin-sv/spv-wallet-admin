@@ -21,7 +21,9 @@ import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTabl
 import { truncateId } from '@/utils/string';
 
 const onClickCopy = (value: string, label: string) => async () => {
-  if (!value) {return};
+  if (!value) {
+    return;
+  }
   await navigator.clipboard.writeText(value);
   toast.success(`${label} Copied to clipboard`);
 };
@@ -60,8 +62,12 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
   const mobileRow: Row<Contact> = {
     original: contact,
     getValue: (key: string) => {
-      if (key === 'paymail') {return contact.paymail};
-      if (key === 'status') {return contact.status};
+      if (key === 'paymail') {
+        return contact.paymail;
+      }
+      if (key === 'status') {
+        return contact.status;
+      }
       return undefined;
     },
   } as Row<Contact>;

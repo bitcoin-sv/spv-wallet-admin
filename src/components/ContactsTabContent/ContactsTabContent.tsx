@@ -28,11 +28,21 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
   const filteredContacts = contacts.filter((contact) => {
     // First apply status filter
     if (currentTab !== 'all') {
-      if (currentTab === 'unconfirmed' && contact.status !== ContactStatus.Unconfirmed) {return false};
-      if (currentTab === 'awaiting' && contact.status !== ContactStatus.Awaiting) {return false};
-      if (currentTab === 'confirmed' && contact.status !== ContactStatus.Confirmed) {return false};
-      if (currentTab === 'rejected' && contact.status !== ContactStatus.Rejected) {return false};
-      if (currentTab === 'deleted' && !contact.deletedAt) {return false};
+      if (currentTab === 'unconfirmed' && contact.status !== ContactStatus.Unconfirmed) {
+        return false;
+      }
+      if (currentTab === 'awaiting' && contact.status !== ContactStatus.Awaiting) {
+        return false;
+      }
+      if (currentTab === 'confirmed' && contact.status !== ContactStatus.Confirmed) {
+        return false;
+      }
+      if (currentTab === 'rejected' && contact.status !== ContactStatus.Rejected) {
+        return false;
+      }
+      if (currentTab === 'deleted' && !contact.deletedAt) {
+        return false;
+      }
     }
 
     // Then apply search filter
@@ -55,8 +65,6 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
         <CardTitle>Contacts</CardTitle>
       </CardHeader>
       <CardContent className="mb-2">
-        
-
         {filteredContacts.length > 0 ? (
           <>
             <div className="hidden sm:block">
