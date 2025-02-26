@@ -2,6 +2,7 @@ import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { AccessKey, Contact, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
+import { createToggleExpandAll } from '@/utils/expandUtils';
 import {
   ColumnDef,
   ColumnSort,
@@ -50,16 +51,7 @@ export function MobileDataTable<TData extends RowType, TValue>({
   const currentPageData = table.getRowModel().rows.map((row) => row.original);
 
   const toggleExpandAll = () => {
-    if (isAllExpanded) {
-      setExpandedItems([]);
-    } else {
-      const ids = currentPageData.map((item) => {
-        const rowItem = item as RowType;
-        return rowItem.id || `webhook-${(rowItem as { url?: string }).url}`;
-      });
-      setExpandedItems(ids);
-    }
-    setIsAllExpanded(!isAllExpanded);
+    createToggleExpandAll(currentPageData, isAllExpanded, setExpandedItems, setIsAllExpanded);
   };
 
   return (

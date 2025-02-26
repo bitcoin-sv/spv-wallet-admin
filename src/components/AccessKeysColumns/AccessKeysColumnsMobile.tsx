@@ -19,6 +19,7 @@ import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTabl
 import { AccessKeysColumns } from './AccessKeysColumns';
 import { isUser } from '@/store/clientStore';
 import { truncateId } from '@/utils/string';
+import { createToggleExpandAll } from '@/utils/expandUtils';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -42,23 +43,19 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
   };
 
   const getStatusBadge = () => {
-    return accessKey.status === 'deleted' ? (
-      <Badge variant="secondary">Deleted</Badge>
-    ) : accessKey.status === 'revoked' ? (
-      <Badge variant="secondary">Revoked</Badge>
-    ) : (
-      <Badge variant="outline">Active</Badge>
-    );
+    switch (accessKey.status) {
+      case 'deleted':
+        return <Badge variant="secondary">Deleted</Badge>;
+      case 'revoked':
+        return <Badge variant="secondary">Revoked</Badge>;
+      default:
+        return <Badge variant="outline">Active</Badge>;
+    }
   };
 
   const mobileRow: Row<AccessKeysColumns> = {
     original: accessKey,
-    getValue: (key: string) => {
-      if (key === 'status') {
-        return accessKey.status;
-      }
-      return undefined;
-    },
+    getValue: (key: string) => (key === 'status' ? accessKey.status : undefined),
   } as Row<AccessKeysColumns>;
 
   return (
@@ -143,15 +140,16 @@ export const AccessKeysMobileList = ({ accessKeys, value, onValueChange }: Acces
   const currentPageData = table.getRowModel().rows.map((row) => row.original);
 
   const toggleExpandAll = () => {
-    if (isAllExpanded) {
-      setExpandedItems([]);
-      onValueChange?.([]);
-    } else {
-      const ids = currentPageData.map((accessKey) => accessKey.id);
-      setExpandedItems(ids);
-      onValueChange?.(ids);
-    }
-    setIsAllExpanded(!isAllExpanded);
+    createToggleExpandAll(
+      currentPageData,
+      isAllExpanded,
+      (ids) => {
+        setExpandedItems(ids);
+        onValueChange?.(ids);
+      },
+      setIsAllExpanded,
+      (accessKey) => accessKey.id,
+    );
   };
 
   const handleValueChange = (newValue: string[]) => {

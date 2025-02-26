@@ -14,6 +14,7 @@ import {
 import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { useState } from 'react';
 import { truncateId } from '@/utils/string';
+import { createToggleExpandAll } from '@/utils/expandUtils';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -111,15 +112,16 @@ export const TransactionsMobileList = ({ transactions, value, onValueChange }: T
   const [isAllExpanded, setIsAllExpanded] = useState(false);
 
   const toggleExpandAll = () => {
-    if (isAllExpanded) {
-      setExpandedItems([]);
-      onValueChange?.([]);
-    } else {
-      const ids = transactions.map((transaction) => transaction.id);
-      setExpandedItems(ids);
-      onValueChange?.(ids);
-    }
-    setIsAllExpanded(!isAllExpanded);
+    createToggleExpandAll(
+      transactions,
+      isAllExpanded,
+      (ids) => {
+        setExpandedItems(ids);
+        onValueChange?.(ids);
+      },
+      setIsAllExpanded,
+      (transaction) => transaction.id,
+    );
   };
 
   const handleValueChange = (newValue: string[]) => {

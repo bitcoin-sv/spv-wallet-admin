@@ -19,6 +19,7 @@ import { Row } from '@tanstack/react-table';
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTablePagination';
 import { truncateId } from '@/utils/string';
+import { createToggleExpandAll } from '@/utils/expandUtils';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -61,15 +62,7 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
 
   const mobileRow: Row<Contact> = {
     original: contact,
-    getValue: (key: string) => {
-      if (key === 'paymail') {
-        return contact.paymail;
-      }
-      if (key === 'status') {
-        return contact.status;
-      }
-      return undefined;
-    },
+    getValue: (key: 'paymail' | 'status'): string | undefined => contact[key],
   } as Row<Contact>;
 
   return (
@@ -173,15 +166,16 @@ export const ContactsMobileList = ({ contacts, value, onValueChange }: ContactsM
   const currentPageData = table.getRowModel().rows.map((row) => row.original);
 
   const toggleExpandAll = () => {
-    if (isAllExpanded) {
-      setExpandedItems([]);
-      onValueChange?.([]);
-    } else {
-      const ids = currentPageData.map((contact) => contact.id);
-      setExpandedItems(ids);
-      onValueChange?.(ids);
-    }
-    setIsAllExpanded(!isAllExpanded);
+    createToggleExpandAll(
+      currentPageData,
+      isAllExpanded,
+      (ids) => {
+        setExpandedItems(ids);
+        onValueChange?.(ids);
+      },
+      setIsAllExpanded,
+      (contact) => contact.id,
+    );
   };
 
   const handleValueChange = (newValue: string[]) => {

@@ -9,6 +9,7 @@ import { isAdmin } from '@/store/clientStore';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
+import { createToggleExpandAll } from '@/utils/expandUtils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -148,12 +149,7 @@ export const PaymailsMobileList = ({ paymails }: PaymailsMobileListProps) => {
   const [isAllExpanded, setIsAllExpanded] = useState(false);
 
   const toggleExpandAll = () => {
-    if (isAllExpanded) {
-      setExpandedItems([]);
-    } else {
-      setExpandedItems(paymails.map((paymail) => paymail.id));
-    }
-    setIsAllExpanded(!isAllExpanded);
+    createToggleExpandAll(paymails, isAllExpanded, setExpandedItems, setIsAllExpanded, (paymail) => paymail.id);
   };
 
   return (
