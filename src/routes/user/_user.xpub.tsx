@@ -1,7 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent, Toaster } from '@/components';
+import { Card, CardContent, CardHeader, CardTitle, CustomErrorComponent, Toaster, DateCell } from '@/components';
 import { Metadata } from '@bsv/spv-wallet-js-client';
 import { ReactNode, createFileRoute, useLoaderData } from '@tanstack/react-router';
 import { getUserApi } from '@/store/clientStore';
+import ReactJson from 'react-json-view';
+import { useTheme } from '@/contexts';
 
 export const Route = createFileRoute('/user/_user/xpub')({
   component: XPub,
@@ -14,13 +16,23 @@ export const Route = createFileRoute('/user/_user/xpub')({
 
 function XPub() {
   const xPub = useLoaderData({ from: '/user/_user/xpub' });
+  const { theme } = useTheme();
+  const isDarkTheme = theme === 'dark';
 
   const renderMetadata = (metadata: Metadata | undefined) => {
     if (!metadata) {
       return null;
     }
 
-    return JSON.stringify(metadata);
+    return (
+      <ReactJson
+        src={metadata}
+        theme={isDarkTheme ? 'monokai' : 'rjv-default'}
+        name={false}
+        collapsed={true}
+        enableClipboard={false}
+      />
+    );
   };
 
   const renderXpub = () => {
@@ -29,16 +41,23 @@ function XPub() {
     }
 
     return Object.entries(xPub).map(([key, value]) => {
+      // Skip rendering if value is null or undefined
+      if (value === null || value === undefined) {
+        return null;
+      }
+
       return (
-        <div key={key} className="flex justify-between gap-2">
-          <span className="text-gray-400">{key}:</span>
-          {key === 'metadata' ? (
-            <span className="break-words whitespace-pre-wrap overflow-hidden text-right">
-              {renderMetadata(value as Metadata | undefined)}
-            </span>
-          ) : (
-            <span>{value as ReactNode}</span>
-          )}
+        <div key={key} className="grid grid-cols-2 gap-2 py-2 border-b last:border-0">
+          <span className="text-sm font-medium">{key}:</span>
+          <div className="text-sm break-all">
+            {key === 'metadata' ? (
+              <div className="overflow-x-auto">{renderMetadata(value as Metadata | undefined)}</div>
+            ) : key === 'createdAt' || key === 'updatedAt' ? (
+              <DateCell date={value as string} />
+            ) : (
+              <span>{value as ReactNode}</span>
+            )}
+          </div>
         </div>
       );
     });
@@ -46,14 +65,13 @@ function XPub() {
 
   return (
     <div className="grid w-full gap-4">
-      <div className="flex justify-end">
-        <div className="flex gap-2" />
-      </div>
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle>XPub</CardTitle>
         </CardHeader>
-        <CardContent>{renderXpub()}</CardContent>
+        <CardContent className="space-y-1">
+          <div className="mt-4 space-y-1">{renderXpub()}</div>
+        </CardContent>
       </Card>
       <Toaster position="bottom-center" />
     </div>

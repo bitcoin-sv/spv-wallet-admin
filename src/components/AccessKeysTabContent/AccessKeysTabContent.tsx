@@ -9,6 +9,7 @@ import {
   RevokeKeyDialog,
   ViewDialog,
 } from '@/components';
+import { AccessKeysMobileList } from '@/components/AccessKeysColumns/AccessKeysColumnsMobile';
 import { AccessKeyExtended } from '@/interfaces';
 
 export interface AccessKeysTabContentProps {
@@ -24,16 +25,23 @@ export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessK
       </CardHeader>
       <CardContent className="mb-2">
         {accessKeys.length > 0 ? (
-          <DataTable
-            columns={accessKeysColumns}
-            data={accessKeys}
-            renderItem={(row) => (
-              <>
-                <ViewDialog row={row} />
-                {hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
-              </>
-            )}
-          />
+          <>
+            <div className="hidden sm:block">
+              <DataTable
+                columns={accessKeysColumns}
+                data={accessKeys}
+                renderItem={(row) => (
+                  <>
+                    <ViewDialog row={row} />
+                    {hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
+                  </>
+                )}
+              />
+            </div>
+            <div className="sm:hidden">
+              <AccessKeysMobileList accessKeys={accessKeys} />
+            </div>
+          </>
         ) : (
           <NoRecordsText message="No Access Keys to show." />
         )}

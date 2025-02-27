@@ -17,13 +17,19 @@ import { toast } from 'sonner';
 import { useAdminApi } from '@/store/clientStore';
 
 interface UnsubscribeWebhookProps {
-  row: Row<Webhook>;
+  row?: Row<Webhook>;
+  webhook?: Webhook;
 }
 
-export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
+export const UnsubscribeWebhook = ({ row, webhook }: UnsubscribeWebhookProps) => {
   const adminApi = useAdminApi();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
+
+  const webhookData = webhook || row?.original;
+  if (!webhookData) {
+    return null;
+  }
 
   const handleIsOpenToggle = () => {
     setIsOpen((prev) => !prev);
@@ -36,7 +42,7 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
     onSuccess: () => queryClient.invalidateQueries(),
   });
   const onRemove = () => {
-    mutation.mutate(row.original.url, {
+    mutation.mutate(webhookData.url, {
       onSuccess: () => {
         toast.success('Webhook unsubscribed');
       },
@@ -58,7 +64,7 @@ export const UnsubscribeWebhook = ({ row }: UnsubscribeWebhookProps) => {
           <DialogHeader>
             <DialogTitle>Are you sure you want to unsubscribe a webhook ?</DialogTitle>
           </DialogHeader>
-          <DialogDescription className="break-all font-bold text-xs">{row.original.url}</DialogDescription>
+          <DialogDescription className="break-all font-bold text-xs">{webhookData.url}</DialogDescription>
           <DialogDescription>This action cannot be undone. Please confirm your decision to proceed.</DialogDescription>
           <div className="grid grid-cols-2 gap-4">
             <Button onClick={onRemove}>Unsubscribe</Button>
