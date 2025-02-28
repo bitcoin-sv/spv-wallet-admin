@@ -77,13 +77,15 @@ function Transactions() {
   };
 
   const formatStatusLabel = (key: string) => {
-    if (key === 'ALL') return 'All';
+    if (key === 'ALL') {
+      return 'All';
+    }
     return key.charAt(0) + key.slice(1).toLowerCase();
   };
 
   const currentStatus = status || null;
   const currentStatusKey =
-    Object.entries(TRANSACTION_STATUS).find(([_, value]) => value === currentStatus)?.[0] || 'ALL';
+    Object.entries(TRANSACTION_STATUS).find(([, value]) => value === currentStatus)?.[0] || 'ALL';
 
   return (
     <>

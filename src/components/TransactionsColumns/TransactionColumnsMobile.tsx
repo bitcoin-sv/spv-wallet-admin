@@ -1,4 +1,3 @@
-import { Tx } from '@bsv/spv-wallet-js-client';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
