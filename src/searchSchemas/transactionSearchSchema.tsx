@@ -6,4 +6,5 @@ export const transactionSearchSchema = z.object({
   blockHeight: z.number().optional().catch(undefined),
   createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
   updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+  status: z.string().nullable().optional().catch(undefined),
 });
