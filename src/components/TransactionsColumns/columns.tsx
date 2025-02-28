@@ -6,8 +6,10 @@ import { Badge, DateCell } from '@/components';
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
+import { TransactionExtended } from '@/interfaces/transaction';
+import { TRANSACTION_STATUS, TransactionStatusValue } from '@/constants';
 
-export const columns: ColumnDef<Tx>[] = [
+export const columns: ColumnDef<TransactionExtended>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => {
@@ -59,11 +61,21 @@ export const columns: ColumnDef<Tx>[] = [
       );
     },
     cell: ({ row }) => {
-      return row.getValue('status') ? (
-        <Badge variant="secondary">Prepared</Badge>
-      ) : (
-        <Badge variant="outline">Recorded</Badge>
-      );
+      const status = row.getValue('status') as TransactionStatusValue;
+      switch (status) {
+        case TRANSACTION_STATUS.MINED:
+          return <Badge variant="secondary">Mined</Badge>;
+        case TRANSACTION_STATUS.CREATED:
+          return <Badge variant="outline">Created</Badge>;
+        case TRANSACTION_STATUS.BROADCASTED:
+          return <Badge>Broadcasted</Badge>;
+        case TRANSACTION_STATUS.REVERTED:
+          return <Badge variant="destructive">Reverted</Badge>;
+        case TRANSACTION_STATUS.PROBLEMATIC:
+          return <Badge variant="destructive">Problematic</Badge>;
+        default:
+          return <Badge variant="outline">{status}</Badge>;
+      }
     },
   },
   {

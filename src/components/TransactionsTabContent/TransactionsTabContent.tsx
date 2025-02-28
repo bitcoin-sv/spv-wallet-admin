@@ -3,9 +3,10 @@ import { columns } from '@/components/TransactionsColumns/columns.tsx';
 import { TransactionsMobileList } from '@/components/TransactionsColumns/TransactionColumnsMobile';
 import { Tx } from '@bsv/spv-wallet-js-client';
 import React from 'react';
+import { TransactionExtended } from '@/interfaces/transaction';
 
 export interface TransactionsTabContentProps {
-  transactions: Tx[];
+  transactions: TransactionExtended[];
   hasRecordTransaction?: boolean;
   hasTransactionEditDialog?: boolean;
   TxDialog: React.ComponentType;
