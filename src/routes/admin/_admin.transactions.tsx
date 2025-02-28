@@ -15,7 +15,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 
 import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
@@ -42,13 +42,12 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
 
 export function Transactions() {
   const [tab, setTab] = useState<string>('all');
-  const [blockHeight, setBlockHeight] = useState<string>('');
-  const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort } = useSearch({ from: '/admin/_admin/transactions' });
+  const [blockHeight, setBlockHeight] = useSearchParam('/admin/_admin/transactions', 'blockHeight');
 
   const { data: transactions } = useSuspenseQuery(
     transactionsQueryOptions({
-      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
+      blockHeight,
       sortBy,
       sort,
     }),
@@ -62,7 +61,16 @@ export function Transactions() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
+            <Searchbar
+              filter={blockHeight != null ? `${blockHeight}` : ''}
+              setFilter={(value) => {
+                const newBlockHeight = parseInt(value);
+                setBlockHeight(
+                  !isNaN(newBlockHeight) ? newBlockHeight : undefined,
+                );
+              }}
+              placeholder="Search by block height"
+            />
           </div>
         </div>
         <TabsContent value="all">

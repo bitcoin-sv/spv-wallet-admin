@@ -11,14 +11,15 @@ import {
   Toaster,
 } from '@/components';
 
-import { contactsQueryOptions, getContactId, getContactPaymail } from '@/utils';
+import { contactsQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { useEffect, useState } from 'react';
 
-import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
+import { CONTACT_ID_LENGTH } from '@/constants';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
@@ -42,9 +43,9 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     pubKey,
   }),
   loader: async ({
-    context: { queryClient },
-    deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
-  }) =>
+                   context: { queryClient },
+                   deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
+                 }) =>
     await queryClient.ensureQueryData(
       contactsQueryOptions({
         updatedRange,
@@ -62,9 +63,13 @@ export function Contacts() {
   const [tab, setTab] = useState<string>('all');
   const [filter, setFilter] = useState<string>('');
 
-  const { id, paymail, pubKey, createdRange, updatedRange, sortBy, sort } = useSearch({
+  const { createdRange, updatedRange, sortBy, sort } = useSearch({
     from: '/admin/_admin/contacts',
   });
+  const [id, setID] = useSearchParam('/admin/_admin/contacts', 'id');
+  const [paymail, setPaymail] = useSearchParam('/admin/_admin/contacts', 'paymail');
+  const [pubKey, setPubKey] = useSearchParam('/admin/_admin/contacts', 'pubKey');
+
 
   const {
     data: { content: contacts },
@@ -79,8 +84,6 @@ export function Contacts() {
       pubKey,
     }),
   );
-
-  const [debouncedFilter] = useDebounce(filter, 200);
 
   const unconfirmedContacts = contacts.filter((c) => c.status === ContactStatus.Unconfirmed && c.deletedAt === null);
   const awaitingContacts = contacts.filter((c) => c.status === ContactStatus.Awaiting);
@@ -100,37 +103,18 @@ export function Contacts() {
   }, [tab]);
 
   useEffect(() => {
-    navigate({
-      search: (old) => {
-        const id = getContactId(filter);
-        const paymail = getContactPaymail(filter);
-        return {
-          ...old,
-          id,
-          paymail,
-          pubKey: !id && !paymail && filter ? filter : undefined,
-        };
-      },
-      replace: true,
-    });
-  }, [debouncedFilter]);
-
-  useEffect(() => {
-    setFilter(id || paymail || pubKey || '');
-    navigate({
-      search: (old) => {
-        const id = getContactId(filter);
-        const paymail = getContactPaymail(filter);
-        return {
-          ...old,
-          id,
-          paymail,
-          pubKey: !id && !paymail && filter ? filter : undefined,
-        };
-      },
-      replace: true,
-    });
-  }, [id, paymail, pubKey]);
+    if (filter === '') {
+      setID(undefined);
+      setPaymail(undefined);
+      setPubKey(undefined);
+    } else if (filter.length === CONTACT_ID_LENGTH) {
+      setID(filter);
+    } else if (filter.includes('@')) {
+      setPaymail(filter);
+    } else {
+      setPubKey(filter);
+    }
+  }, [filter]);
 
   return (
     <>

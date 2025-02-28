@@ -13,12 +13,11 @@ import {
 
 import { addStatusField, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { useState } from 'react';
 
 import { z } from 'zod';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
   component: Xpub,
@@ -46,25 +45,12 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
 
 export function Xpub() {
   const [tab, setTab] = useState<string>('all');
-  const [filter, setFilter] = useState<string>('');
-  const [debouncedFilter] = useDebounce(filter, 200);
 
-  const navigate = useNavigate({ from: Route.fullPath });
-  const { sortBy, sort, id } = useSearch({ from: '/admin/_admin/xpub' });
+  const { sortBy, sort } = useSearch({ from: '/admin/_admin/xpub' });
+  const [id, setID] = useSearchParam('/admin/_admin/xpub', 'id');
 
   const { data: xpubs } = useSuspenseQuery(xPubQueryOptions({ id, sortBy, sort }));
-
   const mappedXpubs = addStatusField(xpubs.content);
-
-  useEffect(() => {
-    navigate({
-      search: (old) => ({
-        ...old,
-        id: debouncedFilter || undefined,
-      }),
-      replace: true,
-    });
-  }, [debouncedFilter]);
 
   return (
     <>
@@ -75,7 +61,7 @@ export function Xpub() {
           </TabsList>
           <div className="flex">
             <AddXpubDialog className="mr-3" />
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by ID" />
+            <Searchbar filter={id ?? ''} setFilter={setID} placeholder="Search by ID" />
           </div>
         </div>
         <TabsContent value="all">

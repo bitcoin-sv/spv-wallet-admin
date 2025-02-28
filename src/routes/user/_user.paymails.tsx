@@ -14,8 +14,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 
-import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/user/_user/paymails')({
   component: Paymails,
@@ -48,14 +48,12 @@ export const Route = createFileRoute('/user/_user/paymails')({
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
-  const [filter, setFilter] = useState<string>('');
 
-  const { sortBy, sort, createdRange, updatedRange, alias } = useSearch({
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { sortBy, sort, createdRange, updatedRange } = useSearch({
     from: '/user/_user/paymails',
   });
-
-  const [debouncedFilter] = useDebounce(filter, 500);
-  const navigate = useNavigate({ from: Route.fullPath });
+  const [alias, setAlias] = useSearchParam('/user/_user/paymails', 'alias');
 
   const { data: paymails } = useSuspenseQuery(
     paymailsQueryOptions({
@@ -68,35 +66,15 @@ export function Paymails() {
   );
 
   const mappedPaymails = addStatusField(paymails.content);
+
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
         search: () => ({}),
         replace: false,
-      });
+      }).catch(console.error);
     }
   }, [tab]);
-
-  useEffect(() => {
-    navigate({
-      search: (old) => ({
-        ...old,
-        alias: filter || undefined,
-      }),
-      replace: true,
-    });
-  }, [debouncedFilter]);
-
-  useEffect(() => {
-    setFilter(alias || '');
-    navigate({
-      search: (old) => ({
-        ...old,
-        alias,
-      }),
-      replace: true,
-    });
-  }, [alias]);
 
   return (
     <>
@@ -106,7 +84,7 @@ export function Paymails() {
             <TabsTrigger value="all">All</TabsTrigger>
           </TabsList>
           <div className="flex">
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by alias" />
+            <Searchbar filter={alias ?? ''} setFilter={setAlias} placeholder="Search by alias" />
             <DateRangeFilter withRevokedRange />
           </div>
         </div>

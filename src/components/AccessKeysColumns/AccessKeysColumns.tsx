@@ -52,6 +52,11 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
         </Link>
       );
     },
+    cell: ({ row }) => {
+      return <Link to={`/admin/xpub`} search={{ id: row.getValue('xpubId') as string }}>
+        {row.getValue('xpubId')}
+      </Link>;
+    },
   },
   {
     accessorKey: 'status',
