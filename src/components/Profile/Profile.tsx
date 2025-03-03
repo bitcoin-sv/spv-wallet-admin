@@ -14,7 +14,7 @@ import {
 
 import { useAuth, useSpvWalletClient } from '@/contexts';
 import { toast } from 'sonner';
-import { clearClients, isUser, useUserApi } from '@/store/clientStore';
+import { clearClients, useIsUser, useUserApi } from '@/store/clientStore';
 
 export const Profile = () => {
   const { loginKey } = useAuth();
@@ -50,7 +50,7 @@ export const Profile = () => {
   };
 
   const shortLoginKey = shortenId(loginKey);
-  const isUserClient = isUser();
+  const isUserClient = useIsUser();
   const userId = isUserClient ? useUserApi().userId : null;
   const shortUserId = userId ? shortenId(userId) : null;
 
@@ -60,7 +60,8 @@ export const Profile = () => {
         <Button variant="outline" size="icon" className="overflow-hidden rounded-full relative group">
           <UserRound />
           {shortLoginKey && (
-            <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+            <span
+              className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
               {shortLoginKey}
             </span>
           )}

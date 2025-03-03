@@ -10,7 +10,7 @@ import {
   ViewDialog,
 } from '@/components';
 import { PaymailExtended } from '@/interfaces/paymail.ts';
-import { isAdmin } from '@/store/clientStore';
+import { useIsAdmin } from '@/store/clientStore';
 
 export interface PaymailsTabContentProps {
   paymails: PaymailExtended[];
@@ -18,7 +18,7 @@ export interface PaymailsTabContentProps {
 }
 
 export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog }: PaymailsTabContentProps) => {
-  const isAdminUser = isAdmin();
+  const isAdminUser = useIsAdmin();
   return (
     <Card>
       <CardHeader>
