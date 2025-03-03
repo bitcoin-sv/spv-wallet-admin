@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { getUserApi } from '../store/clientStore';
 import { TransactionExtended } from '@/interfaces/transaction';
+import { TRANSACTION_STATUS } from '../constants/transactions';
 
 export interface TransactionsQueryOptions {
   blockHeight?: number;
@@ -32,7 +33,7 @@ export const transactionsUserQueryOptions = (opts: TransactionsQueryOptions) => 
         ...response,
         content: response.content.map((tx) => ({
           ...tx,
-          status: tx.status || 'CREATED',
+          status: tx.status || TRANSACTION_STATUS.CREATED,
         })) as TransactionExtended[],
       };
     },
