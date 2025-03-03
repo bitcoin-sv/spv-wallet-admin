@@ -13,6 +13,8 @@ import { DateCell } from '@/components';
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
+import { Shortener } from '@/components/Shortener.tsx';
+import { useIsUser } from '@/store/clientStore';
 
 export interface PaymailColumns extends PaymailAddress {
   status: string;
@@ -108,25 +110,12 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        row.getValue('xpubId') && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="align-middle">
-                <span
-                  onClick={onClickCopy('Xpub ID')}
-                  className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-                >
-                  {row.getValue('xpubId')}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{row.getValue('xpubId')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
-      );
+      const isUser = useIsUser();
+      return <Shortener
+        title="Xpub ID"
+        value={row.getValue('xpubId')}
+        link={!isUser ? { to: '/admin/xpub', key: 'id' } : undefined}
+      />;
     },
   },
   {
