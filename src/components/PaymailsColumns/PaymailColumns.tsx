@@ -48,13 +48,12 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => {
+      const paymail = row.original;
       return (
-        row.getValue('avatar') && (
-          <Avatar>
-            <AvatarImage className="object-cover" src={row.getValue('avatar')} />
-            <AvatarFallback>{row.getValue('alias')}</AvatarFallback>
-          </Avatar>
-        )
+        <Avatar>
+          {paymail.avatar && <AvatarImage className="object-cover" src={paymail.avatar} />}
+          <AvatarFallback>{paymail.alias?.[0]}</AvatarFallback>
+        </Avatar>
       );
     },
   },
