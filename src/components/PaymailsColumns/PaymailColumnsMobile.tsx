@@ -44,33 +44,25 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
     });
   };
 
-  const truncatePaymail = (alias: string, domain: string) => {
-    const fullPaymail = `${alias}@${domain}`;
-    if (fullPaymail.length <= 20) {
-      return fullPaymail;
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) {
+      return text;
     }
-
-    if (alias.length > 16) {
-      return `${alias.slice(0, 14)}...@${domain}`;
-    }
-    return `${alias}@${domain.slice(0, 18)}...`;
+    return `${text.slice(0, maxLength - 3)}...`;
   };
 
   return (
     <AccordionItem value={paymail.id} className="px-2">
       <AccordionTrigger className="hover:no-underline py-3">
         <div className="flex items-center w-full gap-4 min-w-0">
-          {paymail.avatar && (
-            <Avatar className="h-8 w-8 shrink-0">
-              <AvatarImage src={paymail.avatar} />
-              <AvatarFallback>{paymail.alias?.[0]}</AvatarFallback>
-            </Avatar>
-          )}
+          <Avatar className="h-8 w-8 shrink-0">
+            {paymail.avatar && <AvatarImage src={paymail.avatar} />}
+            <AvatarFallback>{paymail.alias?.[0]}</AvatarFallback>
+          </Avatar>
           <div className="flex-1 min-w-0 space-y-1 text-left">
-            <div className="flex items-center min-w-0">
-              <p className="text-sm font-medium leading-none truncate">
-                {truncatePaymail(paymail.alias, paymail.domain)}
-              </p>
+            <div className="flex flex-col min-w-0">
+              <p className="text-sm font-medium leading-none truncate">{truncateText(paymail.alias, 24)}</p>
+              <p className="text-xs text-muted-foreground truncate">@{truncateText(paymail.domain, 24)}</p>
             </div>
             <p className="text-sm text-muted-foreground">
               {paymail.status === 'deleted' ? (
@@ -101,12 +93,14 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
               </>
             )}
 
-            <span className="font-medium">Paymail:</span>
-            <span
-              className="cursor-pointer truncate"
-              onClick={onClickCopy(`${paymail.alias}@${paymail.domain}`, 'Paymail')}
-            >
-              {paymail.alias}@{paymail.domain}
+            <span className="font-medium">Alias:</span>
+            <span className="cursor-pointer break-all" onClick={onClickCopy(paymail.alias, 'Alias')}>
+              {paymail.alias}
+            </span>
+
+            <span className="font-medium">Domain:</span>
+            <span className="cursor-pointer break-all" onClick={onClickCopy(paymail.domain, 'Domain')}>
+              {paymail.domain}
             </span>
 
             {paymail.publicName && (

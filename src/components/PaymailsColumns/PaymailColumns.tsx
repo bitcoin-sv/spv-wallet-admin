@@ -79,12 +79,10 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
     cell: ({ row }) => {
       return (
-        row.getValue('avatar') && (
-          <Avatar>
-            <AvatarImage className="object-cover" src={row.getValue('avatar')} />
-            <AvatarFallback>{row.getValue('alias')}</AvatarFallback>
-          </Avatar>
-        )
+        <Avatar>
+          {row.getValue('avatar') && <AvatarImage className="object-cover" src={row.getValue('avatar')} />}
+          <AvatarFallback>{row.getValue('alias')}</AvatarFallback>
+        </Avatar>
       );
     },
   },
