@@ -39,9 +39,9 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
     revokedRange,
   }),
   loader: async ({
-                   context: { queryClient },
-                   deps: { sortBy, sort, xpubId, createdRange, revokedRange, updatedRange },
-                 }) => {
+    context: { queryClient },
+    deps: { sortBy, sort, xpubId, createdRange, revokedRange, updatedRange },
+  }) => {
     await queryClient.ensureQueryData(
       accessKeysAdminQueryOptions({
         xpubId,
@@ -93,8 +93,7 @@ export function AccessKeys() {
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
           {/* Desktop version */}
-          <TabsList
-            className="hidden sm:flex h-9 items-center justify-start rounded-lg p-1 text-muted-foreground bg-muted">
+          <TabsList className="hidden sm:flex h-9 items-center justify-start rounded-lg p-1 text-muted-foreground bg-muted">
             <TabsTrigger
               value="all"
               className="ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm h-8 px-4 py-2"
@@ -116,8 +115,7 @@ export function AccessKeys() {
           </TabsList>
 
           {/* Mobile version */}
-          <TabsList
-            className="sm:hidden w-full flex justify-between items-center rounded-lg p-1 text-muted-foreground bg-muted">
+          <TabsList className="sm:hidden w-full flex justify-between items-center rounded-lg p-1 text-muted-foreground bg-muted">
             <TabsTrigger
               value="all"
               className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-3 py-2 text-sm"

@@ -60,8 +60,7 @@ export const Profile = () => {
         <Button variant="outline" size="icon" className="overflow-hidden rounded-full relative group">
           <UserRound />
           {shortLoginKey && (
-            <span
-              className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-muted-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
               {shortLoginKey}
             </span>
           )}
