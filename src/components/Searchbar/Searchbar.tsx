@@ -13,7 +13,6 @@ export interface SearchbarProps {
 export const Searchbar = ({ filter, setFilter, placeholder }: SearchbarProps) => {
   const [input, setInput] = React.useState(filter ?? '');
   React.useEffect(() => {
-
     setInput(filter ?? '');
   }, [filter]);
 

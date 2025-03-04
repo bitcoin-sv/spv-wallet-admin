@@ -43,9 +43,9 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     pubKey,
   }),
   loader: async ({
-                   context: { queryClient },
-                   deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
-                 }) =>
+    context: { queryClient },
+    deps: { createdRange, updatedRange, sortBy, sort, id, paymail, pubKey },
+  }) =>
     await queryClient.ensureQueryData(
       contactsQueryOptions({
         updatedRange,
@@ -69,7 +69,6 @@ export function Contacts() {
   const [id, setID] = useSearchParam('/admin/_admin/contacts', 'id');
   const [paymail, setPaymail] = useSearchParam('/admin/_admin/contacts', 'paymail');
   const [pubKey, setPubKey] = useSearchParam('/admin/_admin/contacts', 'pubKey');
-
 
   const {
     data: { content: contacts },

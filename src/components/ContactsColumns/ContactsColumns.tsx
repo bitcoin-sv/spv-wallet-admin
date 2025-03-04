@@ -95,10 +95,7 @@ export const contactsColumns: ColumnDef<Contact>[] = [
       );
     },
     cell: ({ row }) => {
-      return <Shortener
-        title="XPubID"
-        value={row.getValue('pubKey')}
-      />;
+      return <Shortener title="XPubID" value={row.getValue('pubKey')} />;
     },
   },
   {

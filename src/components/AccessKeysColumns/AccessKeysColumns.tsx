@@ -58,9 +58,11 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
       if (isUser) {
         return row.getValue('xpubId');
       }
-      return <Link to={`/admin/xpub`} search={{ id: row.getValue('xpubId') as string }}>
-        <Button variant="link">{row.getValue('xpubId')}</Button>
-      </Link>;
+      return (
+        <Link to={`/admin/xpub`} search={{ id: row.getValue('xpubId') as string }}>
+          <Button variant="link">{row.getValue('xpubId')}</Button>
+        </Link>
+      );
     },
   },
   {

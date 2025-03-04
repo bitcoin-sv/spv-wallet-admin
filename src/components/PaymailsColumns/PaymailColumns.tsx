@@ -35,12 +35,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => (
-      <Shortener
-        title="ID"
-        value={row.getValue('id')}
-      />
-    ),
+    cell: ({ row }) => <Shortener title="ID" value={row.getValue('id')} />,
   },
 
   {
@@ -84,11 +79,13 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
     },
     cell: ({ row }) => {
       const isUser = useIsUser();
-      return <Shortener
-        title="Xpub ID"
-        value={row.getValue('xpubId')}
-        link={!isUser ? { to: '/admin/xpub', key: 'id' } : undefined}
-      />;
+      return (
+        <Shortener
+          title="Xpub ID"
+          value={row.getValue('xpubId')}
+          link={!isUser ? { to: '/admin/xpub', key: 'id' } : undefined}
+        />
+      );
     },
   },
   {

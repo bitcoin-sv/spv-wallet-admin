@@ -65,9 +65,7 @@ export function Transactions() {
               filter={blockHeight != null ? `${blockHeight}` : ''}
               setFilter={(value) => {
                 const newBlockHeight = parseInt(value);
-                setBlockHeight(
-                  !isNaN(newBlockHeight) ? newBlockHeight : undefined,
-                );
+                setBlockHeight(!isNaN(newBlockHeight) ? newBlockHeight : undefined);
               }}
               placeholder="Search by block height"
             />

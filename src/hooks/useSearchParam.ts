@@ -1,13 +1,5 @@
-import {
-  AnyRouter,
-  RegisteredRouter,
-  RouteById,
-  RouteIds,
-  useNavigate,
-  useSearch,
-} from '@tanstack/react-router';
+import { AnyRouter, RegisteredRouter, RouteById, RouteIds, useNavigate, useSearch } from '@tanstack/react-router';
 import type { ConstrainLiteral, Expand } from '@tanstack/router-core';
-
 
 export function useSearchParam<
   TRouter extends AnyRouter = RegisteredRouter,
@@ -32,9 +24,5 @@ export function useSearchParam<
     }).catch(console.error);
   };
 
-  return [
-    searchParams[key],
-    setter,
-  ];
+  return [searchParams[key], setter];
 }
-
