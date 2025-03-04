@@ -1,5 +1,4 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EllipsisVertical, ChevronDown, ChevronUp } from 'lucide-react';
@@ -14,8 +13,9 @@ import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { useState } from 'react';
 import { truncateId } from '@/utils/string';
 import { createToggleExpandAll } from '@/utils/expandUtils';
+import { renderTransactionStatusBadge } from '@/utils';
 import { TransactionExtended } from '@/interfaces/transaction';
-import { TRANSACTION_STATUS, TransactionStatusValue } from '@/constants';
+import { TransactionStatusValue } from '@/constants';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -39,20 +39,7 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
   };
 
   const renderStatusBadge = (status: TransactionStatusValue) => {
-    switch (status) {
-      case TRANSACTION_STATUS.MINED:
-        return <Badge variant="secondary">Mined</Badge>;
-      case TRANSACTION_STATUS.CREATED:
-        return <Badge variant="outline">Created</Badge>;
-      case TRANSACTION_STATUS.BROADCASTED:
-        return <Badge>Broadcasted</Badge>;
-      case TRANSACTION_STATUS.REVERTED:
-        return <Badge variant="destructive">Reverted</Badge>;
-      case TRANSACTION_STATUS.PROBLEMATIC:
-        return <Badge variant="destructive">Problematic</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+    return renderTransactionStatusBadge(status);
   };
 
   return (

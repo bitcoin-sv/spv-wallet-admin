@@ -7,6 +7,7 @@ import {
   TransactionsTabContent,
 } from '@/components';
 import { transactionSearchSchema } from '@/searchSchemas';
+import { formatStatusLabel } from '@/utils';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
@@ -18,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { TRANSACTION_STATUS } from '@/constants';
+import { TRANSACTION_STATUS, TransactionStatusType } from '@/constants';
 
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
@@ -76,13 +77,6 @@ function Transactions() {
     });
   };
 
-  const formatStatusLabel = (key: string) => {
-    if (key === 'ALL') {
-      return 'All';
-    }
-    return key.charAt(0) + key.slice(1).toLowerCase();
-  };
-
   const currentStatus = status || null;
   const currentStatusKey =
     Object.entries(TRANSACTION_STATUS).find(([, value]) => value === currentStatus)?.[0] || 'ALL';
@@ -97,14 +91,14 @@ function Transactions() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="flex items-center gap-2">
-                    {formatStatusLabel(currentStatusKey)}
+                    {formatStatusLabel(currentStatusKey as keyof TransactionStatusType)}
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {Object.entries(TRANSACTION_STATUS).map(([key, value]) => (
                     <DropdownMenuItem key={key} onClick={() => handleStatusChange(value)}>
-                      {formatStatusLabel(key)}
+                      {formatStatusLabel(key as keyof TransactionStatusType)}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>

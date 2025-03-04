@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Badge, DateCell } from '@/components';
+import { DateCell } from '@/components';
 import { Button } from '@/components/ui';
-import { getSortDirection } from '@/utils';
+import { getSortDirection, renderTransactionStatusBadge } from '@/utils';
 import SortIcon from '../ui/sort-icon';
 import { TransactionExtended } from '@/interfaces/transaction';
-import { TRANSACTION_STATUS, TransactionStatusValue } from '@/constants';
+import { TransactionStatusValue } from '@/constants';
 
 export const columns: ColumnDef<TransactionExtended>[] = [
   {
@@ -61,20 +61,7 @@ export const columns: ColumnDef<TransactionExtended>[] = [
     },
     cell: ({ row }) => {
       const status = row.getValue('status') as TransactionStatusValue;
-      switch (status) {
-        case TRANSACTION_STATUS.MINED:
-          return <Badge variant="secondary">Mined</Badge>;
-        case TRANSACTION_STATUS.CREATED:
-          return <Badge variant="outline">Created</Badge>;
-        case TRANSACTION_STATUS.BROADCASTED:
-          return <Badge>Broadcasted</Badge>;
-        case TRANSACTION_STATUS.REVERTED:
-          return <Badge variant="destructive">Reverted</Badge>;
-        case TRANSACTION_STATUS.PROBLEMATIC:
-          return <Badge variant="destructive">Problematic</Badge>;
-        default:
-          return <Badge variant="outline">{status}</Badge>;
-      }
+      return renderTransactionStatusBadge(status);
     },
   },
   {
