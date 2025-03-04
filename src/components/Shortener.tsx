@@ -1,4 +1,4 @@
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
 import { toast } from 'sonner';
 import { CopyIcon } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
@@ -11,27 +11,23 @@ export function Shortener({ title, value, link }: {
 }) {
   return <TooltipProvider>
     <Tooltip>
-      <TooltipTrigger className="align-middle inline-flex items-center">
-        <Button
-          size="sm"
-          variant="ghost" onClick={() => onClickCopy(title, value)}>
-          <CopyIcon size={16} />
-        </Button>
-
+      <TooltipTrigger className="align-middle inline-flex items-center gap-2 cursor-default">
+        <CopyIcon
+          size={12}
+          onClick={() => onClickCopy(title, value)}
+          className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
+        />
 
         {link ? (
-          <Link to={link.to} search={{ [link.key]: value }}>
-            <Button
-              className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-              variant="link"
-            >
-              {value}
-            </Button>
+          <Link
+            className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block hover:underline"
+            to={link.to}
+            search={{ [link.key]: value }}
+          >
+            {value}
           </Link>
         ) : (
-          <span
-            className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-          >
+          <span className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block">
             {value}
           </span>
         )}

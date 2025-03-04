@@ -1,11 +1,6 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
-
-import React from 'react';
-import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
 
@@ -19,17 +14,6 @@ import { useIsUser } from '@/store/clientStore';
 export interface PaymailColumns extends PaymailAddress {
   status: string;
 }
-
-const onClickCopy = (columnName: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
-  const text = e.currentTarget.textContent;
-
-  if (!text) {
-    return;
-  }
-
-  await navigator.clipboard.writeText(text);
-  toast.success(`${columnName} Copied to clipboard`);
-};
 
 export const paymailColumns: ColumnDef<PaymailColumns>[] = [
   {
@@ -52,21 +36,10 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className="align-middle">
-            <span
-              onClick={onClickCopy('ID')}
-              className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-            >
-              {row.getValue('id')}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{row.getValue('id')}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Shortener
+        title="ID"
+        value={row.getValue('id')}
+      />
     ),
   },
 
