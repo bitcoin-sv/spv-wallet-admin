@@ -43,7 +43,7 @@ function Transactions() {
   return (
     <>
       <div>
-        <div className="flex items-center justify-end mb-2">
+        <div className="flex items-center justify-end mb-2 mt-1">
           <div className="flex">
             <PrepareTxDialogUser />
             <Searchbar

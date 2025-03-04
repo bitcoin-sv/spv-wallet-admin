@@ -9,7 +9,7 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
-import { paymailsQueryOptions, addStatusField } from '@/utils';
+import { paymailsQueryOptions, addStatusField, getDeletedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
@@ -67,6 +67,8 @@ export function Paymails() {
 
   const mappedPaymails = addStatusField(paymails.content);
 
+  const deletedPaymails = getDeletedElements(mappedPaymails);
+
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
@@ -79,17 +81,35 @@ export function Paymails() {
   return (
     <>
       <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mt-1">
+          <TabsList className="w-full sm:w-auto grid grid-cols-2 gap-2">
+            <TabsTrigger
+              value="all"
+              className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-8"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger
+              value="deleted"
+              className="flex-1 data-[state=active]:bg-background data-[state=active]:text-foreground px-8"
+            >
+              Deleted
+            </TabsTrigger>
           </TabsList>
-          <div className="flex">
-            <Searchbar filter={alias ?? ''} setFilter={setAlias} placeholder="Search by alias" />
-            <DateRangeFilter withRevokedRange />
+          <div className="flex items-center justify-between px-4 sm:px-1 w-full sm:w-auto gap-4 sm:gap-2">
+            <div className="flex-1 sm:flex-initial">
+              <Searchbar filter={alias ?? ''} setFilter={setAlias} placeholder="Search by alias" />
+            </div>
+            <div className="flex-1 sm:flex-initial">
+              <DateRangeFilter withRevokedRange className="w-full" />
+            </div>
           </div>
         </div>
         <TabsContent value="all">
           <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
+        </TabsContent>
+        <TabsContent value="deleted">
+          <PaymailsTabContent paymails={deletedPaymails} />
         </TabsContent>
       </Tabs>
       <Toaster position="bottom-center" />
