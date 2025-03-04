@@ -102,21 +102,21 @@ export function Contacts() {
   }, [tab]);
 
   useEffect(() => {
-   if (!filter) {
-    setID(undefined);
-    setPaymail(undefined);
-    setPubKey(undefined);
-    return;
-  }
+    if (!filter) {
+      setID(undefined);
+      setPaymail(undefined);
+      setPubKey(undefined);
+      return;
+    }
 
-  if (filter.length === CONTACT_ID_LENGTH) {
-    setID(filter);
-  } else if (filter.includes('@')) {
-    setPaymail(filter);
-  } else {
-    setPubKey(filter);
-  }
-}, [filter]);
+    if (filter.length === CONTACT_ID_LENGTH) {
+      setID(filter);
+    } else if (filter.includes('@')) {
+      setPaymail(filter);
+    } else {
+      setPubKey(filter);
+    }
+  }, [filter]);
 
   return (
     <>
