@@ -16,9 +16,8 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useEffect, useState } from 'react';
 
-import { useDebounce } from 'use-debounce';
-
 import { z } from 'zod';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
@@ -58,14 +57,12 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
 
 export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
-  const [filter, setFilter] = useState<string>('');
 
-  const { xpubId, sortBy, sort, createdRange, updatedRange, revokedRange } = useSearch({
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { sortBy, sort, createdRange, updatedRange, revokedRange } = useSearch({
     from: '/admin/_admin/access-keys',
   });
-
-  const [debouncedFilter] = useDebounce(filter, 500);
-  const navigate = useNavigate({ from: Route.fullPath });
+  const [xpubId, setXPubId] = useSearchParam('/admin/_admin/access-keys', 'xpubId');
 
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysAdminQueryOptions({
@@ -83,34 +80,13 @@ export function AccessKeys() {
   const deletedKeys = getDeletedElements(mappedAccessKeys);
 
   useEffect(() => {
-    navigate({
-      search: (old) => ({
-        ...old,
-        xpubId: filter || undefined,
-      }),
-      replace: true,
-    });
-  }, [debouncedFilter]);
-
-  useEffect(() => {
     if (tab !== 'all') {
       navigate({
         search: () => ({}),
         replace: false,
-      });
+      }).catch(console.error);
     }
   }, [tab]);
-
-  useEffect(() => {
-    setFilter(xpubId || '');
-    navigate({
-      search: (old) => ({
-        ...old,
-        xpubId,
-      }),
-      replace: true,
-    });
-  }, [xpubId]);
 
   return (
     <>
@@ -161,7 +137,7 @@ export function AccessKeys() {
           </TabsList>
 
           <div className="flex items-center p-1">
-            <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
+            <Searchbar filter={xpubId ?? ''} setFilter={setXPubId} placeholder="Search by xpubID" />
             <DateRangeFilter withRevokedRange />
           </div>
         </div>

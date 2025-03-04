@@ -17,7 +17,7 @@ import { Row } from '@tanstack/react-table';
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTablePagination';
 import { AccessKeysColumns } from './AccessKeysColumns';
-import { isUser } from '@/store/clientStore';
+import { useIsUser } from '@/store/clientStore';
 import { truncateId } from '@/utils/string';
 import { createToggleExpandAll } from '@/utils/expandUtils';
 
@@ -34,6 +34,8 @@ interface AccessKeyMobileItemProps {
 }
 
 export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => {
+  const isUser = useIsUser();
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -107,7 +109,7 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
                 <DropdownMenuItem asChild>
                   <ViewDialogMobile data={accessKey} />
                 </DropdownMenuItem>
-                {accessKey.status !== 'revoked' && accessKey.status !== 'deleted' && isUser() && (
+                {accessKey.status !== 'revoked' && accessKey.status !== 'deleted' && isUser && (
                   <RevokeKeyDialog row={mobileRow} />
                 )}
               </DropdownMenuContent>

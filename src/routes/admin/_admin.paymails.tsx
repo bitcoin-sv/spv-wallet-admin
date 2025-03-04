@@ -16,8 +16,8 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useEffect, useState } from 'react';
 
-import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/paymails')({
   component: Paymails,
@@ -50,14 +50,12 @@ export const Route = createFileRoute('/admin/_admin/paymails')({
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
-  const [filter, setFilter] = useState<string>('');
 
-  const { sortBy, sort, xpubId, createdRange, updatedRange } = useSearch({
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { sortBy, sort, createdRange, updatedRange } = useSearch({
     from: '/admin/_admin/paymails',
   });
-
-  const [debouncedFilter] = useDebounce(filter, 200);
-  const navigate = useNavigate({ from: Route.fullPath });
+  const [xpubId, setXPubId] = useSearchParam('/admin/_admin/paymails', 'xpubId');
 
   const { data: paymails } = useSuspenseQuery(
     paymailsAdminQueryOptions({
@@ -77,30 +75,9 @@ export function Paymails() {
       navigate({
         search: () => ({}),
         replace: false,
-      });
+      }).catch(console.error);
     }
   }, [tab]);
-
-  useEffect(() => {
-    navigate({
-      search: (old) => ({
-        ...old,
-        xpubId: filter || undefined,
-      }),
-      replace: true,
-    });
-  }, [debouncedFilter]);
-
-  useEffect(() => {
-    setFilter(xpubId || '');
-    navigate({
-      search: (old) => ({
-        ...old,
-        xpubId,
-      }),
-      replace: true,
-    });
-  }, [xpubId]);
 
   return (
     <>
@@ -125,7 +102,7 @@ export function Paymails() {
               <AddPaymailDialog className="w-full" />
             </div>
             <div className="flex-1 sm:flex-initial">
-              <Searchbar filter={filter} setFilter={setFilter} placeholder="Search by xpubID" />
+              <Searchbar filter={xpubId ?? ''} setFilter={setXPubId} placeholder="Search by xpubID" />
             </div>
             <div className="flex-1 sm:flex-initial">
               <DateRangeFilter className="w-full" />

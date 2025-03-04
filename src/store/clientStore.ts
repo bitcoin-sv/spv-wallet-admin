@@ -49,13 +49,13 @@ export const useUserApi = () => {
 };
 
 // Helper function to check admin status
-export const isAdmin = () => {
+export const useIsAdmin = () => {
   const adminClient = useStore(clientStore, (state) => state.adminClient);
   return !!adminClient;
 };
 
 // Helper function to check user status
-export const isUser = () => {
+export const useIsUser = () => {
   const userClient = useStore(clientStore, (state) => state.userClient);
   return !!userClient;
 };

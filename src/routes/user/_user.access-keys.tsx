@@ -88,7 +88,7 @@ export function AccessKeys() {
       navigate({
         search: () => ({}),
         replace: false,
-      });
+      }).catch(console.error);
     }
   }, [tab]);
 

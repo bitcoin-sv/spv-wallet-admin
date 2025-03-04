@@ -1,11 +1,6 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 import { Link } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
-
-import React from 'react';
-import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
 
@@ -13,21 +8,12 @@ import { DateCell } from '@/components';
 import { Badge, Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
+import { Shortener } from '@/components/Shortener.tsx';
+import { useIsUser } from '@/store/clientStore';
 
 export interface PaymailColumns extends PaymailAddress {
   status: string;
 }
-
-const onClickCopy = (columnName: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
-  const text = e.currentTarget.textContent;
-
-  if (!text) {
-    return;
-  }
-
-  await navigator.clipboard.writeText(text);
-  toast.success(`${columnName} Copied to clipboard`);
-};
 
 export const paymailColumns: ColumnDef<PaymailColumns>[] = [
   {
@@ -49,23 +35,7 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
         </Link>
       );
     },
-    cell: ({ row }) => (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className="align-middle">
-            <span
-              onClick={onClickCopy('ID')}
-              className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-            >
-              {row.getValue('id')}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{row.getValue('id')}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    ),
+    cell: ({ row }) => <Shortener title="ID" value={row.getValue('id')} />,
   },
 
   {
@@ -78,13 +48,12 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => {
+      const paymail = row.original;
       return (
-        row.getValue('avatar') && (
-          <Avatar>
-            <AvatarImage className="object-cover" src={row.getValue('avatar')} />
-            <AvatarFallback>{row.getValue('alias')}</AvatarFallback>
-          </Avatar>
-        )
+        <Avatar>
+          {paymail.avatar && <AvatarImage className="object-cover" src={paymail.avatar} />}
+          <AvatarFallback>{paymail.alias?.[0]}</AvatarFallback>
+        </Avatar>
       );
     },
   },
@@ -108,24 +77,13 @@ export const paymailColumns: ColumnDef<PaymailColumns>[] = [
       );
     },
     cell: ({ row }) => {
+      const isUser = useIsUser();
       return (
-        row.getValue('xpubId') && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="align-middle">
-                <span
-                  onClick={onClickCopy('Xpub ID')}
-                  className="overflow-ellipsis overflow-hidden whitespace-nowrap max-w-[100px] block"
-                >
-                  {row.getValue('xpubId')}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{row.getValue('xpubId')}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
+        <Shortener
+          title="Xpub ID"
+          value={row.getValue('xpubId')}
+          link={!isUser ? { to: '/admin/xpub', key: 'id' } : undefined}
+        />
       );
     },
   },
