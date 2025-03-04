@@ -1,6 +1,4 @@
-import { Tx } from '@bsv/spv-wallet-js-client';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { EllipsisVertical, ChevronDown, ChevronUp } from 'lucide-react';
@@ -15,6 +13,9 @@ import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { useState } from 'react';
 import { truncateId } from '@/utils/string';
 import { createToggleExpandAll } from '@/utils/expandUtils';
+import { renderTransactionStatusBadge } from '@/utils';
+import { TransactionExtended } from '@/interfaces/transaction';
+import { TransactionStatusValue } from '@/constants';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -25,7 +26,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 };
 
 interface TransactionMobileItemProps {
-  transaction: Tx & { status?: boolean };
+  transaction: TransactionExtended;
 }
 
 export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProps) => {
@@ -37,6 +38,10 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
     });
   };
 
+  const renderStatusBadge = (status: TransactionStatusValue) => {
+    return renderTransactionStatusBadge(status);
+  };
+
   return (
     <AccordionItem value={transaction.id} className="px-2">
       <AccordionTrigger className="hover:no-underline py-3">
@@ -46,13 +51,7 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
               <span className="shrink-0">ID:</span>
               <span className="truncate">{truncateId(transaction.id)}</span>
             </p>
-            <p className="text-sm text-muted-foreground">
-              {transaction.status === true ? (
-                <Badge variant="secondary">Prepared</Badge>
-              ) : (
-                <Badge variant="outline">Recorded</Badge>
-              )}
-            </p>
+            <p className="text-sm text-muted-foreground">{renderStatusBadge(transaction.status)}</p>
           </div>
         </div>
       </AccordionTrigger>
@@ -68,13 +67,7 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
             <span>{transaction.blockHeight || 'N/A'}</span>
 
             <span className="font-medium">Status:</span>
-            <span>
-              {transaction.status === true ? (
-                <Badge variant="secondary">Prepared</Badge>
-              ) : (
-                <Badge variant="outline">Recorded</Badge>
-              )}
-            </span>
+            <span>{renderStatusBadge(transaction.status)}</span>
 
             <span className="font-medium">Created:</span>
             <span>{formatDate(new Date(transaction.createdAt))}</span>
@@ -102,7 +95,7 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
 };
 
 export interface TransactionsMobileListProps {
-  transactions: Tx[];
+  transactions: TransactionExtended[];
   value?: string[];
   onValueChange?: (value: string[]) => void;
 }
