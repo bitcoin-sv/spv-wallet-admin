@@ -41,9 +41,9 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     };
   },
   loader: async ({
-                   context: { queryClient },
-                   deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
-                 }) =>
+    context: { queryClient },
+    deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
+  }) =>
     await queryClient.ensureQueryData(
       accessKeysQueryOptions({
         sortBy,
