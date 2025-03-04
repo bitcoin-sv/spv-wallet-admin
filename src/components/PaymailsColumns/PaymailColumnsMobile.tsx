@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { PaymailDeleteDialogMobile } from '@/components/PaymailDeleteDialog/PaymailDeleteDialogMobile';
-import { isAdmin } from '@/store/clientStore';
+import { useIsAdmin } from '@/store/clientStore';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
@@ -35,7 +35,7 @@ export interface PaymailMobileItemProps {
 }
 
 export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
-  const isAdminUser = isAdmin();
+  const isAdmin = useIsAdmin();
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -124,7 +124,7 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <ViewDialogMobile data={paymail} />
-                {isAdminUser && paymail.deletedAt == null && <PaymailDeleteDialogMobile id={paymail.id} />}
+                {isAdmin && paymail.deletedAt == null && <PaymailDeleteDialogMobile id={paymail.id} />}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
