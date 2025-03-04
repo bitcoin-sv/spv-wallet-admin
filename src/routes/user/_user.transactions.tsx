@@ -1,12 +1,9 @@
 import { CustomErrorComponent, PrepareTxDialogUser, Searchbar, Toaster, TransactionsTabContent } from '@/components';
+import { useSearchParam } from '@/hooks/useSearchParam';
 import { transactionSearchSchema } from '@/searchSchemas';
 import { transactionsUserQueryOptions } from '@/utils/transactionsUserQueryOptions.tsx';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
-
-import { useState } from 'react';
-
-import { useDebounce } from 'use-debounce';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -32,13 +29,12 @@ export const Route = createFileRoute('/user/_user/transactions')({
 });
 
 function Transactions() {
-  const [blockHeight, setBlockHeight] = useState<string>('');
-  const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort } = useSearch({ from: '/user/_user/transactions' });
+  const [blockHeight, setBlockHeight] = useSearchParam('/user/_user/transactions', 'blockHeight');
 
   const { data: transactions } = useSuspenseQuery(
     transactionsUserQueryOptions({
-      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
+      blockHeight: blockHeight,
       sortBy,
       sort,
     }),
@@ -50,7 +46,14 @@ function Transactions() {
         <div className="flex items-center justify-end mb-2 mt-1">
           <div className="flex">
             <PrepareTxDialogUser />
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
+            <Searchbar
+              filter={blockHeight != null ? `${blockHeight}` : ''}
+              setFilter={(value) => {
+                const newBlockHeight = parseInt(value);
+                setBlockHeight(!isNaN(newBlockHeight) ? newBlockHeight : undefined);
+              }}
+              placeholder="Search by block height"
+            />
           </div>
         </div>
         <TransactionsTabContent

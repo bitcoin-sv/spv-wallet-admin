@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge, Button, DateCell } from '@/components';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
+import { Shortener } from '@/components/Shortener.tsx';
 
 export const enum ContactStatus {
   Confirmed = 'confirmed',
@@ -92,6 +93,9 @@ export const contactsColumns: ColumnDef<Contact>[] = [
           </Button>
         </Link>
       );
+    },
+    cell: ({ row }) => {
+      return <Shortener title="XPubID" value={row.getValue('pubKey')} />;
     },
   },
   {

@@ -7,6 +7,7 @@ import { Badge, DateCell } from '@/components';
 import { Button } from '@/components/ui';
 import { getSortDirection } from '@/utils';
 import SortIcon from '../ui/sort-icon';
+import { useIsUser } from '@/store/clientStore.ts';
 
 export interface AccessKeysColumns extends AccessKey {
   status: string;
@@ -49,6 +50,17 @@ export const accessKeysColumns: ColumnDef<AccessKeysColumns>[] = [
             Xpub ID
             <SortIcon column={column} />
           </Button>
+        </Link>
+      );
+    },
+    cell: ({ row }) => {
+      const isUser = useIsUser();
+      if (isUser) {
+        return row.getValue('xpubId');
+      }
+      return (
+        <Link to={`/admin/xpub`} search={{ id: row.getValue('xpubId') as string }}>
+          <Button variant="link">{row.getValue('xpubId')}</Button>
         </Link>
       );
     },

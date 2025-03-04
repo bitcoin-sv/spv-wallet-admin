@@ -2,17 +2,23 @@ import { Input } from '@/components';
 import { Search } from 'lucide-react';
 
 import React from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 export interface SearchbarProps {
   filter: string;
-  setFilter: React.Dispatch<React.SetStateAction<string>>;
+  setFilter: (newValue: string) => void;
   placeholder?: string;
 }
 
 export const Searchbar = ({ filter, setFilter, placeholder }: SearchbarProps) => {
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(event.target.value);
-  };
+  const [input, setInput] = React.useState(filter ?? '');
+  React.useEffect(() => {
+    setInput(filter ?? '');
+  }, [filter]);
+
+  const debounced = useDebouncedCallback((value: string) => {
+    setFilter(value);
+  }, 250);
 
   return (
     <div className="relative flex-1 md:grow-0 mr-3">
@@ -21,8 +27,11 @@ export const Searchbar = ({ filter, setFilter, placeholder }: SearchbarProps) =>
         type="search"
         placeholder={placeholder || 'Search'}
         className="w-full h-10 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-        value={filter}
-        onChange={handleFilterChange}
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          debounced(e.target.value);
+        }}
       />
     </div>
   );

@@ -14,7 +14,7 @@ import {
 
 import { useAuth, useSpvWalletClient } from '@/contexts';
 import { toast } from 'sonner';
-import { clearClients, isUser, useUserApi } from '@/store/clientStore';
+import { clearClients, useIsUser, useUserApi } from '@/store/clientStore';
 
 export const Profile = () => {
   const { loginKey } = useAuth();
@@ -50,7 +50,7 @@ export const Profile = () => {
   };
 
   const shortLoginKey = shortenId(loginKey);
-  const isUserClient = isUser();
+  const isUserClient = useIsUser();
   const userId = isUserClient ? useUserApi().userId : null;
   const shortUserId = userId ? shortenId(userId) : null;
 
