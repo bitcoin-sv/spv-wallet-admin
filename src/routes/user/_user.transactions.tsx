@@ -21,8 +21,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 import { TRANSACTION_STATUS, TransactionStatusType } from '@/constants';
 
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -53,14 +52,13 @@ export const Route = createFileRoute('/user/_user/transactions')({
 });
 
 function Transactions() {
-  const [blockHeight, setBlockHeight] = useState<string>('');
-  const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort, createdRange, updatedRange, status } = useSearch({ from: '/user/_user/transactions' });
+  const [blockHeight, setBlockHeight] = useSearchParam('/user/_user/transactions', 'blockHeight');
   const navigate = useNavigate();
 
   const { data: transactions } = useSuspenseQuery(
     transactionsUserQueryOptions({
-      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
+      blockHeight,
       sortBy,
       sort,
       createdRange,
@@ -83,34 +81,37 @@ function Transactions() {
 
   return (
     <>
-      <div>
+      <div className="max-w-screen overflow-x-scroll scrollbar-hide">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-sm font-medium ml-1">Status:</span>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    {formatStatusLabel(currentStatusKey as keyof TransactionStatusType)}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {Object.entries(TRANSACTION_STATUS).map(([key, value]) => (
-                    <DropdownMenuItem key={key} onClick={() => handleStatusChange(value)}>
-                      {formatStatusLabel(key as keyof TransactionStatusType)}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <div className="flex-1 sm:flex-initial w-full sm:w-auto">
-              <PrepareTxDialogUser className="w-full sm:w-auto" />
-            </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-medium ml-1">Status:</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  {formatStatusLabel(currentStatusKey as keyof TransactionStatusType)}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {Object.entries(TRANSACTION_STATUS).map(([key, value]) => (
+                  <DropdownMenuItem key={key} onClick={() => handleStatusChange(value)}>
+                    {formatStatusLabel(key as keyof TransactionStatusType)}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <PrepareTxDialogUser className="ml-0 sm:ml-2 mt-2 sm:mt-0 w-full sm:w-auto" />
           </div>
-          <div className="flex gap-2 -mr-2">
+          <div className="flex gap-2 mt-2 sm:mt-0">
             <DateRangeFilter />
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
+            <Searchbar
+              filter={blockHeight != null ? `${blockHeight}` : ''}
+              setFilter={(value) => {
+                const newBlockHeight = parseInt(value);
+                setBlockHeight(!isNaN(newBlockHeight) ? newBlockHeight : undefined);
+              }}
+              placeholder="Search by block height"
+            />
           </div>
         </div>
         <div className="mt-4">
@@ -121,8 +122,8 @@ function Transactions() {
             TxDialog={PrepareTxDialogUser}
           />
         </div>
-        <Toaster position="bottom-center" />
       </div>
+      <Toaster position="bottom-center" />
     </>
   );
 }

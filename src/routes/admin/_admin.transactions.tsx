@@ -14,8 +14,7 @@ import {
 import { ChevronDown } from 'lucide-react';
 import { TRANSACTION_STATUS, TransactionStatusType } from '@/constants';
 
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import { useSearchParam } from '@/hooks/useSearchParam.ts';
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
@@ -46,14 +45,13 @@ export const Route = createFileRoute('/admin/_admin/transactions')({
 });
 
 export function Transactions() {
-  const [blockHeight, setBlockHeight] = useState<string>('');
-  const [debouncedBlockHeight] = useDebounce(blockHeight, 200);
   const { sortBy, sort, createdRange, updatedRange, status } = useSearch({ from: '/admin/_admin/transactions' });
+  const [blockHeight, setBlockHeight] = useSearchParam('/admin/_admin/transactions', 'blockHeight');
   const navigate = useNavigate();
 
   const { data: transactions } = useSuspenseQuery(
     transactionsQueryOptions({
-      blockHeight: debouncedBlockHeight ? Number(debouncedBlockHeight) : undefined,
+      blockHeight,
       sortBy,
       sort,
       createdRange,
@@ -96,9 +94,16 @@ export function Transactions() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="flex gap-2 -mr-2 mt-1">
+          <div className="flex gap-2 mt-2 sm:mt-0">
             <DateRangeFilter />
-            <Searchbar filter={blockHeight} setFilter={setBlockHeight} placeholder="Search by block height" />
+            <Searchbar
+              filter={blockHeight != null ? `${blockHeight}` : ''}
+              setFilter={(value) => {
+                const newBlockHeight = parseInt(value);
+                setBlockHeight(!isNaN(newBlockHeight) ? newBlockHeight : undefined);
+              }}
+              placeholder="Search by block height"
+            />
           </div>
         </div>
         <div className="mt-4">
