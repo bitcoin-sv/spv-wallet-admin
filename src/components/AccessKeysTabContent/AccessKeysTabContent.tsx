@@ -11,13 +11,15 @@ import {
 } from '@/components';
 import { AccessKeysMobileList } from '@/components/AccessKeysColumns/AccessKeysColumnsMobile';
 import { AccessKeyExtended } from '@/interfaces';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 export interface AccessKeysTabContentProps {
   accessKeys: AccessKeyExtended[];
   hasRevokeKeyDialog?: boolean;
+  pagination?: PaginationProps;
 }
 
-export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessKeysTabContentProps) => {
+export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog, pagination }: AccessKeysTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -36,10 +38,12 @@ export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog }: AccessK
                     {hasRevokeKeyDialog && <RevokeKeyDialog row={row} />}
                   </>
                 )}
+                pagination={pagination}
+                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
-              <AccessKeysMobileList accessKeys={accessKeys} />
+              <AccessKeysMobileList accessKeys={accessKeys} pagination={pagination} />
             </div>
           </>
         ) : (

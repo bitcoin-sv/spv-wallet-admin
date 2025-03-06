@@ -1,8 +1,8 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { EllipsisVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +12,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { RevokeKeyDialog } from '@/components';
-import { useState } from 'react';
 import { Row } from '@tanstack/react-table';
-import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTablePagination';
+import { MobileDataTable } from '@/components/DataTable/MobileDataTable';
 import { AccessKeysColumns } from './AccessKeysColumns';
 import { useIsUser } from '@/store/clientStore';
 import { truncateId } from '@/utils/string';
-import { createToggleExpandAll } from '@/utils/expandUtils';
+import { PaginationProps } from '../DataTable/DataTable';
+import { AccessKey } from '@bsv/spv-wallet-js-client';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -31,6 +30,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 
 interface AccessKeyMobileItemProps {
   accessKey: AccessKeysColumns;
+  expandedState: { expandedItems: string[]; setExpandedItems: (value: string[]) => void };
 }
 
 export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => {
@@ -55,10 +55,10 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
     }
   };
 
-  const mobileRow: Row<AccessKeysColumns> = {
+  const mobileRow = {
     original: accessKey,
     getValue: (key: string) => (key === 'status' ? accessKey.status : undefined),
-  } as Row<AccessKeysColumns>;
+  } as unknown as Row<AccessKey>;
 
   return (
     <AccordionItem value={accessKey.id} className="px-2">
@@ -69,7 +69,7 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
               <span className="shrink-0">ID:</span>
               <span className="truncate">{truncateId(accessKey.id)}</span>
             </p>
-            <p className="text-sm text-muted-foreground">{getStatusBadge()}</p>
+            <div className="text-sm text-muted-foreground">{getStatusBadge()}</div>
           </div>
         </div>
       </AccordionTrigger>
@@ -123,66 +123,29 @@ export const AccessKeyMobileItem = ({ accessKey }: AccessKeyMobileItemProps) => 
 
 export interface AccessKeysMobileListProps {
   accessKeys: AccessKeysColumns[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
+  pagination?: PaginationProps;
 }
 
-export const AccessKeysMobileList = ({ accessKeys, value, onValueChange }: AccessKeysMobileListProps) => {
-  const [expandedItems, setExpandedItems] = useState<string[]>(value || []);
-  const [isAllExpanded, setIsAllExpanded] = useState(false);
-
-  const table = useReactTable({
-    data: accessKeys,
-    columns: [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-  });
-
-  const currentPageData = table.getRowModel().rows.map((row) => row.original);
-
-  const toggleExpandAll = () => {
-    createToggleExpandAll(
-      currentPageData,
-      isAllExpanded,
-      (ids) => {
-        setExpandedItems(ids);
-        onValueChange?.(ids);
-      },
-      setIsAllExpanded,
-      (accessKey) => accessKey.id,
-    );
-  };
-
-  const handleValueChange = (newValue: string[]) => {
-    setExpandedItems(newValue);
-    onValueChange?.(newValue);
-    setIsAllExpanded(newValue.length === currentPageData.length);
-  };
-
+export const AccessKeysMobileList = ({ accessKeys, pagination }: AccessKeysMobileListProps) => {
+  // Use the MobileDataTable component to handle pagination
   return (
-    <div className="rounded-md border">
-      <div className="p-2 border-b">
-        <Button variant="ghost" onClick={toggleExpandAll} className="w-full flex items-center justify-center gap-2">
-          {isAllExpanded ? (
-            <>
-              <ChevronUp className="h-4 w-4" /> Collapse All
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-4 w-4" /> Expand All
-            </>
-          )}
-        </Button>
-      </div>
-      <div className="p-1">
-        <Accordion type="multiple" value={expandedItems} onValueChange={handleValueChange} className="w-full">
-          {currentPageData.map((accessKey) => (
-            <AccessKeyMobileItem key={accessKey.id} accessKey={accessKey} />
-          ))}
-        </Accordion>
-      </div>
-      <MobileDataTablePagination table={table} />
-    </div>
+    <MobileDataTable
+      columns={[
+        {
+          accessorKey: 'id',
+          header: 'ID',
+        },
+      ]}
+      data={accessKeys}
+      renderMobileItem={(accessKey, expandedState) => (
+        <AccessKeyMobileItem
+          key={accessKey.id}
+          accessKey={accessKey as AccessKeysColumns}
+          expandedState={expandedState}
+        />
+      )}
+      pagination={pagination}
+      manualPagination={!!pagination}
+    />
   );
 };

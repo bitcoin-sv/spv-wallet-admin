@@ -9,13 +9,11 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
-
 import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
+import { AccessKey } from '@bsv/spv-wallet-js-client';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 
 export const Route = createFileRoute('/user/_user/access-keys')({
@@ -29,17 +27,15 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     page: z.number().optional().catch(1),
     size: z.number().optional().catch(10),
   }),
-  loaderDeps: ({ search: { sortBy, sort, createdRange, revokedRange, updatedRange, page, size } }) => {
-    return {
-      sortBy,
-      sort,
-      createdRange,
-      updatedRange,
-      revokedRange,
-      page,
-      size,
-    };
-  },
+  loaderDeps: ({ search: { sortBy, sort, createdRange, revokedRange, updatedRange, page, size } }) => ({
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    revokedRange,
+    page,
+    size,
+  }),
   loader: async ({
     context: { queryClient },
     deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
@@ -61,10 +57,17 @@ export const Route = createFileRoute('/user/_user/access-keys')({
 export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
 
-  const { sortBy, sort, createdRange, updatedRange, revokedRange, page, size } = useSearch({
+  const {
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    revokedRange,
+    page = 1,
+    size = 10,
+  } = useSearch({
     from: '/user/_user/access-keys',
   });
-
   const navigate = useNavigate({ from: Route.fullPath });
 
   const { data: accessKeys } = useSuspenseQuery(
@@ -79,10 +82,28 @@ export function AccessKeys() {
     }),
   );
 
-  const mappedAccessKeys = addStatusField(accessKeys.content);
-  const revokedKeys = getRevokedElements(mappedAccessKeys);
-  const deletedKeys = getDeletedElements(mappedAccessKeys);
+  const { content, page: apiPage } = accessKeys as {
+    content: AccessKey[];
+    page: {
+      size: number;
+      number: number;
+      totalElements: number;
+      totalPages: number;
+    };
+  };
 
+  // Memoize the transformed access keys
+  const mappedAccessKeys = useMemo(() => addStatusField(content), [content]);
+  const revokedKeys = useMemo(() => getRevokedElements(mappedAccessKeys), [mappedAccessKeys]);
+  const deletedKeys = useMemo(() => getDeletedElements(mappedAccessKeys), [mappedAccessKeys]);
+
+  // Calculate pagination values
+  const totalElements = apiPage?.totalElements || mappedAccessKeys.length;
+  const totalPages = apiPage?.totalPages || Math.ceil(totalElements / size);
+  const currentPage = (apiPage?.number || page) - 1; // Convert from 1-indexed (API) to 0-indexed (UI)
+  const pageSize = apiPage?.size || size;
+
+  // Clear URL search parameters when the active tab is not "all"
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
@@ -90,7 +111,37 @@ export function AccessKeys() {
         replace: false,
       }).catch(console.error);
     }
-  }, [tab]);
+  }, [tab, navigate]);
+
+  // Memoized pagination handlers
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      // Convert from 0-indexed UI to 1-indexed API
+      navigate({
+        search: (old) => ({
+          ...old,
+          page: newPage + 1,
+          size: old.size || 10,
+        }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const handlePageSizeChange = useCallback(
+    (newSize: number) => {
+      navigate({
+        search: (old) => ({
+          ...old,
+          size: newSize,
+          page: 1, // Reset to first page when page size changes
+        }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
 
   return (
     <>
@@ -126,7 +177,18 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
+          <AccessKeysTabContent
+            accessKeys={mappedAccessKeys}
+            hasRevokeKeyDialog
+            pagination={{
+              totalElements,
+              totalPages,
+              currentPage,
+              pageSize,
+              onPageChange: handlePageChange,
+              onPageSizeChange: handlePageSizeChange,
+            }}
+          />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

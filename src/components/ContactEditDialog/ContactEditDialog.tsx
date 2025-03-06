@@ -10,6 +10,7 @@ import {
   Label,
   LoadingSpinner,
   Textarea,
+  DialogDescription,
 } from '@/components';
 import { errorWrapper } from '@/utils';
 import { Contact, Metadata } from '@bsv/spv-wallet-js-client';
@@ -76,6 +77,7 @@ export const ContactEditDialog = ({ row }: ContactEditDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Contact Information</DialogTitle>
+          <DialogDescription>Update the details for this contact</DialogDescription>
         </DialogHeader>
         <Label htmlFor="fullName">Full Name</Label>
         <Input placeholder="Full Name" id="fullName" value={fullName} onChange={handleFullNameChange} />

@@ -16,36 +16,18 @@ import {
 import { ContactsMobileList } from '@/components/ContactsColumns/ContactsColumnsMobile';
 import { ContactExtended } from '@/interfaces/contacts.ts';
 import { useState } from 'react';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 export interface ContactsTabContentProps {
   contacts: ContactExtended[];
+  pagination?: PaginationProps;
 }
 
-export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
-  const [currentTab] = useState('all');
+export const ContactsTabContent = ({ contacts, pagination }: ContactsTabContentProps) => {
   const [searchQuery] = useState('');
 
   const filteredContacts = contacts.filter((contact) => {
-    // First apply status filter
-    if (currentTab !== 'all') {
-      if (currentTab === 'unconfirmed' && contact.status !== ContactStatus.Unconfirmed) {
-        return false;
-      }
-      if (currentTab === 'awaiting' && contact.status !== ContactStatus.Awaiting) {
-        return false;
-      }
-      if (currentTab === 'confirmed' && contact.status !== ContactStatus.Confirmed) {
-        return false;
-      }
-      if (currentTab === 'rejected' && contact.status !== ContactStatus.Rejected) {
-        return false;
-      }
-      if (currentTab === 'deleted' && !contact.deletedAt) {
-        return false;
-      }
-    }
-
-    // Then apply search filter
+    // Apply search filter
     if (searchQuery) {
       const searchLower = searchQuery.toLowerCase();
       return (
@@ -88,10 +70,12 @@ export const ContactsTabContent = ({ contacts }: ContactsTabContentProps) => {
                     {row.original.deletedAt == null && <ContactDeleteDialog row={row} />}
                   </>
                 )}
+                pagination={pagination}
+                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
-              <ContactsMobileList contacts={filteredContacts} />
+              <ContactsMobileList contacts={filteredContacts} pagination={pagination} manualPagination={!!pagination} />
             </div>
           </>
         ) : (

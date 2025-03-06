@@ -1,8 +1,10 @@
 import { XPub } from '@bsv/spv-wallet-js-client';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { truncateId } from '@/utils/string';
+import { MobileDataTable } from '@/components/DataTable/MobileDataTable';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 export interface XPubColumnsMobile extends XPub {
   status: string;
@@ -19,6 +21,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 
 export interface XPubMobileItemProps {
   xpub: XPubColumnsMobile;
+  expandedState?: { expandedItems: string[]; setExpandedItems: (value: string[]) => void };
 }
 
 export const XPubMobileItem = ({ xpub }: XPubMobileItemProps) => {
@@ -76,14 +79,26 @@ export const XPubMobileItem = ({ xpub }: XPubMobileItemProps) => {
 
 export interface XPubMobileListProps {
   xpubs: XPubColumnsMobile[];
+  pagination?: PaginationProps;
+  manualPagination?: boolean;
 }
 
-export const XPubMobileList = ({ xpubs }: XPubMobileListProps) => {
+export const XPubMobileList = ({ xpubs, pagination, manualPagination = false }: XPubMobileListProps) => {
+  // Use MobileDataTable for pagination support
   return (
-    <Accordion type="single" collapsible className="w-full">
-      {xpubs.map((xpub) => (
-        <XPubMobileItem key={xpub.id} xpub={xpub} />
-      ))}
-    </Accordion>
+    <MobileDataTable
+      data={xpubs}
+      columns={[
+        {
+          accessorKey: 'id',
+          header: 'ID',
+        },
+      ]}
+      renderMobileItem={(item: XPubColumnsMobile, expandedState) => (
+        <XPubMobileItem xpub={item} expandedState={expandedState} />
+      )}
+      pagination={pagination}
+      manualPagination={manualPagination}
+    />
   );
 };

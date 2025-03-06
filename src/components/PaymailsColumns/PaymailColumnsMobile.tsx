@@ -1,5 +1,5 @@
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
@@ -7,15 +7,15 @@ import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
 import { PaymailDeleteDialogMobile } from '@/components/PaymailDeleteDialog/PaymailDeleteDialogMobile';
 import { useIsAdmin } from '@/store/clientStore';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, EllipsisVertical } from 'lucide-react';
-import { useState } from 'react';
-import { createToggleExpandAll } from '@/utils/expandUtils';
+import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { MobileDataTable } from '@/components/DataTable/MobileDataTable';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 export interface PaymailColumnsMobile extends Omit<PaymailAddress, 'id'> {
   id: string;
@@ -32,6 +32,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 
 export interface PaymailMobileItemProps {
   paymail: PaymailColumnsMobile;
+  expandedState?: { expandedItems: string[]; setExpandedItems: (value: string[]) => void };
 }
 
 export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
@@ -136,38 +137,25 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
 
 export interface PaymailsMobileListProps {
   paymails: PaymailColumnsMobile[];
+  pagination?: PaginationProps;
+  manualPagination?: boolean;
 }
 
-export const PaymailsMobileList = ({ paymails }: PaymailsMobileListProps) => {
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const [isAllExpanded, setIsAllExpanded] = useState(false);
-
-  const toggleExpandAll = () => {
-    createToggleExpandAll(paymails, isAllExpanded, setExpandedItems, setIsAllExpanded, (paymail) => paymail.id);
-  };
-
+export const PaymailsMobileList = ({ paymails, pagination, manualPagination = false }: PaymailsMobileListProps) => {
   return (
-    <div className="rounded-md border">
-      <div className="p-2 border-b">
-        <Button variant="ghost" onClick={toggleExpandAll} className="w-full flex items-center justify-center gap-2">
-          {isAllExpanded ? (
-            <>
-              <ChevronUp className="h-4 w-4" /> Collapse All
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-4 w-4" /> Expand All
-            </>
-          )}
-        </Button>
-      </div>
-      <div className="p-1">
-        <Accordion type="multiple" value={expandedItems} onValueChange={setExpandedItems} className="w-full">
-          {paymails.map((paymail) => (
-            <PaymailMobileItem key={paymail.id} paymail={paymail} />
-          ))}
-        </Accordion>
-      </div>
-    </div>
+    <MobileDataTable
+      data={paymails}
+      columns={[
+        {
+          accessorKey: 'id',
+          header: 'ID',
+        },
+      ]}
+      renderMobileItem={(item: PaymailColumnsMobile, expandedState) => (
+        <PaymailMobileItem paymail={item} expandedState={expandedState} />
+      )}
+      pagination={pagination}
+      manualPagination={manualPagination}
+    />
   );
 };
