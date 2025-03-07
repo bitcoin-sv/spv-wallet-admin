@@ -118,7 +118,7 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
             </div>
             <div className="grid grid-cols-4 items-center">
               <Label htmlFor="alias" className="text-right pr-4">
-                Address
+                Alias
               </Label>
               <Input id="alias" placeholder="john" className="col-span-3" {...register('alias')} />
               <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.alias?.message}</span>
