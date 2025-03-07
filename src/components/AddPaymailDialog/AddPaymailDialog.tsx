@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@/components';
+import { LoadingSpinner, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components';
 
 import { Button } from '@/components/ui';
 import {
@@ -22,10 +22,13 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { KEY_LENGTH } from '@/constants';
 import { toast } from 'sonner';
+import { useSupportedDomains } from '@/hooks/useSharedConfig.ts';
 
 interface AddPaymailDialogProps {
   className?: string;
 }
+
+const aliasRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
 
 const addPaymailFormSchema = z.object({
   xPub: z
@@ -33,10 +36,8 @@ const addPaymailFormSchema = z.object({
     .min(1, 'xPub is required')
     .refine((val) => val.startsWith('xpub'), 'xPub should start with xpub')
     .refine((val) => val.length === KEY_LENGTH, 'Invalid xPriv length.'),
-  paymail: z
-    .string({ required_error: 'Paymail is required' })
-    .min(1, 'Paymail is required')
-    .email('Invalid paymail format'),
+  alias: z.string({ required_error: 'Alias is required' }).regex(aliasRegex, 'Invalid paymail alias'),
+  domain: z.string({ required_error: 'Domain is required' }).min(1, 'Domain is required'),
   publicName: z.string().default(''),
   avatar: z.string().default(''),
 });
@@ -44,12 +45,15 @@ const addPaymailFormSchema = z.object({
 export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
   const queryClient = useQueryClient();
   const adminApi = useAdminApi();
+  const supportedDomains = useSupportedDomains();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
+    setValue,
+    getValues,
   } = useForm<z.infer<typeof addPaymailFormSchema>>({
     resolver: zodResolver(addPaymailFormSchema),
   });
@@ -74,12 +78,12 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
     },
   });
 
-  const onSubmit = async ({ avatar, paymail, xPub, publicName }: z.infer<typeof addPaymailFormSchema>) => {
+  const onSubmit = async ({ avatar, alias, domain, xPub, publicName }: z.infer<typeof addPaymailFormSchema>) => {
     try {
       HD.fromString(xPub);
       await mutation.mutateAsync({
         xPub,
-        address: paymail,
+        address: `${alias}@${domain}`,
         publicName,
         avatar,
       });
@@ -89,8 +93,6 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
       toast.error('Unable to add Paymail');
     }
   };
-
-  const { isPending } = mutation;
 
   return (
     <Dialog>
@@ -115,11 +117,29 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
               <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.xPub?.message}</span>
             </div>
             <div className="grid grid-cols-4 items-center">
-              <Label htmlFor="address" className="text-right pr-4">
+              <Label htmlFor="alias" className="text-right pr-4">
                 Address
               </Label>
-              <Input id="paymail" placeholder="john@example.com" className="col-span-3" {...register('paymail')} />
-              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.paymail?.message}</span>
+              <Input id="alias" placeholder="john" className="col-span-3" {...register('alias')} />
+              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.alias?.message}</span>
+            </div>
+            <div className="grid grid-cols-4 items-center">
+              <Label htmlFor="domain" className="text-right pr-4">
+                Domain
+              </Label>
+              <Select onValueChange={(value) => setValue('domain', value)} value={getValues('domain')}>
+                <SelectTrigger id="domain" className="col-span-3">
+                  <SelectValue placeholder="Select domain" />
+                </SelectTrigger>
+                <SelectContent>
+                  {supportedDomains.map((domain) => (
+                    <SelectItem key={domain} value={`${domain}`}>
+                      {domain}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-red-600 text-xs col-span-3 col-start-2 pt-1">{errors.domain?.message}</span>
             </div>
             <div className="grid grid-cols-4 items-center ">
               <Label htmlFor="publicName" className="text-right pr-4">
@@ -136,8 +156,8 @@ export const AddPaymailDialog = ({ className }: AddPaymailDialogProps) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
-              Add Paymail {isPending && <LoadingSpinner className="ml-2" />}
+            <Button type="submit" disabled={mutation.isPending}>
+              Add Paymail {mutation.isPending && <LoadingSpinner className="ml-2" />}
             </Button>
           </DialogFooter>
         </form>
