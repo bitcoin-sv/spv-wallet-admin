@@ -12,26 +12,18 @@ import {
 import { contactsQueryOptions, ContactStatus as ApiContactStatus } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { CONTACT_ID_LENGTH } from '@/constants';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
 import { ContactExtended } from '@/interfaces/contacts';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
 
-// Define interface for API response
 interface ContactsApiResponse {
   content: ContactExtended[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: ApiPaginationResponse;
 }
-
-// Utility functions for pagination conversion
-const convertToApiPage = (uiPage: number): number => uiPage + 1;
-const convertToUiPage = (apiPage: number): number => apiPage - 1;
 
 export const Route = createFileRoute('/admin/_admin/contacts')({
   component: Contacts,
@@ -44,8 +36,8 @@ export const Route = createFileRoute('/admin/_admin/contacts')({
     paymail: z.string().optional(),
     pubKey: z.string().optional(),
     status: z.enum(['unconfirmed', 'awaiting', 'confirmed', 'rejected']).optional(),
-    page: z.coerce.number().optional().catch(1),
-    size: z.coerce.number().optional().catch(10),
+    page: z.coerce.number().optional().catch(DEFAULT_API_PAGE),
+    size: z.coerce.number().optional().catch(DEFAULT_PAGE_SIZE),
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, id, paymail, pubKey, status, page, size } }) => ({
@@ -86,12 +78,12 @@ export function Contacts() {
   const [filter, setFilter] = useState<string>('');
 
   const {
-    createdRange,
-    updatedRange,
     sortBy,
     sort,
-    page = 1,
-    size = 10,
+    createdRange,
+    updatedRange,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/admin/_admin/contacts',
   });
@@ -101,6 +93,9 @@ export function Contacts() {
   const [statusParam, setStatusParam] = useSearchParam('/admin/_admin/contacts', 'status');
 
   const navigate = useNavigate({ from: Route.fullPath });
+
+  // Use our custom pagination hook
+  const pagination = useRoutePagination('/admin/_admin/contacts');
 
   // Update status parameter when tab changes
   useEffect(() => {
@@ -183,35 +178,6 @@ export function Contacts() {
       setPubKey('');
     }
   }, [filter, setID, setPaymail, setPubKey]);
-
-  // Memoize pagination handlers
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      navigate({
-        search: (old) => ({
-          ...old,
-          page: convertToApiPage(newPage), // Convert from 0-indexed (UI) to 1-indexed (API)
-          size: old.size || 10,
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        search: (old) => ({
-          ...old,
-          size: newSize,
-          page: 1, // Reset to first page when page size changes
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
 
   // Helper component to abstract TabsTrigger styling
   const TabButton = ({ value, children }: { value: string; children: React.ReactNode }) => (
@@ -299,12 +265,12 @@ export function Contacts() {
           <ContactsTabContent
             contacts={contacts}
             pagination={{
-              currentPage: convertToUiPage(currentPage), // Convert from 1-indexed (API) to 0-indexed (UI)
+              currentPage: convertFromApiPage(currentPage), // Convert from 1-indexed (API) to 0-indexed (UI)
               pageSize,
               totalPages,
               totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </TabsContent>

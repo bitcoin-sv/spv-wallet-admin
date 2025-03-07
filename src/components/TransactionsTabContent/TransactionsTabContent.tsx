@@ -59,15 +59,10 @@ export const TransactionsTabContent = ({
                   </>
                 )}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
-              <TransactionsMobileList
-                transactions={transactions}
-                pagination={pagination}
-                manualPagination={!!pagination}
-              />
+              <TransactionsMobileList transactions={transactions} pagination={pagination} />
             </div>
           </>
         ) : (

@@ -13,8 +13,15 @@ import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedE
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { AccessKey } from '@bsv/spv-wallet-js-client';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { z } from 'zod';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
+
+interface AccessKeysApiResponse {
+  content: AccessKey[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
@@ -24,8 +31,8 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     sort: z.string().optional().catch('desc'),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    page: z.number().optional().catch(1),
-    size: z.number().optional().catch(10),
+    page: z.number().optional().catch(DEFAULT_API_PAGE),
+    size: z.number().optional().catch(DEFAULT_PAGE_SIZE),
   }),
   loaderDeps: ({ search: { sortBy, sort, createdRange, revokedRange, updatedRange, page, size } }) => ({
     sortBy,
@@ -36,9 +43,10 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     page,
     size,
   }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient },
-    deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
+    deps: { sortBy, sort, createdRange, updatedRange, revokedRange, page, size },
   }) =>
     await queryClient.ensureQueryData(
       accessKeysQueryOptions({
@@ -51,7 +59,6 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         size,
       }),
     ),
-  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
 });
 
 export function AccessKeys() {
@@ -63,12 +70,14 @@ export function AccessKeys() {
     createdRange,
     updatedRange,
     revokedRange,
-    page = 1,
-    size = 10,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/user/_user/access-keys',
   });
   const navigate = useNavigate({ from: Route.fullPath });
+
+  const pagination = useRoutePagination('/user/_user/access-keys');
 
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysQueryOptions({
@@ -82,15 +91,7 @@ export function AccessKeys() {
     }),
   );
 
-  const { content, page: apiPage } = accessKeys as {
-    content: AccessKey[];
-    page: {
-      size: number;
-      number: number;
-      totalElements: number;
-      totalPages: number;
-    };
-  };
+  const { content, page: apiPage } = accessKeys as AccessKeysApiResponse;
 
   // Memoize the transformed access keys
   const mappedAccessKeys = useMemo(() => addStatusField(content), [content]);
@@ -98,54 +99,23 @@ export function AccessKeys() {
   const deletedKeys = useMemo(() => getDeletedElements(mappedAccessKeys), [mappedAccessKeys]);
 
   // Calculate pagination values
-  const totalElements = apiPage?.totalElements || mappedAccessKeys.length;
-  const totalPages = apiPage?.totalPages || Math.ceil(totalElements / size);
-  const currentPage = (apiPage?.number || page) - 1; // Convert from 1-indexed (API) to 0-indexed (UI)
-  const pageSize = apiPage?.size || size;
+  const { totalElements, totalPages } = apiPage;
+  const currentPage = convertFromApiPage(apiPage.number); // Convert from 1-indexed (API) to 0-indexed (UI)
+  const pageSize = apiPage.size || DEFAULT_PAGE_SIZE;
 
   // Clear URL search parameters when the active tab is not "all"
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
         search: () => ({}),
-        replace: false,
+        replace: true,
       }).catch(console.error);
     }
   }, [tab, navigate]);
 
-  // Memoized pagination handlers
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      // Convert from 0-indexed UI to 1-indexed API
-      navigate({
-        search: (old) => ({
-          ...old,
-          page: newPage + 1,
-          size: old.size || 10,
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        search: (old) => ({
-          ...old,
-          size: newSize,
-          page: 1, // Reset to first page when page size changes
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
+      <Tabs defaultValue={tab} onValueChange={setTab} className="w-full">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mt-1">
           <TabsList className="w-full sm:w-auto grid grid-cols-3 gap-2">
             <TabsTrigger
@@ -185,8 +155,8 @@ export function AccessKeys() {
               totalPages,
               currentPage,
               pageSize,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </TabsContent>

@@ -71,11 +71,10 @@ export const ContactsTabContent = ({ contacts, pagination }: ContactsTabContentP
                   </>
                 )}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
-              <ContactsMobileList contacts={filteredContacts} pagination={pagination} manualPagination={!!pagination} />
+              <ContactsMobileList contacts={filteredContacts} pagination={pagination} />
             </div>
           </>
         ) : (

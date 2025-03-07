@@ -7,15 +7,23 @@ import {
   TabsList,
   TabsTrigger,
   Toaster,
-  XpubsSkeleton,
   XpubsTabContent,
+  XpubsSkeleton,
 } from '@/components';
 import { addStatusField, xPubQueryOptions } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useState, useMemo, useCallback } from 'react';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { XPub } from '@bsv/spv-wallet-js-client';
+import { useState, useMemo } from 'react';
 import { z } from 'zod';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
+import { useRoutePagination } from '@/components/DataTable';
+
+interface XpubsApiResponse {
+  content: XPub[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/admin/_admin/xpub')({
   component: Xpub,
@@ -23,8 +31,8 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     sortBy: z.string().optional().catch('id'),
     sort: z.string().optional().catch('asc'),
     id: z.string().optional(),
-    page: z.coerce.number().optional().default(1).catch(1),
-    size: z.coerce.number().optional().default(10).catch(10),
+    page: z.coerce.number().optional().default(DEFAULT_API_PAGE).catch(DEFAULT_API_PAGE),
+    size: z.coerce.number().optional().default(DEFAULT_PAGE_SIZE).catch(DEFAULT_PAGE_SIZE),
   }),
   loaderDeps: ({ search: { sortBy, sort, id, page, size } }) => ({
     sortBy,
@@ -34,6 +42,7 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
     size,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
+  notFoundComponent: () => <CustomErrorComponent error={new Error('Page not found')} />,
   loader: async ({ context: { queryClient }, deps: { sortBy, sort, id, page, size } }) =>
     await queryClient.ensureQueryData(
       xPubQueryOptions({
@@ -49,11 +58,12 @@ export const Route = createFileRoute('/admin/_admin/xpub')({
 
 export function Xpub() {
   const [tab, setTab] = useState<string>('all');
-  const { sortBy, sort, page = 1, size = 10 } = useSearch({ from: '/admin/_admin/xpub' });
+  const { sortBy, sort, page = DEFAULT_API_PAGE, size = DEFAULT_PAGE_SIZE } = useSearch({ from: '/admin/_admin/xpub' });
   const [id, setID] = useSearchParam('/admin/_admin/xpub', 'id');
-  const navigate = useNavigate();
 
-  const { data: xpubs } = useSuspenseQuery(
+  const pagination = useRoutePagination('/admin/_admin/xpub');
+
+  const { data } = useSuspenseQuery(
     xPubQueryOptions({
       id,
       sortBy,
@@ -63,32 +73,10 @@ export function Xpub() {
     }),
   );
 
+  const xpubs = data as XpubsApiResponse;
+
   // Memoize the transformed xpubs data
   const mappedXpubs = useMemo(() => addStatusField(xpubs.content), [xpubs.content]);
-
-  // Memoize pagination handlers to avoid unnecessary re-renders
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      // Convert from 0-indexed (UI) to 1-indexed (API)
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, page: newPage + 1 }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, size: newSize, page: 1 }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
 
   return (
     <>
@@ -106,12 +94,12 @@ export function Xpub() {
           <XpubsTabContent
             xpubs={mappedXpubs}
             pagination={{
-              currentPage: Number(page) - 1, // Convert API's 1-indexed to UI's 0-indexed
+              currentPage: convertFromApiPage(Number(page)), // Convert API's 1-indexed to UI's 0-indexed
               pageSize: Number(size),
               totalPages: xpubs.page.totalPages,
               totalElements: xpubs.page.totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </TabsContent>

@@ -73,7 +73,7 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
               <span className="shrink-0">Name:</span>
               <span className="truncate">{truncateId(contact.paymail)}</span>
             </p>
-            <p className="text-sm text-muted-foreground">{getStatusBadge()}</p>
+            <div className="text-sm text-muted-foreground">{getStatusBadge()}</div>
           </div>
         </div>
       </AccordionTrigger>
@@ -147,10 +147,9 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
 export interface ContactsMobileListProps {
   contacts: Contact[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
-export const ContactsMobileList = ({ contacts, pagination, manualPagination = false }: ContactsMobileListProps) => {
+export const ContactsMobileList = ({ contacts, pagination }: ContactsMobileListProps) => {
   // Use MobileDataTable for pagination support
   return (
     <MobileDataTable
@@ -165,7 +164,6 @@ export const ContactsMobileList = ({ contacts, pagination, manualPagination = fa
         <ContactMobileItem contact={item} expandedState={expandedState} />
       )}
       pagination={pagination}
-      manualPagination={manualPagination}
     />
   );
 };

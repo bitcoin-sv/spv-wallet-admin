@@ -59,7 +59,6 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog, paginatio
                   );
                 }}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
@@ -70,7 +69,6 @@ export const PaymailsTabContent = ({ paymails, hasPaymailDeleteDialog, paginatio
                   <PaymailMobileItem paymail={item} expandedState={expandedState} />
                 )}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
           </>

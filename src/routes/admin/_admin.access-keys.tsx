@@ -17,6 +17,13 @@ import { AccessKey } from '@bsv/spv-wallet-js-client';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
+
+interface AccessKeysApiResponse {
+  content: AccessKey[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/admin/_admin/access-keys')({
   component: AccessKeys,
@@ -27,8 +34,8 @@ export const Route = createFileRoute('/admin/_admin/access-keys')({
     createdRange: z.object({ from: z.string(), to: z.string() }).optional(),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional(),
     revokedRange: z.object({ from: z.string(), to: z.string() }).optional(),
-    page: z.coerce.number().optional().default(1).catch(1),
-    size: z.coerce.number().optional().default(10).catch(10),
+    page: z.coerce.number().optional().default(DEFAULT_API_PAGE).catch(DEFAULT_API_PAGE),
+    size: z.coerce.number().optional().default(DEFAULT_PAGE_SIZE).catch(DEFAULT_PAGE_SIZE),
   }),
   loaderDeps: ({ search: { xpubId, sortBy, sort, createdRange, updatedRange, revokedRange, page, size } }) => ({
     xpubId,
@@ -69,13 +76,15 @@ export function AccessKeys() {
     createdRange,
     updatedRange,
     revokedRange,
-    page = 1,
-    size = 10,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/admin/_admin/access-keys',
   });
 
   const navigate = useNavigate({ from: Route.fullPath });
+
+  const pagination = useRoutePagination('/admin/_admin/access-keys');
 
   // Local filter state for input field
   const [filter, setFilter] = useState<string>(xpubId || '');
@@ -110,55 +119,17 @@ export function AccessKeys() {
     }),
   );
 
-  const accessKeysResponse = data as {
-    content: AccessKey[];
-    page: {
-      size: number;
-      number: number;
-      totalElements: number;
-      totalPages: number;
-    };
-  };
+  const accessKeysResponse = data as AccessKeysApiResponse;
 
   // Memoize data transformations
   const mappedAccessKeys = useMemo(() => addStatusField(accessKeysResponse.content), [accessKeysResponse.content]);
   const revokedKeys = useMemo(() => getRevokedElements(mappedAccessKeys), [mappedAccessKeys]);
   const deletedKeys = useMemo(() => getDeletedElements(mappedAccessKeys), [mappedAccessKeys]);
 
-  const totalElements = accessKeysResponse.page?.totalElements || 0;
-  const totalPages = accessKeysResponse.page?.totalPages || 1;
+  const { totalElements, totalPages } = accessKeysResponse.page;
   // Adjust for 0-indexed UI pagination
-  const currentPage = (accessKeysResponse.page?.number || 1) - 1;
-  const pageSize = accessKeysResponse.page?.size || 10;
-
-  // Use useCallback to memoize pagination handlers
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      navigate({
-        search: (old) => ({
-          ...old,
-          page: newPage + 1, // convert to 1-indexed API page
-          size: old.size || 10,
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        search: (old) => ({
-          ...old,
-          size: newSize,
-          page: 1, // reset to first page on size change
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
+  const currentPage = convertFromApiPage(accessKeysResponse.page.number);
+  const pageSize = accessKeysResponse.page.size || DEFAULT_PAGE_SIZE;
 
   // Memoize tab change handler
   const handleTabChange = useCallback(
@@ -219,8 +190,8 @@ export function AccessKeys() {
               pageSize,
               totalPages,
               totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </TabsContent>

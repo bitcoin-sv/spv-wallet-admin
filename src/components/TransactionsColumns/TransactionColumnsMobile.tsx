@@ -100,14 +100,9 @@ export interface TransactionsMobileListProps {
   value?: string[];
   onValueChange?: (value: string[]) => void;
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
-export const TransactionsMobileList = ({
-  transactions,
-  pagination,
-  manualPagination = false,
-}: TransactionsMobileListProps) => {
+export const TransactionsMobileList = ({ transactions, pagination }: TransactionsMobileListProps) => {
   // Use MobileDataTable for pagination support
   return (
     <MobileDataTable
@@ -122,7 +117,6 @@ export const TransactionsMobileList = ({
         <TransactionMobileItem transaction={item} expandedState={expandedState} />
       )}
       pagination={pagination}
-      manualPagination={manualPagination}
     />
   );
 };

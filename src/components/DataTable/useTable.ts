@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { useEffect } from 'react';
 import { PaginationProps, RowType } from './DataTable';
+import { DEFAULT_PAGINATION } from '@/constants/pagination';
 
 const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
@@ -16,7 +17,6 @@ interface UseTableProps<TData, TValue> {
   data: TData[];
   initialSorting?: ColumnSort[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
 export function useTable<TData extends RowType, TValue>({
@@ -24,8 +24,10 @@ export function useTable<TData extends RowType, TValue>({
   data,
   initialSorting,
   pagination,
-  manualPagination = false,
 }: UseTableProps<TData, TValue>) {
+  // Deduce manualPagination from the presence of pagination prop
+  const manualPagination = !!pagination;
+
   const table = useReactTable({
     data,
     columns,
@@ -33,16 +35,13 @@ export function useTable<TData extends RowType, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: initialSorting ? initialSorting : defaultInitialSorting,
+      sorting: initialSorting ?? defaultInitialSorting,
       pagination: pagination
         ? {
             pageIndex: pagination.currentPage,
             pageSize: pagination.pageSize,
           }
-        : {
-            pageIndex: 0,
-            pageSize: 10,
-          },
+        : DEFAULT_PAGINATION,
     },
     manualPagination,
     pageCount: manualPagination && pagination ? Math.max(1, pagination.totalPages) : undefined,

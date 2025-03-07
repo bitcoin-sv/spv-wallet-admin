@@ -17,7 +17,6 @@ interface MobileDataTableProps<TData extends RowType, TValue> {
   ) => React.ReactNode;
   initialSorting?: ColumnSort[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
 export function MobileDataTable<TData extends RowType, TValue>({
@@ -26,7 +25,6 @@ export function MobileDataTable<TData extends RowType, TValue>({
   renderMobileItem,
   initialSorting,
   pagination,
-  manualPagination = false,
 }: MobileDataTableProps<TData, TValue>) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isAllExpanded, setIsAllExpanded] = useState(false);
@@ -36,8 +34,10 @@ export function MobileDataTable<TData extends RowType, TValue>({
     data,
     initialSorting,
     pagination,
-    manualPagination,
   });
+
+  // Deduce manualPagination from the presence of pagination prop
+  const isManualPagination = !!pagination;
 
   // Reset expanded state when page or page size changes
   useEffect(() => {
@@ -75,7 +75,7 @@ export function MobileDataTable<TData extends RowType, TValue>({
       </div>
       <MobileDataTablePagination
         table={table}
-        manualPagination={manualPagination}
+        manualPagination={isManualPagination}
         totalRecords={pagination?.totalElements}
       />
     </div>

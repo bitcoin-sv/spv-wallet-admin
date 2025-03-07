@@ -49,7 +49,6 @@ interface DataTableProps<TData, TValue> {
   renderInlineItem?: (row: Row<TData>) => React.ReactNode;
   initialSorting?: ColumnSort[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
 const getColumns = <TData, TValue>(
@@ -102,7 +101,6 @@ export function DataTable<TData extends RowType, TValue>({
   renderInlineItem,
   initialSorting,
   pagination,
-  manualPagination = false,
 }: DataTableProps<TData, TValue>) {
   // Use the enhanced columns with actions
   const enhancedColumns = getColumns(columns, renderItem, renderInlineItem);
@@ -113,8 +111,10 @@ export function DataTable<TData extends RowType, TValue>({
     data,
     initialSorting,
     pagination,
-    manualPagination,
   });
+
+  // Deduce manualPagination from the presence of pagination prop
+  const isManualPagination = !!pagination;
 
   return (
     <div className="rounded-md border">
@@ -150,7 +150,11 @@ export function DataTable<TData extends RowType, TValue>({
           )}
         </TableBody>
       </Table>
-      <DataTablePagination table={table} manualPagination={manualPagination} totalRecords={pagination?.totalElements} />
+      <DataTablePagination
+        table={table}
+        manualPagination={isManualPagination}
+        totalRecords={pagination?.totalElements}
+      />
     </div>
   );
 }

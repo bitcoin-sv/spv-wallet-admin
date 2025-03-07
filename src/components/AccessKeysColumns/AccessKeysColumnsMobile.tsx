@@ -145,7 +145,6 @@ export const AccessKeysMobileList = ({ accessKeys, pagination }: AccessKeysMobil
         />
       )}
       pagination={pagination}
-      manualPagination={!!pagination}
     />
   );
 };

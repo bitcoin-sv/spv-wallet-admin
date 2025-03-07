@@ -1,19 +1,31 @@
-import { CustomErrorComponent, DateRangeFilter, Searchbar, Toaster, TransactionsTabContent } from '@/components';
 import { transactionSearchSchema } from '@/searchSchemas';
-import { formatStatusLabel, transactionsQueryOptions } from '@/utils';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
 import {
+  Button,
+  CustomErrorComponent,
+  DateRangeFilter,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+  Searchbar,
+  Toaster,
+  TransactionsTabContent,
+} from '@/components';
 import { TRANSACTION_STATUS, TransactionStatusType } from '@/constants';
+import { formatStatusLabel, transactionsQueryOptions } from '@/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
 import { useCallback, useMemo } from 'react';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { TransactionExtended } from '@/interfaces/transaction';
+import { useRoutePagination } from '@/components/DataTable';
+import { ChevronDown } from 'lucide-react';
+
+interface TransactionsApiResponse {
+  content: TransactionExtended[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/admin/_admin/transactions')({
   component: Transactions,
@@ -54,15 +66,17 @@ export function Transactions() {
     createdRange,
     updatedRange,
     status,
-    page = 1,
-    size = 10,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/admin/_admin/transactions',
   });
   const [blockHeight, setBlockHeight] = useSearchParam('/admin/_admin/transactions', 'blockHeight');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
 
-  const { data: transactions } = useSuspenseQuery(
+  const pagination = useRoutePagination('/admin/_admin/transactions');
+
+  const { data } = useSuspenseQuery(
     transactionsQueryOptions({
       blockHeight,
       sortBy,
@@ -74,6 +88,8 @@ export function Transactions() {
       size,
     }),
   );
+
+  const transactions = data as TransactionsApiResponse;
 
   // Memoize current status key lookup
   const currentStatusKey = useMemo(() => {
@@ -87,29 +103,6 @@ export function Transactions() {
       navigate({
         to: '.',
         search: (prev) => ({ ...prev, status: newStatus }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  // Pagination handlers
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, page: newPage + 1 }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, size: newSize, page: 1 }),
         replace: true,
       });
     },
@@ -161,12 +154,12 @@ export function Transactions() {
             hasRecordTransaction={false}
             TxDialog={() => null}
             pagination={{
-              currentPage: Number(page) - 1, // Convert API's 1-indexed page to UI's 0-indexed
+              currentPage: convertFromApiPage(Number(page)), // Convert API's 1-indexed page to UI's 0-indexed
               pageSize: Number(size),
               totalPages: transactions.page.totalPages,
               totalElements: transactions.page.totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </div>

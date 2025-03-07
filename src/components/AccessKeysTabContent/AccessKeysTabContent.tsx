@@ -39,7 +39,6 @@ export const AccessKeysTabContent = ({ accessKeys, hasRevokeKeyDialog, paginatio
                   </>
                 )}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">

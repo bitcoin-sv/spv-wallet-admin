@@ -40,7 +40,6 @@ export const XpubsTabContent = ({ xpubs, pagination }: XpubsTabContentProps) => 
                 data={xpubs}
                 renderItem={(row) => <ViewDialog row={row} />}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
             <div className="sm:hidden">
@@ -51,7 +50,6 @@ export const XpubsTabContent = ({ xpubs, pagination }: XpubsTabContentProps) => 
                   <XPubMobileItem xpub={item} expandedState={expandedState} />
                 )}
                 pagination={pagination}
-                manualPagination={!!pagination}
               />
             </div>
           </>

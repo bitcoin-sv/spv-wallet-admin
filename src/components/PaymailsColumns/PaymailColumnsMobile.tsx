@@ -65,7 +65,7 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
               <p className="text-sm font-medium leading-none truncate">{truncateText(paymail.alias, 24)}</p>
               <p className="text-xs text-muted-foreground truncate">@{truncateText(paymail.domain, 24)}</p>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               {paymail.status === 'deleted' ? (
                 <Badge variant="secondary">Deleted</Badge>
               ) : paymail.status === 'revoked' ? (
@@ -73,7 +73,7 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
               ) : (
                 <Badge variant="outline">Active</Badge>
               )}
-            </p>
+            </div>
           </div>
         </div>
       </AccordionTrigger>
@@ -138,10 +138,9 @@ export const PaymailMobileItem = ({ paymail }: PaymailMobileItemProps) => {
 export interface PaymailsMobileListProps {
   paymails: PaymailColumnsMobile[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
-export const PaymailsMobileList = ({ paymails, pagination, manualPagination = false }: PaymailsMobileListProps) => {
+export const PaymailsMobileList = ({ paymails, pagination }: PaymailsMobileListProps) => {
   return (
     <MobileDataTable
       data={paymails}
@@ -155,7 +154,6 @@ export const PaymailsMobileList = ({ paymails, pagination, manualPagination = fa
         <PaymailMobileItem paymail={item} expandedState={expandedState} />
       )}
       pagination={pagination}
-      manualPagination={manualPagination}
     />
   );
 };

@@ -21,7 +21,15 @@ import {
 import { ChevronDown } from 'lucide-react';
 import { TRANSACTION_STATUS, TransactionStatusType } from '@/constants';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
+import { TransactionExtended } from '@/interfaces/transaction';
 import { useCallback, useMemo } from 'react';
+
+interface TransactionsApiResponse {
+  content: TransactionExtended[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/user/_user/transactions')({
   component: Transactions,
@@ -43,9 +51,9 @@ export const Route = createFileRoute('/user/_user/transactions')({
   }) =>
     await queryClient.ensureQueryData(
       transactionsUserQueryOptions({
+        blockHeight,
         sort,
         sortBy,
-        blockHeight,
         createdRange,
         updatedRange,
         status,
@@ -62,15 +70,17 @@ function Transactions() {
     createdRange,
     updatedRange,
     status,
-    page = 1,
-    size = 10,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/user/_user/transactions',
   });
   const [blockHeight, setBlockHeight] = useSearchParam('/user/_user/transactions', 'blockHeight');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
 
-  const { data: transactions } = useSuspenseQuery(
+  const pagination = useRoutePagination('/user/_user/transactions');
+
+  const { data } = useSuspenseQuery(
     transactionsUserQueryOptions({
       blockHeight,
       sortBy,
@@ -83,29 +93,20 @@ function Transactions() {
     }),
   );
 
+  const transactions = data as TransactionsApiResponse;
+
   // Memoize current status key lookup based on status from URL
   const currentStatusKey = useMemo(() => {
     const currentStatus = status || null;
     return Object.entries(TRANSACTION_STATUS).find(([, value]) => value === currentStatus)?.[0] || 'ALL';
   }, [status]);
 
-  // Pagination handlers memoized using useCallback
-  const handlePageChange = useCallback(
-    (newPage: number) => {
+  // Event handler to change status filter
+  const handleStatusChange = useCallback(
+    (newStatus: string | null) => {
       navigate({
         to: '.',
-        search: (prev) => ({ ...prev, page: newPage + 1 }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, size: newSize, page: 1 }),
+        search: (prev) => ({ ...prev, status: newStatus }),
         replace: true,
       });
     },
@@ -128,24 +129,15 @@ function Transactions() {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {Object.entries(TRANSACTION_STATUS).map(([key, value]) => (
-                  <DropdownMenuItem
-                    key={key}
-                    onClick={() =>
-                      navigate({
-                        to: '.',
-                        search: (prev) => ({ ...prev, status: value }),
-                        replace: true,
-                      })
-                    }
-                  >
+                  <DropdownMenuItem key={key} onClick={() => handleStatusChange(value)}>
                     {formatStatusLabel(key as keyof TransactionStatusType)}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <PrepareTxDialogUser className="ml-0 sm:ml-2 mt-2 sm:mt-0 w-full sm:w-auto" />
+            <PrepareTxDialogUser />
           </div>
-          {/* Date Range Filter and Block Height Search */}
+          {/* Date Filter & Block Height Search */}
           <div className="flex gap-2 mt-2 sm:mt-0">
             <DateRangeFilter />
             <Searchbar
@@ -166,12 +158,12 @@ function Transactions() {
             hasRecordTransaction
             TxDialog={PrepareTxDialogUser}
             pagination={{
-              currentPage: Number(page) - 1,
+              currentPage: convertFromApiPage(Number(page)),
               pageSize: Number(size),
               totalPages: transactions.page.totalPages,
               totalElements: transactions.page.totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </div>

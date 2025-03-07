@@ -1,5 +1,8 @@
 import { Table } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { AnyRouter, RegisteredRouter, RouteIds, useNavigate } from '@tanstack/react-router';
+import { DEFAULT_API_PAGE, DEFAULT_PAGE_SIZE, convertToApiPage } from '@/constants/pagination';
+import type { ConstrainLiteral } from '@tanstack/router-core';
 
 interface UsePaginationProps<TData> {
   table: Table<TData>;
@@ -72,5 +75,60 @@ export function usePagination<TData>({
     canNextPage,
     handlePageSizeChange,
     handlePageChange,
+  };
+}
+
+/**
+ * Custom hook for handling pagination in routes
+ * @param routeID - The route ID to navigate to
+ * @returns Pagination handlers
+ */
+export function useRoutePagination<TRouter extends AnyRouter = RegisteredRouter, const TFrom extends string = string>(
+  routeID: ConstrainLiteral<TFrom, RouteIds<TRouter['routeTree']>>,
+) {
+  // Get the navigate function from the router with proper typing
+  const navigate = useNavigate<TRouter, TFrom>({ from: routeID });
+
+  /**
+   * Handle page change
+   * @param newPage - The new page index (0-indexed)
+   */
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      // @ts-expect-error - Generic navigation with search params
+      navigate({
+        search: (old: Record<string, object>) => ({
+          ...old,
+          page: convertToApiPage(newPage), // convert to 1-indexed API page
+          size: old.size || DEFAULT_PAGE_SIZE,
+        }),
+        replace: true,
+      }).catch(console.error);
+    },
+    [navigate],
+  );
+
+  /**
+   * Handle page size change
+   * @param newSize - The new page size
+   */
+  const handlePageSizeChange = useCallback(
+    (newSize: number) => {
+      // @ts-expect-error - Generic navigation with search params
+      navigate({
+        search: (old) => ({
+          ...old,
+          size: newSize,
+          page: DEFAULT_API_PAGE, // Reset to first page when changing page size
+        }),
+        replace: true,
+      }).catch(console.error);
+    },
+    [navigate],
+  );
+
+  return {
+    onPageChange: handlePageChange,
+    onPageSizeChange: handlePageSizeChange,
   };
 }

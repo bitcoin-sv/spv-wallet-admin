@@ -12,20 +12,16 @@ import {
 import { paymailsQueryOptions, addStatusField, getDeletedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
 import { PaymailAddress } from '@bsv/spv-wallet-js-client';
 
-// Define interface for API response
 interface PaymailsApiResponse {
   content: PaymailAddress[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  page: ApiPaginationResponse;
 }
 
 export const Route = createFileRoute('/user/_user/paymails')({
@@ -36,8 +32,8 @@ export const Route = createFileRoute('/user/_user/paymails')({
     alias: z.string().optional().catch(undefined),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    page: z.coerce.number().optional().catch(1),
-    size: z.coerce.number().optional().catch(10),
+    page: z.coerce.number().optional().catch(DEFAULT_API_PAGE),
+    size: z.coerce.number().optional().catch(DEFAULT_PAGE_SIZE),
   }),
   loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, alias, page, size } }) => ({
     sortBy,
@@ -68,19 +64,21 @@ export const Route = createFileRoute('/user/_user/paymails')({
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
-
   const navigate = useNavigate({ from: Route.fullPath });
   const {
     sortBy,
     sort,
     createdRange,
     updatedRange,
-    page = 1,
-    size = 10,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
   } = useSearch({
     from: '/user/_user/paymails',
   });
   const [alias, setAlias] = useSearchParam('/user/_user/paymails', 'alias');
+
+  // Use our custom pagination hook
+  const pagination = useRoutePagination('/user/_user/paymails');
 
   const { data } = useSuspenseQuery(
     paymailsQueryOptions({
@@ -96,8 +94,7 @@ export function Paymails() {
 
   const paymailsResponse = data as PaymailsApiResponse;
   const { content, page: apiPage } = paymailsResponse;
-  const totalElements = apiPage.totalElements;
-  const totalPages = apiPage.totalPages;
+  const { totalElements, totalPages } = apiPage;
 
   // Memoize data transformations
   const mappedPaymails = useMemo(() => addStatusField(content), [content]);
@@ -112,35 +109,6 @@ export function Paymails() {
       }).catch(console.error);
     }
   }, [tab, navigate]);
-
-  // Memoize pagination handlers
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          page: newPage + 1, // Convert UI (0-indexed) to API (1-indexed)
-          size: prev.size || 10,
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (newSize: number) => {
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          size: newSize,
-          page: 1, // Reset to first page when page size changes
-        }),
-        replace: true,
-      });
-    },
-    [navigate],
-  );
 
   return (
     <>
@@ -174,12 +142,12 @@ export function Paymails() {
             paymails={mappedPaymails}
             hasPaymailDeleteDialog
             pagination={{
-              currentPage: page ? page - 1 : 0, // Convert from 1-indexed (API) to 0-indexed (UI)
-              pageSize: size || 10,
+              currentPage: convertFromApiPage(Number(page)), // Convert from 1-indexed (API) to 0-indexed (UI)
+              pageSize: Number(size),
               totalPages,
               totalElements,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
             }}
           />
         </TabsContent>

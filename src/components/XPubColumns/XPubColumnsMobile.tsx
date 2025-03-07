@@ -80,10 +80,9 @@ export const XPubMobileItem = ({ xpub }: XPubMobileItemProps) => {
 export interface XPubMobileListProps {
   xpubs: XPubColumnsMobile[];
   pagination?: PaginationProps;
-  manualPagination?: boolean;
 }
 
-export const XPubMobileList = ({ xpubs, pagination, manualPagination = false }: XPubMobileListProps) => {
+export const XPubMobileList = ({ xpubs, pagination }: XPubMobileListProps) => {
   // Use MobileDataTable for pagination support
   return (
     <MobileDataTable
@@ -98,7 +97,6 @@ export const XPubMobileList = ({ xpubs, pagination, manualPagination = false }: 
         <XPubMobileItem xpub={item} expandedState={expandedState} />
       )}
       pagination={pagination}
-      manualPagination={manualPagination}
     />
   );
 };
