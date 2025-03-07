@@ -1,7 +1,7 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { EllipsisVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
-import { useState } from 'react';
 import { truncateId } from '@/utils/string';
-import { createToggleExpandAll } from '@/utils/expandUtils';
 import { renderTransactionStatusBadge } from '@/utils';
 import { TransactionExtended } from '@/interfaces/transaction';
 import { TransactionStatusValue } from '@/constants';
+import { MobileDataTable } from '@/components/DataTable/MobileDataTable';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -27,6 +27,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 
 interface TransactionMobileItemProps {
   transaction: TransactionExtended;
+  expandedState?: { expandedItems: string[]; setExpandedItems: (value: string[]) => void };
 }
 
 export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProps) => {
@@ -51,7 +52,7 @@ export const TransactionMobileItem = ({ transaction }: TransactionMobileItemProp
               <span className="shrink-0">ID:</span>
               <span className="truncate">{truncateId(transaction.id)}</span>
             </p>
-            <p className="text-sm text-muted-foreground">{renderStatusBadge(transaction.status)}</p>
+            <div className="text-sm text-muted-foreground">{renderStatusBadge(transaction.status)}</div>
           </div>
         </div>
       </AccordionTrigger>
@@ -98,53 +99,24 @@ export interface TransactionsMobileListProps {
   transactions: TransactionExtended[];
   value?: string[];
   onValueChange?: (value: string[]) => void;
+  pagination?: PaginationProps;
 }
 
-export const TransactionsMobileList = ({ transactions, value, onValueChange }: TransactionsMobileListProps) => {
-  const [expandedItems, setExpandedItems] = useState<string[]>(value || []);
-  const [isAllExpanded, setIsAllExpanded] = useState(false);
-
-  const toggleExpandAll = () => {
-    createToggleExpandAll(
-      transactions,
-      isAllExpanded,
-      (ids) => {
-        setExpandedItems(ids);
-        onValueChange?.(ids);
-      },
-      setIsAllExpanded,
-      (transaction) => transaction.id,
-    );
-  };
-
-  const handleValueChange = (newValue: string[]) => {
-    setExpandedItems(newValue);
-    onValueChange?.(newValue);
-    setIsAllExpanded(newValue.length === transactions.length);
-  };
-
+export const TransactionsMobileList = ({ transactions, pagination }: TransactionsMobileListProps) => {
+  // Use MobileDataTable for pagination support
   return (
-    <div className="rounded-md border">
-      <div className="p-2 border-b">
-        <Button variant="ghost" onClick={toggleExpandAll} className="w-full flex items-center justify-center gap-2">
-          {isAllExpanded ? (
-            <>
-              <ChevronUp className="h-4 w-4" /> Collapse All
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-4 w-4" /> Expand All
-            </>
-          )}
-        </Button>
-      </div>
-      <div className="p-1">
-        <Accordion type="multiple" value={expandedItems} onValueChange={handleValueChange} className="w-full">
-          {transactions.map((transaction) => (
-            <TransactionMobileItem key={transaction.id} transaction={transaction} />
-          ))}
-        </Accordion>
-      </div>
-    </div>
+    <MobileDataTable
+      data={transactions}
+      columns={[
+        {
+          accessorKey: 'id',
+          header: 'ID',
+        },
+      ]}
+      renderMobileItem={(item: TransactionExtended, expandedState) => (
+        <TransactionMobileItem transaction={item} expandedState={expandedState} />
+      )}
+      pagination={pagination}
+    />
   );
 };

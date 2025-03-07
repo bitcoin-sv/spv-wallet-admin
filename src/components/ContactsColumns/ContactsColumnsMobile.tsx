@@ -1,11 +1,11 @@
 import { Contact } from '@bsv/spv-wallet-js-client';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { ContactStatus } from './ContactsColumns';
 import { ContactAcceptDialog, ContactRejectDialog, ContactEditDialog, ContactDeleteDialog } from '@/components';
 import { Button } from '@/components/ui/button';
-import { EllipsisVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +14,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ViewDialogMobile } from '@/components/ViewDialog/ViewDialogMobile';
-import { useState } from 'react';
 import { Row } from '@tanstack/react-table';
-import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import { MobileDataTablePagination } from '@/components/DataTable/MobileDataTablePagination';
 import { truncateId } from '@/utils/string';
-import { createToggleExpandAll } from '@/utils/expandUtils';
+import { MobileDataTable } from '@/components/DataTable/MobileDataTable';
+import { PaginationProps } from '@/components/DataTable/DataTable';
 
 const onClickCopy = (value: string, label: string) => async () => {
   if (!value) {
@@ -31,6 +29,7 @@ const onClickCopy = (value: string, label: string) => async () => {
 
 interface ContactMobileItemProps {
   contact: Contact;
+  expandedState?: { expandedItems: string[]; setExpandedItems: (value: string[]) => void };
 }
 
 export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
@@ -74,7 +73,7 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
               <span className="shrink-0">Name:</span>
               <span className="truncate">{truncateId(contact.paymail)}</span>
             </p>
-            <p className="text-sm text-muted-foreground">{getStatusBadge()}</p>
+            <div className="text-sm text-muted-foreground">{getStatusBadge()}</div>
           </div>
         </div>
       </AccordionTrigger>
@@ -147,66 +146,24 @@ export const ContactMobileItem = ({ contact }: ContactMobileItemProps) => {
 
 export interface ContactsMobileListProps {
   contacts: Contact[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
+  pagination?: PaginationProps;
 }
 
-export const ContactsMobileList = ({ contacts, value, onValueChange }: ContactsMobileListProps) => {
-  const [expandedItems, setExpandedItems] = useState<string[]>(value || []);
-  const [isAllExpanded, setIsAllExpanded] = useState(false);
-
-  const table = useReactTable({
-    data: contacts,
-    columns: [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-  });
-
-  const currentPageData = table.getRowModel().rows.map((row) => row.original);
-
-  const toggleExpandAll = () => {
-    createToggleExpandAll(
-      currentPageData,
-      isAllExpanded,
-      (ids) => {
-        setExpandedItems(ids);
-        onValueChange?.(ids);
-      },
-      setIsAllExpanded,
-      (contact) => contact.id,
-    );
-  };
-
-  const handleValueChange = (newValue: string[]) => {
-    setExpandedItems(newValue);
-    onValueChange?.(newValue);
-    setIsAllExpanded(newValue.length === currentPageData.length);
-  };
-
+export const ContactsMobileList = ({ contacts, pagination }: ContactsMobileListProps) => {
+  // Use MobileDataTable for pagination support
   return (
-    <div className="rounded-md border">
-      <div className="p-2 border-b">
-        <Button variant="ghost" onClick={toggleExpandAll} className="w-full flex items-center justify-center gap-2">
-          {isAllExpanded ? (
-            <>
-              <ChevronUp className="h-4 w-4" /> Collapse All
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-4 w-4" /> Expand All
-            </>
-          )}
-        </Button>
-      </div>
-      <div className="p-1">
-        <Accordion type="multiple" value={expandedItems} onValueChange={handleValueChange} className="w-full">
-          {currentPageData.map((contact) => (
-            <ContactMobileItem key={contact.id} contact={contact} />
-          ))}
-        </Accordion>
-      </div>
-      <MobileDataTablePagination table={table} />
-    </div>
+    <MobileDataTable
+      data={contacts}
+      columns={[
+        {
+          accessorKey: 'id',
+          header: 'ID',
+        },
+      ]}
+      renderMobileItem={(item: Contact, expandedState) => (
+        <ContactMobileItem contact={item} expandedState={expandedState} />
+      )}
+      pagination={pagination}
+    />
   );
 };

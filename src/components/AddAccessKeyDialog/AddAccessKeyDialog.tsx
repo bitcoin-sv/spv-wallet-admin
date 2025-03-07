@@ -12,6 +12,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  DialogDescription,
 } from '@/components';
 import { errorWrapper } from '@/utils';
 import { Metadata } from '@bsv/spv-wallet-js-client';
@@ -136,6 +137,7 @@ export const AddAccessKeyDialog = ({ className }: AddAccessKeyDialogProps) => {
           <>
             <DialogHeader>
               <DialogTitle>Add Access Key</DialogTitle>
+              <DialogDescription>Create a new access key for your account</DialogDescription>
             </DialogHeader>
 
             <div className="flex">

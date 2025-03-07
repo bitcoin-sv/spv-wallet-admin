@@ -4,28 +4,37 @@ import { Table } from '@tanstack/react-table';
 import { Button } from '@/components/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { PAGE_SIZES } from '@/constants';
+import { usePagination } from './usePagination';
 
 interface MobileDataTablePaginationProps<TData> {
   table: Table<TData>;
+  manualPagination?: boolean;
+  totalRecords?: number;
 }
 
-export function MobileDataTablePagination<TData>({ table }: MobileDataTablePaginationProps<TData>) {
+export function MobileDataTablePagination<TData>({
+  table,
+  manualPagination = false,
+  totalRecords,
+}: MobileDataTablePaginationProps<TData>) {
+  const { total, currentPageSize, canPreviousPage, canNextPage, handlePageSizeChange, handlePageChange } =
+    usePagination({
+      table,
+      manualPagination,
+      totalRecords,
+    });
+
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <div data-testid="table_total" className="text-sm text-muted-foreground">
-        Total records: {table.getFilteredRowModel().rows.length}
+        Total records: {total}
       </div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
+          <Select value={`${currentPageSize}`} onValueChange={handlePageSizeChange}>
             <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={`${currentPageSize}`} />
             </SelectTrigger>
             <SelectContent side="top">
               {PAGE_SIZES.map((pageSize) => (
@@ -44,8 +53,10 @@ export function MobileDataTablePagination<TData>({ table }: MobileDataTablePagin
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => {
+                handlePageChange(Math.max(0, table.getState().pagination.pageIndex - 1));
+              }}
+              disabled={!canPreviousPage}
             >
               <span className="sr-only">Go to previous page</span>
               <ChevronLeftIcon className="h-4 w-4" />
@@ -53,8 +64,10 @@ export function MobileDataTablePagination<TData>({ table }: MobileDataTablePagin
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => {
+                handlePageChange(Math.min(table.getPageCount() - 1, table.getState().pagination.pageIndex + 1));
+              }}
+              disabled={!canNextPage}
             >
               <span className="sr-only">Go to next page</span>
               <ChevronRightIcon className="h-4 w-4" />

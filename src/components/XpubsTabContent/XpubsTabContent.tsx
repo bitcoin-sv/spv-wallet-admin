@@ -6,17 +6,26 @@ import {
   CardTitle,
   DataTable,
   MobileDataTable,
-  ViewDialog,
+  ViewDialog as BaseViewDialog,
   xPubsColumns,
 } from '@/components';
 import { XPubMobileItem } from '@/components/XPubColumns/XPubColumnsMobile';
 import { XpubExtended } from '@/interfaces';
+import { PaginationProps } from '@/components/DataTable/DataTable';
+import { Row } from '@tanstack/react-table';
+import { RowType } from '../DataTable/DataTable';
+
+// Create wrapper component that handles the type conversion
+const ViewDialog = ({ row }: { row: Row<XpubExtended> }) => {
+  return <BaseViewDialog row={row as unknown as Row<RowType>} />;
+};
 
 export interface XpubsTabContentProps {
   xpubs: XpubExtended[];
+  pagination?: PaginationProps;
 }
 
-export const XpubsTabContent = ({ xpubs }: XpubsTabContentProps) => {
+export const XpubsTabContent = ({ xpubs, pagination }: XpubsTabContentProps) => {
   return (
     <Card>
       <CardHeader>
@@ -26,13 +35,21 @@ export const XpubsTabContent = ({ xpubs }: XpubsTabContentProps) => {
         {xpubs.length > 0 ? (
           <>
             <div className="hidden sm:block">
-              <DataTable columns={xPubsColumns} data={xpubs} renderItem={(row) => <ViewDialog row={row} />} />
+              <DataTable
+                columns={xPubsColumns}
+                data={xpubs}
+                renderItem={(row) => <ViewDialog row={row} />}
+                pagination={pagination}
+              />
             </div>
             <div className="sm:hidden">
               <MobileDataTable
                 columns={xPubsColumns}
                 data={xpubs}
-                renderMobileItem={(item: XpubExtended) => <XPubMobileItem xpub={item} />}
+                renderMobileItem={(item: XpubExtended, expandedState) => (
+                  <XPubMobileItem xpub={item} expandedState={expandedState} />
+                )}
+                pagination={pagination}
               />
             </div>
           </>

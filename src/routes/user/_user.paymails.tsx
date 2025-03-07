@@ -12,10 +12,17 @@ import {
 import { paymailsQueryOptions, addStatusField, getDeletedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { useSearchParam } from '@/hooks/useSearchParam.ts';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
+import { PaymailAddress } from '@bsv/spv-wallet-js-client';
+
+interface PaymailsApiResponse {
+  content: PaymailAddress[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/user/_user/paymails')({
   component: Paymails,
@@ -25,16 +32,23 @@ export const Route = createFileRoute('/user/_user/paymails')({
     alias: z.string().optional().catch(undefined),
     createdRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
+    page: z.coerce.number().optional().catch(DEFAULT_API_PAGE),
+    size: z.coerce.number().optional().catch(DEFAULT_PAGE_SIZE),
   }),
-  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, alias } }) => ({
+  loaderDeps: ({ search: { sortBy, sort, createdRange, updatedRange, alias, page, size } }) => ({
     sortBy,
     sort,
     createdRange,
     updatedRange,
     alias,
+    page,
+    size,
   }),
   errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
-  loader: async ({ context: { queryClient }, deps: { sort, sortBy, createdRange, updatedRange, alias } }) =>
+  loader: async ({
+    context: { queryClient },
+    deps: { sort, sortBy, createdRange, updatedRange, alias, page, size },
+  }): Promise<PaymailsApiResponse> =>
     await queryClient.ensureQueryData(
       paymailsQueryOptions({
         sort,
@@ -42,33 +56,51 @@ export const Route = createFileRoute('/user/_user/paymails')({
         createdRange,
         updatedRange,
         alias,
+        page,
+        size,
       }),
     ),
 });
 
 export function Paymails() {
   const [tab, setTab] = useState<string>('all');
-
   const navigate = useNavigate({ from: Route.fullPath });
-  const { sortBy, sort, createdRange, updatedRange } = useSearch({
+  const {
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
+  } = useSearch({
     from: '/user/_user/paymails',
   });
   const [alias, setAlias] = useSearchParam('/user/_user/paymails', 'alias');
 
-  const { data: paymails } = useSuspenseQuery(
+  // Use our custom pagination hook
+  const pagination = useRoutePagination('/user/_user/paymails');
+
+  const { data } = useSuspenseQuery(
     paymailsQueryOptions({
       alias,
       sortBy,
       sort,
       createdRange,
       updatedRange,
+      page,
+      size,
     }),
   );
 
-  const mappedPaymails = addStatusField(paymails.content);
+  const paymailsResponse = data as PaymailsApiResponse;
+  const { content, page: apiPage } = paymailsResponse;
+  const { totalElements, totalPages } = apiPage;
 
-  const deletedPaymails = getDeletedElements(mappedPaymails);
+  // Memoize data transformations
+  const mappedPaymails = useMemo(() => addStatusField(content), [content]);
+  const deletedPaymails = useMemo(() => getDeletedElements(mappedPaymails), [mappedPaymails]);
 
+  // Clear search parameters when tab is not "all"
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
@@ -76,11 +108,11 @@ export function Paymails() {
         replace: false,
       }).catch(console.error);
     }
-  }, [tab]);
+  }, [tab, navigate]);
 
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
+      <Tabs defaultValue={tab} value={tab} onValueChange={setTab} className="w-full">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mt-1">
           <TabsList className="w-full sm:w-auto grid grid-cols-2 gap-2">
             <TabsTrigger
@@ -106,7 +138,18 @@ export function Paymails() {
           </div>
         </div>
         <TabsContent value="all">
-          <PaymailsTabContent paymails={mappedPaymails} hasPaymailDeleteDialog />
+          <PaymailsTabContent
+            paymails={mappedPaymails}
+            hasPaymailDeleteDialog
+            pagination={{
+              currentPage: convertFromApiPage(Number(page)), // Convert from 1-indexed (API) to 0-indexed (UI)
+              pageSize: Number(size),
+              totalPages,
+              totalElements,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
+            }}
+          />
         </TabsContent>
         <TabsContent value="deleted">
           <PaymailsTabContent paymails={deletedPaymails} />

@@ -9,14 +9,19 @@ import {
   TabsTrigger,
   Toaster,
 } from '@/components';
-
 import { accessKeysQueryOptions, addStatusField, getDeletedElements, getRevokedElements } from '@/utils';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { useEffect, useState } from 'react';
-
+import { AccessKey } from '@bsv/spv-wallet-js-client';
+import { useEffect, useState, useMemo } from 'react';
 import { z } from 'zod';
+import { ApiPaginationResponse, DEFAULT_PAGE_SIZE, DEFAULT_API_PAGE, convertFromApiPage } from '@/constants/pagination';
+import { useRoutePagination } from '@/components/DataTable';
+
+interface AccessKeysApiResponse {
+  content: AccessKey[];
+  page: ApiPaginationResponse;
+}
 
 export const Route = createFileRoute('/user/_user/access-keys')({
   component: AccessKeys,
@@ -26,23 +31,22 @@ export const Route = createFileRoute('/user/_user/access-keys')({
     revokedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
     sort: z.string().optional().catch('desc'),
     updatedRange: z.object({ from: z.string(), to: z.string() }).optional().catch(undefined),
-    page: z.number().optional().catch(1),
-    size: z.number().optional().catch(10),
+    page: z.number().optional().catch(DEFAULT_API_PAGE),
+    size: z.number().optional().catch(DEFAULT_PAGE_SIZE),
   }),
-  loaderDeps: ({ search: { sortBy, sort, createdRange, revokedRange, updatedRange, page, size } }) => {
-    return {
-      sortBy,
-      sort,
-      createdRange,
-      updatedRange,
-      revokedRange,
-      page,
-      size,
-    };
-  },
+  loaderDeps: ({ search: { sortBy, sort, createdRange, revokedRange, updatedRange, page, size } }) => ({
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    revokedRange,
+    page,
+    size,
+  }),
+  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
   loader: async ({
     context: { queryClient },
-    deps: { sortBy, sort, page, size, createdRange, revokedRange, updatedRange },
+    deps: { sortBy, sort, createdRange, updatedRange, revokedRange, page, size },
   }) =>
     await queryClient.ensureQueryData(
       accessKeysQueryOptions({
@@ -55,17 +59,25 @@ export const Route = createFileRoute('/user/_user/access-keys')({
         size,
       }),
     ),
-  errorComponent: ({ error }) => <CustomErrorComponent error={error} />,
 });
 
 export function AccessKeys() {
   const [tab, setTab] = useState<string>('all');
 
-  const { sortBy, sort, createdRange, updatedRange, revokedRange, page, size } = useSearch({
+  const {
+    sortBy,
+    sort,
+    createdRange,
+    updatedRange,
+    revokedRange,
+    page = DEFAULT_API_PAGE,
+    size = DEFAULT_PAGE_SIZE,
+  } = useSearch({
     from: '/user/_user/access-keys',
   });
-
   const navigate = useNavigate({ from: Route.fullPath });
+
+  const pagination = useRoutePagination('/user/_user/access-keys');
 
   const { data: accessKeys } = useSuspenseQuery(
     accessKeysQueryOptions({
@@ -79,22 +91,31 @@ export function AccessKeys() {
     }),
   );
 
-  const mappedAccessKeys = addStatusField(accessKeys.content);
-  const revokedKeys = getRevokedElements(mappedAccessKeys);
-  const deletedKeys = getDeletedElements(mappedAccessKeys);
+  const { content, page: apiPage } = accessKeys as AccessKeysApiResponse;
 
+  // Memoize the transformed access keys
+  const mappedAccessKeys = useMemo(() => addStatusField(content), [content]);
+  const revokedKeys = useMemo(() => getRevokedElements(mappedAccessKeys), [mappedAccessKeys]);
+  const deletedKeys = useMemo(() => getDeletedElements(mappedAccessKeys), [mappedAccessKeys]);
+
+  // Calculate pagination values
+  const { totalElements, totalPages } = apiPage;
+  const currentPage = convertFromApiPage(apiPage.number); // Convert from 1-indexed (API) to 0-indexed (UI)
+  const pageSize = apiPage.size || DEFAULT_PAGE_SIZE;
+
+  // Clear URL search parameters when the active tab is not "all"
   useEffect(() => {
     if (tab !== 'all') {
       navigate({
         search: () => ({}),
-        replace: false,
+        replace: true,
       }).catch(console.error);
     }
-  }, [tab]);
+  }, [tab, navigate]);
 
   return (
     <>
-      <Tabs defaultValue={tab} onValueChange={setTab} className="max-w-screen overflow-x-scroll scrollbar-hide">
+      <Tabs defaultValue={tab} onValueChange={setTab} className="w-full">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mt-1">
           <TabsList className="w-full sm:w-auto grid grid-cols-3 gap-2">
             <TabsTrigger
@@ -126,7 +147,18 @@ export function AccessKeys() {
           </div>
         </div>
         <TabsContent value="all">
-          <AccessKeysTabContent accessKeys={mappedAccessKeys} />
+          <AccessKeysTabContent
+            accessKeys={mappedAccessKeys}
+            hasRevokeKeyDialog
+            pagination={{
+              totalElements,
+              totalPages,
+              currentPage,
+              pageSize,
+              onPageChange: pagination.onPageChange,
+              onPageSizeChange: pagination.onPageSizeChange,
+            }}
+          />
         </TabsContent>
         <TabsContent value="revoked">
           <AccessKeysTabContent accessKeys={revokedKeys} />

@@ -13,21 +13,34 @@ import {
   TableRow,
 } from '@/components';
 import { AccessKey, Contact, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
-import {
-  ColumnDef,
-  ColumnSort,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  Row,
-  useReactTable,
-} from '@tanstack/react-table';
+import { ColumnDef, ColumnSort, flexRender, Row } from '@tanstack/react-table';
 import { EllipsisVertical } from 'lucide-react';
 
 import React from 'react';
+import { useTable } from './useTable';
+import { ContactExtended } from '@/interfaces/contacts';
+import { PaymailExtended } from '@/interfaces/paymail';
+import { XpubExtended } from '@/interfaces';
 
-export type RowType = XPub | Contact | AccessKey | PaymailAddress | Tx;
+export type RowType =
+  | XPub
+  | Contact
+  | AccessKey
+  | PaymailAddress
+  | Tx
+  | ContactExtended
+  | PaymailExtended
+  | XpubExtended
+  | { id?: string; url?: string; status?: string };
+
+export interface PaginationProps {
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,9 +48,8 @@ interface DataTableProps<TData, TValue> {
   renderItem?: (row: Row<TData>) => React.ReactNode;
   renderInlineItem?: (row: Row<TData>) => React.ReactNode;
   initialSorting?: ColumnSort[];
+  pagination?: PaginationProps;
 }
-
-const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
 const getColumns = <TData, TValue>(
   columns: ColumnDef<TData, TValue>[],
@@ -81,23 +93,28 @@ const getColumns = <TData, TValue>(
 
   return columns;
 };
-export function DataTable<TData, TValue>({
+
+export function DataTable<TData extends RowType, TValue>({
   columns,
   data,
   renderItem,
   renderInlineItem,
   initialSorting,
+  pagination,
 }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
+  // Use the enhanced columns with actions
+  const enhancedColumns = getColumns(columns, renderItem, renderInlineItem);
+
+  // Use our shared table hook
+  const { table } = useTable({
+    columns: enhancedColumns,
     data,
-    columns: getColumns(columns, renderItem, renderInlineItem),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: initialSorting ? initialSorting : defaultInitialSorting,
-    },
+    initialSorting,
+    pagination,
   });
+
+  // Deduce manualPagination from the presence of pagination prop
+  const isManualPagination = !!pagination;
 
   return (
     <div className="rounded-md border">
@@ -133,7 +150,11 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        manualPagination={isManualPagination}
+        totalRecords={pagination?.totalElements}
+      />
     </div>
   );
 }

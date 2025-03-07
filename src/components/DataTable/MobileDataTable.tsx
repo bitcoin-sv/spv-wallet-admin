@@ -1,20 +1,12 @@
 import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { AccessKey, Contact, PaymailAddress, Tx, XPub } from '@bsv/spv-wallet-js-client';
 import { createToggleExpandAll } from '@/utils/expandUtils';
-import {
-  ColumnDef,
-  ColumnSort,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import React, { useState } from 'react';
+import { ColumnDef, ColumnSort } from '@tanstack/react-table';
+import React, { useState, useEffect } from 'react';
 import { MobileDataTablePagination } from './MobileDataTablePagination';
-
-export type RowType = XPub | Contact | AccessKey | PaymailAddress | Tx | { id?: string; url?: string };
+import { RowType, PaginationProps } from './DataTable';
+import { useTable } from './useTable';
 
 interface MobileDataTableProps<TData extends RowType, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -24,31 +16,34 @@ interface MobileDataTableProps<TData extends RowType, TValue> {
     expandedState: { expandedItems: string[]; setExpandedItems: (value: string[]) => void },
   ) => React.ReactNode;
   initialSorting?: ColumnSort[];
+  pagination?: PaginationProps;
 }
-
-const defaultInitialSorting: ColumnSort[] = [{ id: 'id', desc: false }];
 
 export function MobileDataTable<TData extends RowType, TValue>({
   columns,
   data,
   renderMobileItem,
   initialSorting,
+  pagination,
 }: MobileDataTableProps<TData, TValue>) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isAllExpanded, setIsAllExpanded] = useState(false);
 
-  const table = useReactTable({
-    data,
+  const { table, currentPageData } = useTable({
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: initialSorting ? initialSorting : defaultInitialSorting,
-    },
+    data,
+    initialSorting,
+    pagination,
   });
 
-  const currentPageData = table.getRowModel().rows.map((row) => row.original);
+  // Deduce manualPagination from the presence of pagination prop
+  const isManualPagination = !!pagination;
+
+  // Reset expanded state when page or page size changes
+  useEffect(() => {
+    setExpandedItems([]);
+    setIsAllExpanded(false);
+  }, [table.getState().pagination.pageIndex, table.getState().pagination.pageSize]);
 
   const toggleExpandAll = () => {
     createToggleExpandAll(currentPageData, isAllExpanded, setExpandedItems, setIsAllExpanded);
@@ -78,7 +73,11 @@ export function MobileDataTable<TData extends RowType, TValue>({
           ))}
         </Accordion>
       </div>
-      <MobileDataTablePagination table={table} />
+      <MobileDataTablePagination
+        table={table}
+        manualPagination={isManualPagination}
+        totalRecords={pagination?.totalElements}
+      />
     </div>
   );
 }
